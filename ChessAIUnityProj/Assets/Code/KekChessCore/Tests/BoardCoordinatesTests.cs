@@ -1,7 +1,7 @@
-﻿using ChessAI.Domain.Impl;
+﻿using KekChessCore.Domain.Impl;
 using NUnit.Framework;
 
-namespace ChessAI.Tests
+namespace KekChessCore.Tests
 {
     public class BoardCoordinatesTests
     {

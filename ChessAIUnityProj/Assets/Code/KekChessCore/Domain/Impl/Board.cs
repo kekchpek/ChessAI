@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ChessAI.Domain.Impl
+namespace KekChessCore.Domain.Impl
 {
     public class Board : IBoard
     {

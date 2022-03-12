@@ -1,9 +1,9 @@
-﻿using ChessAI.Core.MoveUtility;
-using ChessAI.Core.TurnUtility;
-using ChessAI.Domain;
-using ChessAI.Domain.Impl;
+﻿using KekChessCore.Domain;
+using KekChessCore.Domain.Impl;
+using KekChessCore.MoveUtility;
+using KekChessCore.TurnUtility;
 
-namespace ChessAI.Core.API.PlayerFacade
+namespace KekChessCore.API.PlayerFacade
 {
     public class PlayerFacade : IPlayerFacade
     {

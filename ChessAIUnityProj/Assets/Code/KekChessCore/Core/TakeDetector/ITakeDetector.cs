@@ -1,4 +1,4 @@
-﻿namespace ChessAI.Core.TakeDetector
+﻿namespace KekChessCore.TakeDetector
 {
     public interface ITakeDetector
     {

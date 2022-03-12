@@ -1,6 +1,6 @@
-﻿using ChessAI.Domain;
+﻿using KekChessCore.Domain;
 
-namespace ChessAI.Core.XRayUtility.XRayPiecesUtilities.RookXRayUtility
+namespace KekChessCore.XRayUtility.XRayPiecesUtilities.RookXRayUtility
 {
     public class RookXRayUtility : BasePieceXRayUtility
     {

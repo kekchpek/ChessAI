@@ -1,9 +1,9 @@
 ﻿using System;
-using ChessAI.Core.BoardStateUtils;
-using ChessAI.Domain;
+using KekChessCore.BoardStateUtils;
+using KekChessCore.Domain;
 using NUnit.Framework;
 
-namespace ChessAI.Tests
+namespace KekChessCore.Tests
 {
     public class BoardStateContainerTests
     {

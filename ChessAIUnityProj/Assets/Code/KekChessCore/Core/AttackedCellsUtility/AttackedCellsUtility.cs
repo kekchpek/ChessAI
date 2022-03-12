@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using ChessAI.Core.MoveUtility;
-using ChessAI.Domain;
-using ChessAI.Domain.Impl;
+using KekChessCore.Domain;
+using KekChessCore.Domain.Impl;
+using KekChessCore.MoveUtility;
 
-namespace ChessAI.Core.AttackedCellsUtility
+namespace KekChessCore.AttackedCellsUtility
 {
     public class AttackedCellsUtility : IAttackedCellsUtility
     {

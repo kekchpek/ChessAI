@@ -1,15 +1,14 @@
 ﻿using System;
-using ChessAI.Core.MoveUtility.PieceMoveUtilities.Bishop;
-using ChessAI.Core.MoveUtility.PieceMoveUtilities.King;
-using ChessAI.Core.MoveUtility.PieceMoveUtilities.Knight;
-using ChessAI.Core.MoveUtility.PieceMoveUtilities.Pawn;
-using ChessAI.Core.MoveUtility.PieceMoveUtilities.Queen;
-using ChessAI.Core.MoveUtility.PieceMoveUtilities.Rook;
-using ChessAI.Core.XRayUtility.XRayPiecesUtilities.BishopXRayUtility;
-using ChessAI.Domain;
-using ChessAI.Domain.Impl;
+using KekChessCore.Domain;
+using KekChessCore.Domain.Impl;
+using KekChessCore.MoveUtility.PieceMoveUtilities.Bishop;
+using KekChessCore.MoveUtility.PieceMoveUtilities.King;
+using KekChessCore.MoveUtility.PieceMoveUtilities.Knight;
+using KekChessCore.MoveUtility.PieceMoveUtilities.Pawn;
+using KekChessCore.MoveUtility.PieceMoveUtilities.Queen;
+using KekChessCore.MoveUtility.PieceMoveUtilities.Rook;
 
-namespace ChessAI.Core.MoveUtility
+namespace KekChessCore.MoveUtility
 {
     public class PieceMoveUtilityFacade : IPieceMoveUtilityFacade
     {

@@ -1,4 +1,4 @@
-﻿namespace ChessAI.Core.XRayUtility.XRayPiecesUtilities.RookXRayUtility
+﻿namespace KekChessCore.XRayUtility.XRayPiecesUtilities.RookXRayUtility
 {
     public interface IRookXRayUtility : IPieceXRayUtility
     {

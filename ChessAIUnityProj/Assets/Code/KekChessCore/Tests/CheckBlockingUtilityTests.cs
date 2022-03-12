@@ -1,21 +1,20 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using ChessAI.Core.CheckBlockingUtility;
-using ChessAI.Core.XRayUtility;
-using ChessAI.Domain;
-using ChessAI.Domain.Impl;
+using KekChessCore.Domain;
+using KekChessCore.Domain.Impl;
+using KekChessCore.XRayUtility;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace ChessAI.Tests
+namespace KekChessCore.Tests
 {
     public class CheckBlockingUtilityTests
     {
-        private CheckBlockingUtility CreateCheckBlockingUtility(
+        private CheckBlockingUtility.CheckBlockingUtility CreateCheckBlockingUtility(
             out IXRayUtility xRayUtility)
         {
             xRayUtility = Substitute.For<IXRayUtility>();
-            return new CheckBlockingUtility(xRayUtility);
+            return new CheckBlockingUtility.CheckBlockingUtility(xRayUtility);
         }
 
         [Test]

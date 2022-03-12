@@ -1,8 +1,8 @@
 ﻿using System.Linq;
-using ChessAI.Domain;
-using ChessAI.Domain.Impl;
+using KekChessCore.Domain;
+using KekChessCore.Domain.Impl;
 
-namespace ChessAI.Core.MoveUtility.PieceMoveUtilities.Knight
+namespace KekChessCore.MoveUtility.PieceMoveUtilities.Knight
 {
     public class KnightMoveUtility : IKnightMoveUtility
     {

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace ChessAI.Domain
+namespace KekChessCore.Domain
 {
     public interface IBoard
     {

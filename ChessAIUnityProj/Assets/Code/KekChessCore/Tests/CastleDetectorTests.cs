@@ -1,19 +1,18 @@
 ﻿using System;
-using ChessAI.Core.CastleDetector;
-using ChessAI.Domain;
-using ChessAI.Domain.Impl;
+using KekChessCore.Domain;
+using KekChessCore.Domain.Impl;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace ChessAI.Tests
+namespace KekChessCore.Tests
 {
     public class CastleDetectorTests
     {
-        private CastleDetector CreateCastleDetector(
+        private CastleDetector.CastleDetector CreateCastleDetector(
             out IBoard board)
         {
             board = Substitute.For<IBoard>();
-            return new CastleDetector(board);
+            return new CastleDetector.CastleDetector(board);
         }
 
         [TestCase(0)]

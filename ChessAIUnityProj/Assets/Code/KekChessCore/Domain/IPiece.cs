@@ -1,7 +1,7 @@
 ﻿using System;
-using ChessAI.Domain.Impl;
+using KekChessCore.Domain.Impl;
 
-namespace ChessAI.Domain
+namespace KekChessCore.Domain
 {
     public interface IPiece
     {

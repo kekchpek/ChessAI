@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using ChessAI.Domain;
-using ChessAI.Domain.Impl;
+using KekChessCore.Domain;
+using KekChessCore.Domain.Impl;
 
-namespace ChessAI.Core.XRayUtility
+namespace KekChessCore.XRayUtility
 {
     public interface IXRay
     {

@@ -1,4 +1,4 @@
-﻿namespace ChessAI.Domain
+﻿namespace KekChessCore.Domain
 {
     public enum PieceColor
     {

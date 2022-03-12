@@ -1,8 +1,8 @@
 ﻿using System.Linq;
-using ChessAI.Core.EnPassantUtility;
-using ChessAI.Domain;
+using KekChessCore.Domain;
+using KekChessCore.EnPassantUtility;
 
-namespace ChessAI.Core.TakeDetector
+namespace KekChessCore.TakeDetector
 {
     public class TakeDetector : ITakeDetector
     {

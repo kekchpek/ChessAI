@@ -1,10 +1,10 @@
-﻿using ChessAI.Core.MoveUtility.PieceMoveUtilities.Knight;
-using ChessAI.Domain;
-using ChessAI.Domain.Impl;
+﻿using KekChessCore.Domain;
+using KekChessCore.Domain.Impl;
+using KekChessCore.MoveUtility.PieceMoveUtilities.Knight;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace ChessAI.Tests
+namespace KekChessCore.Tests.PIecesMoves
 {
     public class KnightMoveUtilityTests
     {

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
-using ChessAI.Domain;
-using ChessAI.Domain.Impl;
+using KekChessCore.Domain;
+using KekChessCore.Domain.Impl;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace ChessAI.Tests
+namespace KekChessCore.Tests
 {
     public class BoardTests
     {

@@ -1,17 +1,16 @@
 ﻿using System;
-using ChessAI.Core.TurnUtility;
-using ChessAI.Domain;
+using KekChessCore.Domain;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace ChessAI.Tests
+namespace KekChessCore.Tests
 {
     public class TurnUtilityTests
     {
-        private TurnUtility CreateTurnUtility(out IBoard board)
+        private TurnUtility.TurnUtility CreateTurnUtility(out IBoard board)
         {
             board = Substitute.For<IBoard>();
-            return new TurnUtility(board);
+            return new TurnUtility.TurnUtility(board);
         }
 
         [Test]

@@ -1,7 +1,7 @@
 ﻿using System;
-using ChessAI.Domain;
+using KekChessCore.Domain;
 
-namespace ChessAI.Core.TurnUtility
+namespace KekChessCore.TurnUtility
 {
     public class TurnUtility : ITurnGetter, ITurnObserver, ITurnSetter
     {

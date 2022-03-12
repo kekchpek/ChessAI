@@ -1,4 +1,4 @@
-﻿namespace ChessAI.Core.CheckDetector
+﻿namespace KekChessCore.CheckDetector
 {
     public interface ICheckDetector
     {

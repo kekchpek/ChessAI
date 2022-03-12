@@ -1,8 +1,8 @@
-﻿using ChessAI.Core.BoardStateUtils;
-using ChessAI.Core.CheckUtility;
-using ChessAI.Domain;
+﻿using KekChessCore.BoardStateUtils;
+using KekChessCore.CheckUtility;
+using KekChessCore.Domain;
 
-namespace ChessAI.Core.CheckDetector
+namespace KekChessCore.CheckDetector
 {
     public class CheckDetector: ICheckDetector
     {

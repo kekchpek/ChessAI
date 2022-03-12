@@ -1,12 +1,12 @@
-﻿using ChessAI.Core.XRayUtility;
-using ChessAI.Core.XRayUtility.XRayPiecesUtilities.BishopXRayUtility;
-using ChessAI.Core.XRayUtility.XRayPiecesUtilities.QueenXRayUtility;
-using ChessAI.Core.XRayUtility.XRayPiecesUtilities.RookXRayUtility;
-using ChessAI.Domain;
+﻿using KekChessCore.Domain;
+using KekChessCore.XRayUtility;
+using KekChessCore.XRayUtility.XRayPiecesUtilities.BishopXRayUtility;
+using KekChessCore.XRayUtility.XRayPiecesUtilities.QueenXRayUtility;
+using KekChessCore.XRayUtility.XRayPiecesUtilities.RookXRayUtility;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace ChessAI.Tests.PiecesXRays
+namespace KekChessCore.Tests.PiecesXRays
 {
     public class QueenXRayUtilityTests
     {

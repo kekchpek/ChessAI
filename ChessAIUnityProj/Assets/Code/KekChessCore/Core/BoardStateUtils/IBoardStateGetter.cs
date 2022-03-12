@@ -1,6 +1,6 @@
-﻿using ChessAI.Domain;
+﻿using KekChessCore.Domain;
 
-namespace ChessAI.Core.BoardStateUtils
+namespace KekChessCore.BoardStateUtils
 {
     public interface IBoardStateGetter
     {

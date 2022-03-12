@@ -1,9 +1,8 @@
 ﻿using System.Linq;
-using ChessAI.Domain;
-using ChessAI.Domain.Impl;
-using UnityEngine.Assertions;
+using KekChessCore.Domain;
+using KekChessCore.Domain.Impl;
 
-namespace ChessAI.Core.CastleDetector
+namespace KekChessCore.CastleDetector
 {
     public class CastleDetector
     {

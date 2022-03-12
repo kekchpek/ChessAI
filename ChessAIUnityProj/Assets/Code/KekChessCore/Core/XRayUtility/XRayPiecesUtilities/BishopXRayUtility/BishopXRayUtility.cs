@@ -1,6 +1,6 @@
-﻿using ChessAI.Domain;
+﻿using KekChessCore.Domain;
 
-namespace ChessAI.Core.XRayUtility.XRayPiecesUtilities.BishopXRayUtility
+namespace KekChessCore.XRayUtility.XRayPiecesUtilities.BishopXRayUtility
 {
     public class BishopXRayUtility : BasePieceXRayUtility
     {

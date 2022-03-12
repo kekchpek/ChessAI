@@ -1,23 +1,22 @@
 ﻿using System;
 using System.Linq;
-using ChessAI.Core.CheckUtility;
-using ChessAI.Core.MoveUtility;
-using ChessAI.Domain;
-using ChessAI.Domain.Impl;
+using KekChessCore.Domain;
+using KekChessCore.Domain.Impl;
+using KekChessCore.MoveUtility;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace ChessAI.Tests
+namespace KekChessCore.Tests
 {
     public class CheckUtilityTests
     {
-        private CheckUtility CreateCheckUtility(
+        private CheckUtility.CheckUtility CreateCheckUtility(
             out IBoard board,
             out IPieceMoveUtilityFacade pieceMoveUtilityFacade)
         {
             board = Substitute.For<IBoard>();
             pieceMoveUtilityFacade = Substitute.For<IPieceMoveUtilityFacade>();
-            return new CheckUtility(board, pieceMoveUtilityFacade);
+            return new CheckUtility.CheckUtility(board, pieceMoveUtilityFacade);
         }
 
         [Test] 

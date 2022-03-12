@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace ChessAI.Domain.Impl
+namespace KekChessCore.Domain.Impl
 {
     public readonly struct BoardCoordinates
     {

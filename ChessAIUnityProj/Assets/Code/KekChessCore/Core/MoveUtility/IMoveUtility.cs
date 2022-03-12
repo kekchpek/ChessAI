@@ -1,7 +1,7 @@
-﻿using ChessAI.Domain;
-using ChessAI.Domain.Impl;
+﻿using KekChessCore.Domain;
+using KekChessCore.Domain.Impl;
 
-namespace ChessAI.Core.MoveUtility
+namespace KekChessCore.MoveUtility
 {
     public interface IMoveUtility
     {

@@ -1,6 +1,6 @@
-﻿using ChessAI.Domain;
+﻿using KekChessCore.Domain;
 
-namespace ChessAI.Core.XRayUtility.XRayPiecesUtilities
+namespace KekChessCore.XRayUtility.XRayPiecesUtilities
 {
     public interface IPieceXRayUtility
     {

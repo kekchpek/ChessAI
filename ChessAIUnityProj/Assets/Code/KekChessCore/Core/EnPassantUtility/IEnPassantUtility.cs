@@ -1,6 +1,6 @@
-﻿using ChessAI.Domain;
+﻿using KekChessCore.Domain;
 
-namespace ChessAI.Core.EnPassantUtility
+namespace KekChessCore.EnPassantUtility
 {
     public interface IEnPassantUtility
     {

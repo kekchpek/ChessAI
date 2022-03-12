@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ChessAI.Core.AttackedCellsUtility;
-using ChessAI.Core.BoardStateUtils;
-using ChessAI.Core.CheckBlockingUtility;
-using ChessAI.Core.CheckUtility;
-using ChessAI.Core.XRayUtility;
-using ChessAI.Domain;
-using ChessAI.Domain.Impl;
+using KekChessCore.AttackedCellsUtility;
+using KekChessCore.BoardStateUtils;
+using KekChessCore.CheckBlockingUtility;
+using KekChessCore.CheckUtility;
+using KekChessCore.Domain;
+using KekChessCore.Domain.Impl;
+using KekChessCore.XRayUtility;
 
-namespace ChessAI.Core.MoveUtility
+namespace KekChessCore.MoveUtility
 {
     public class MoveUtility : IMoveUtility
     {

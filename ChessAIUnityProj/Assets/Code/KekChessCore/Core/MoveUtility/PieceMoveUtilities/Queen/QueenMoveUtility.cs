@@ -1,10 +1,10 @@
 ﻿using System.Linq;
-using ChessAI.Core.MoveUtility.PieceMoveUtilities.Bishop;
-using ChessAI.Core.MoveUtility.PieceMoveUtilities.Rook;
-using ChessAI.Domain;
-using ChessAI.Domain.Impl;
+using KekChessCore.Domain;
+using KekChessCore.Domain.Impl;
+using KekChessCore.MoveUtility.PieceMoveUtilities.Bishop;
+using KekChessCore.MoveUtility.PieceMoveUtilities.Rook;
 
-namespace ChessAI.Core.MoveUtility.PieceMoveUtilities.Queen
+namespace KekChessCore.MoveUtility.PieceMoveUtilities.Queen
 {
     public class QueenMoveUtility : IQueenMoveUtility
     {

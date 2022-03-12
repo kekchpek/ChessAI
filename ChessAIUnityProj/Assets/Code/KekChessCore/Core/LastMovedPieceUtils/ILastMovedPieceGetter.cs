@@ -1,6 +1,6 @@
-﻿using ChessAI.Domain;
+﻿using KekChessCore.Domain;
 
-namespace ChessAI.Core.LastMovedPieceUtils
+namespace KekChessCore.LastMovedPieceUtils
 {
     public interface ILastMovedPieceGetter
     {

@@ -1,18 +1,17 @@
-﻿using ChessAI.Core.EnPassantUtility;
-using ChessAI.Core.LastMovedPieceUtils;
-using ChessAI.Domain;
+﻿using KekChessCore.Domain;
+using KekChessCore.LastMovedPieceUtils;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace ChessAI.Tests
+namespace KekChessCore.Tests
 {
     public class EnPassantUtilityTests
     {
-        private EnPassantUtility CreateEnPassantUtility(
+        private EnPassantUtility.EnPassantUtility CreateEnPassantUtility(
             out ILastMovedPieceGetter lastMovedPieceGetter)
         {
             lastMovedPieceGetter = Substitute.For<ILastMovedPieceGetter>();
-            return new EnPassantUtility(lastMovedPieceGetter);
+            return new EnPassantUtility.EnPassantUtility(lastMovedPieceGetter);
         }
 
         [Test]

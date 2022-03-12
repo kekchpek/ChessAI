@@ -1,8 +1,7 @@
-﻿using ChessAI.Domain;
-using ChessAI.Domain.Impl;
-using JetBrains.Annotations;
+﻿using KekChessCore.Domain;
+using KekChessCore.Domain.Impl;
 
-namespace ChessAI.Core.CheckBlockingUtility
+namespace KekChessCore.CheckBlockingUtility
 {
     public interface ICheckBlockingUtility
     {

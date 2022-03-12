@@ -1,23 +1,22 @@
 ﻿using System;
-using ChessAI.Core.AttackedCellsUtility;
-using ChessAI.Core.MoveUtility;
-using ChessAI.Domain;
-using ChessAI.Domain.Impl;
+using KekChessCore.Domain;
+using KekChessCore.Domain.Impl;
+using KekChessCore.MoveUtility;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace ChessAI.Tests
+namespace KekChessCore.Tests
 {
     public class AttackedCellsUtilityTests
     {
 
-        private AttackedCellsUtility CreateAttackedCellsUtility(
+        private AttackedCellsUtility.AttackedCellsUtility CreateAttackedCellsUtility(
             out IPieceMoveUtilityFacade pieceMoveUtilityFacade,
             out IBoard board)
         {
             pieceMoveUtilityFacade = Substitute.For<IPieceMoveUtilityFacade>();
             board = Substitute.For<IBoard>();
-            return new AttackedCellsUtility(pieceMoveUtilityFacade, board);
+            return new AttackedCellsUtility.AttackedCellsUtility(pieceMoveUtilityFacade, board);
         }
 
         [Test]

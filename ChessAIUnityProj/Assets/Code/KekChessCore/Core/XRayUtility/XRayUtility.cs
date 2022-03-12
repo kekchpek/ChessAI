@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
-using ChessAI.Core.XRayUtility.XRayPiecesUtilities.BishopXRayUtility;
-using ChessAI.Core.XRayUtility.XRayPiecesUtilities.QueenXRayUtility;
-using ChessAI.Core.XRayUtility.XRayPiecesUtilities.RookXRayUtility;
-using ChessAI.Domain;
+using KekChessCore.Domain;
+using KekChessCore.XRayUtility.XRayPiecesUtilities.BishopXRayUtility;
+using KekChessCore.XRayUtility.XRayPiecesUtilities.QueenXRayUtility;
+using KekChessCore.XRayUtility.XRayPiecesUtilities.RookXRayUtility;
 
-namespace ChessAI.Core.XRayUtility
+namespace KekChessCore.XRayUtility
 {
     public class XRayUtility : IXRayUtility
     {

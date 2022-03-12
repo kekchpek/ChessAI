@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Linq;
-using ChessAI.Core.XRayUtility;
-using ChessAI.Domain;
-using ChessAI.Domain.Impl;
+using KekChessCore.Domain;
+using KekChessCore.Domain.Impl;
+using KekChessCore.XRayUtility;
 
-namespace ChessAI.Core.CheckBlockingUtility
+namespace KekChessCore.CheckBlockingUtility
 {
     public class CheckBlockingUtility : ICheckBlockingUtility
     {

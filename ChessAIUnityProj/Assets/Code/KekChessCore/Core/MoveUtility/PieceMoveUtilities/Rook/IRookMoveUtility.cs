@@ -1,4 +1,4 @@
-﻿namespace ChessAI.Core.MoveUtility.PieceMoveUtilities.Rook
+﻿namespace KekChessCore.MoveUtility.PieceMoveUtilities.Rook
 {
     public interface IRookMoveUtility : IPieceMoveUtility
     {

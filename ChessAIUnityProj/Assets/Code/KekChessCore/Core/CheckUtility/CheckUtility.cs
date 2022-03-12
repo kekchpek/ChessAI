@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ChessAI.Core.MoveUtility;
-using ChessAI.Domain;
+using KekChessCore.Domain;
+using KekChessCore.MoveUtility;
 
-namespace ChessAI.Core.CheckUtility
+namespace KekChessCore.CheckUtility
 {
     public class CheckUtility : ICheckUtility
     {

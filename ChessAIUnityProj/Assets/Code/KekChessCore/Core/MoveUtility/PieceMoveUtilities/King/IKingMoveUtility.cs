@@ -1,4 +1,4 @@
-﻿namespace ChessAI.Core.MoveUtility.PieceMoveUtilities.King
+﻿namespace KekChessCore.MoveUtility.PieceMoveUtilities.King
 {
     public interface IKingMoveUtility : IPieceMoveUtility
     {

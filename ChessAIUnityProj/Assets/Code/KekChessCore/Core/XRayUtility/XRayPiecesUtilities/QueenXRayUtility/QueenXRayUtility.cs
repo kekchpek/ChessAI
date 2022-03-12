@@ -1,9 +1,9 @@
 ﻿using System.Linq;
-using ChessAI.Core.XRayUtility.XRayPiecesUtilities.BishopXRayUtility;
-using ChessAI.Core.XRayUtility.XRayPiecesUtilities.RookXRayUtility;
-using ChessAI.Domain;
+using KekChessCore.Domain;
+using KekChessCore.XRayUtility.XRayPiecesUtilities.BishopXRayUtility;
+using KekChessCore.XRayUtility.XRayPiecesUtilities.RookXRayUtility;
 
-namespace ChessAI.Core.XRayUtility.XRayPiecesUtilities.QueenXRayUtility
+namespace KekChessCore.XRayUtility.XRayPiecesUtilities.QueenXRayUtility
 {
     public class QueenXRayUtility : IQueenXRayUtility
     {

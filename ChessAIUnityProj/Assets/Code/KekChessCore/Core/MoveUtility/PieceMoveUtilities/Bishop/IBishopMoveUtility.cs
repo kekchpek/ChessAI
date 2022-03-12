@@ -1,4 +1,4 @@
-﻿namespace ChessAI.Core.MoveUtility.PieceMoveUtilities.Bishop
+﻿namespace KekChessCore.MoveUtility.PieceMoveUtilities.Bishop
 {
     public interface IBishopMoveUtility : IPieceMoveUtility
     {

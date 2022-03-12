@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
-using ChessAI.Core.LastMovedPieceUtils;
-using ChessAI.Domain;
+using KekChessCore.Domain;
+using KekChessCore.LastMovedPieceUtils;
 
-namespace ChessAI.Core.EnPassantUtility
+namespace KekChessCore.EnPassantUtility
 {
     public class EnPassantUtility : IEnPassantUtility
     {

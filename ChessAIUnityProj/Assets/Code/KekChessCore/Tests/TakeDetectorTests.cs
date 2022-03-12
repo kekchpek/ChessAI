@@ -1,22 +1,20 @@
 ﻿using System;
-using ChessAI.Core.EnPassantUtility;
-using ChessAI.Core.TakeDetector;
-using ChessAI.Domain;
+using KekChessCore.Domain;
+using KekChessCore.EnPassantUtility;
 using NSubstitute;
-using NSubstitute.Extensions;
 using NUnit.Framework;
 
-namespace ChessAI.Tests
+namespace KekChessCore.Tests
 {
     public class TakeDetectorTests
     {
-        private TakeDetector CreateTakeDetector(
+        private TakeDetector.TakeDetector CreateTakeDetector(
             out IBoard board,
             out IEnPassantUtility enPassantUtility)
         {
             board = Substitute.For<IBoard>();
             enPassantUtility = Substitute.For<IEnPassantUtility>();
-            return new TakeDetector(board, enPassantUtility);
+            return new TakeDetector.TakeDetector(board, enPassantUtility);
         }
 
         [Test]

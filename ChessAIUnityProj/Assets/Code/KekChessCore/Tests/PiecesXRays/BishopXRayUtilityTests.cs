@@ -1,10 +1,10 @@
 ﻿using System.Linq;
-using ChessAI.Core.XRayUtility.XRayPiecesUtilities.BishopXRayUtility;
-using ChessAI.Domain;
+using KekChessCore.Domain;
+using KekChessCore.XRayUtility.XRayPiecesUtilities.BishopXRayUtility;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace ChessAI.Tests.PiecesXRays
+namespace KekChessCore.Tests.PiecesXRays
 {
     public class BishopXRayUtilityTests
     {

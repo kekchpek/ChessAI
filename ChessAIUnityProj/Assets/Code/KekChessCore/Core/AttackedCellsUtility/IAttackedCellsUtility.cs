@@ -1,7 +1,7 @@
-﻿using ChessAI.Domain;
-using ChessAI.Domain.Impl;
+﻿using KekChessCore.Domain;
+using KekChessCore.Domain.Impl;
 
-namespace ChessAI.Core.AttackedCellsUtility
+namespace KekChessCore.AttackedCellsUtility
 {
     public interface IAttackedCellsUtility
     {

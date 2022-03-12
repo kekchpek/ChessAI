@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ChessAI.Domain.Impl
+namespace KekChessCore.Domain.Impl
 {
     public class Piece : IPiece
     {

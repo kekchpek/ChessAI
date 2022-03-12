@@ -1,6 +1,6 @@
-﻿using ChessAI.Domain;
+﻿using KekChessCore.Domain;
 
-namespace ChessAI.Core.Factories
+namespace KekChessCore.Factories
 {
     public interface IBoardFactory
     {

@@ -1,12 +1,12 @@
-﻿using ChessAI.Core.MoveUtility.PieceMoveUtilities.Bishop;
-using ChessAI.Core.MoveUtility.PieceMoveUtilities.Queen;
-using ChessAI.Core.MoveUtility.PieceMoveUtilities.Rook;
-using ChessAI.Domain;
-using ChessAI.Domain.Impl;
+﻿using KekChessCore.Domain;
+using KekChessCore.Domain.Impl;
+using KekChessCore.MoveUtility.PieceMoveUtilities.Bishop;
+using KekChessCore.MoveUtility.PieceMoveUtilities.Queen;
+using KekChessCore.MoveUtility.PieceMoveUtilities.Rook;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace ChessAI.Tests
+namespace KekChessCore.Tests.PIecesMoves
 {
     public class QueenMoveUtilityTests
     {

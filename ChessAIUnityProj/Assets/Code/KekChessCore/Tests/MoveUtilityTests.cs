@@ -1,20 +1,19 @@
 ﻿using System.Collections.Generic;
-using ChessAI.Core.AttackedCellsUtility;
-using ChessAI.Core.BoardStateUtils;
-using ChessAI.Core.CheckBlockingUtility;
-using ChessAI.Core.CheckUtility;
-using ChessAI.Core.MoveUtility;
-using ChessAI.Core.XRayUtility;
-using ChessAI.Domain;
-using ChessAI.Domain.Impl;
+using KekChessCore.AttackedCellsUtility;
+using KekChessCore.BoardStateUtils;
+using KekChessCore.CheckUtility;
+using KekChessCore.Domain;
+using KekChessCore.Domain.Impl;
+using KekChessCore.MoveUtility;
+using KekChessCore.XRayUtility;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace ChessAI.Tests
+namespace KekChessCore.Tests
 {
     public class MoveUtilityTests
     {
-        private MoveUtility CreateMoveUtility(
+        private MoveUtility.MoveUtility CreateMoveUtility(
             out IPieceMoveUtilityFacade pieceMoveUtilityFacade,
             out IXRayUtility xRayUtility,
             out IAttackedCellsUtility attackedCellsUtility,
@@ -28,7 +27,7 @@ namespace ChessAI.Tests
             boardStateGetter = Substitute.For<IBoardStateGetter>();
             checkBlockingUtility = Substitute.For<ICheckBlockingUtility>();
             checkUtility = Substitute.For<ICheckUtility>();
-            return new MoveUtility(pieceMoveUtilityFacade,
+            return new MoveUtility.MoveUtility(pieceMoveUtilityFacade,
                 xRayUtility, attackedCellsUtility, boardStateGetter, checkBlockingUtility,
                 checkUtility);
         }

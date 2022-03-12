@@ -1,8 +1,8 @@
 ﻿using System;
-using ChessAI.Core.API.PlayerFacade;
+using KekChessCore.API.PlayerFacade;
 using NUnit.Framework;
 
-namespace ChessAI.Tests
+namespace KekChessCore.Tests
 {
     public class PlayerFacadeTests
     {

@@ -1,20 +1,20 @@
 ﻿using System;
 using System.Linq;
-using ChessAI.Core.XRayUtility;
-using ChessAI.Core.XRayUtility.XRayPiecesUtilities.BishopXRayUtility;
-using ChessAI.Core.XRayUtility.XRayPiecesUtilities.QueenXRayUtility;
-using ChessAI.Core.XRayUtility.XRayPiecesUtilities.RookXRayUtility;
-using ChessAI.Domain;
+using KekChessCore.Domain;
+using KekChessCore.XRayUtility;
+using KekChessCore.XRayUtility.XRayPiecesUtilities.BishopXRayUtility;
+using KekChessCore.XRayUtility.XRayPiecesUtilities.QueenXRayUtility;
+using KekChessCore.XRayUtility.XRayPiecesUtilities.RookXRayUtility;
 using NSubstitute;
 using NSubstitute.Extensions;
 using NUnit.Framework;
 
-namespace ChessAI.Tests
+namespace KekChessCore.Tests
 {
     public class XRayUtilityTests
     {
 
-        private XRayUtility CreateXRayUtility(
+        private XRayUtility.XRayUtility CreateXRayUtility(
             out IBoard board,
             out IQueenXRayUtility queenXRayUtility,
             out IRookXRayUtility rookXRayUtility,
@@ -24,7 +24,7 @@ namespace ChessAI.Tests
             queenXRayUtility = Substitute.For<IQueenXRayUtility>();
             rookXRayUtility = Substitute.For<IRookXRayUtility>();
             bishopXRayUtility = Substitute.For<IBishopXRayUtility>();
-            return new XRayUtility(board, queenXRayUtility, rookXRayUtility, bishopXRayUtility); 
+            return new XRayUtility.XRayUtility(board, queenXRayUtility, rookXRayUtility, bishopXRayUtility); 
         }
 
         [Test]

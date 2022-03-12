@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using ChessAI.Domain;
-using ChessAI.Domain.Impl;
+using KekChessCore.Domain;
+using KekChessCore.Domain.Impl;
 
-namespace ChessAI.Core.MoveUtility.PieceMoveUtilities.Rook
+namespace KekChessCore.MoveUtility.PieceMoveUtilities.Rook
 {
     public class RookMoveUtility : IRookMoveUtility
     {

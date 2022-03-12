@@ -1,7 +1,7 @@
 ﻿using System;
-using ChessAI.Domain;
+using KekChessCore.Domain;
 
-namespace ChessAI.Core.BoardStateUtils
+namespace KekChessCore.BoardStateUtils
 {
     public class BoardStateContainer : IBoardStateSetter, IBoardStateGetter, IBoardStateObserver
     {

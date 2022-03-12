@@ -1,16 +1,15 @@
 ﻿using System;
-using ChessAI.Core.BoardStateUtils;
-using ChessAI.Core.CheckDetector;
-using ChessAI.Core.CheckUtility;
-using ChessAI.Domain;
+using KekChessCore.BoardStateUtils;
+using KekChessCore.CheckUtility;
+using KekChessCore.Domain;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace ChessAI.Tests
+namespace KekChessCore.Tests
 {
     public class CheckDetectorTests
     {
-        private CheckDetector CreateCheckDetector(
+        private CheckDetector.CheckDetector CreateCheckDetector(
             out IBoard board,
             out IBoardStateSetter boardStateSetter,
             out ICheckUtility checkUtility)
@@ -18,7 +17,7 @@ namespace ChessAI.Tests
             board = Substitute.For<IBoard>();
             boardStateSetter = Substitute.For<IBoardStateSetter>();
             checkUtility = Substitute.For<ICheckUtility>();
-            return new CheckDetector(board, boardStateSetter, checkUtility);
+            return new CheckDetector.CheckDetector(board, boardStateSetter, checkUtility);
         }
 
         [Test]

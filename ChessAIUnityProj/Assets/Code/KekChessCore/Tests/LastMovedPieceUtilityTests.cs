@@ -1,10 +1,10 @@
 ﻿using System;
-using ChessAI.Core.LastMovedPieceUtils;
-using ChessAI.Domain;
+using KekChessCore.Domain;
+using KekChessCore.LastMovedPieceUtils;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace ChessAI.Tests
+namespace KekChessCore.Tests
 {
     public class LastMovedPieceUtilityTests
     {

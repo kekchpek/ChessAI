@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using KekChessCore.AttackedCellsUtility;
 using KekChessCore.BoardStateUtils;
+using KekChessCore.CheckBlockingUtility;
 using KekChessCore.CheckUtility;
 using KekChessCore.Domain;
 using KekChessCore.Domain.Impl;

@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Linq;
+using KekChessCore.BoardEnvironment;
 using KekChessCore.Domain;
 using KekChessCore.Domain.Impl;
 using KekChessCore.XRayUtility;
 
 namespace KekChessCore.CheckBlockingUtility
 {
-    public class CheckBlockingUtility : ICheckBlockingUtility
+    public class CheckBlockingUtility : ICheckBlockingUtility, IBoardEnvironmentComponent
     {
         private readonly IXRayUtility _xRayUtility;
 
@@ -23,6 +24,11 @@ namespace KekChessCore.CheckBlockingUtility
             if (_xRayUtility.TargetPieces[checkedKing].Count > 1)
                 return Array.Empty<BoardCoordinates>();
             return _xRayUtility.TargetPieces[checkedKing].First().CellsBetween.ToArray();
+        }
+
+        public void Dispose()
+        {
+            // do nothing
         }
     }
 }

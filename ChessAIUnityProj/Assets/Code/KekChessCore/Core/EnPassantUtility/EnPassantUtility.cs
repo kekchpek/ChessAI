@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Linq;
+using KekChessCore.BoardEnvironment;
 using KekChessCore.Domain;
 using KekChessCore.LastMovedPieceUtils;
 
 namespace KekChessCore.EnPassantUtility
 {
-    public class EnPassantUtility : IEnPassantUtility
+    public class EnPassantUtility : IEnPassantUtility, IBoardEnvironmentComponent
     {
         private readonly ILastMovedPieceGetter _lastMovedPieceGetter;
 
@@ -40,6 +41,11 @@ namespace KekChessCore.EnPassantUtility
 
             takenPiece = default;
             return false;
+        }
+
+        public void Dispose()
+        {
+            // do nothing
         }
     }
 }

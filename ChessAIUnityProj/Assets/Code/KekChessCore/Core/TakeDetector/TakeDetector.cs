@@ -1,10 +1,11 @@
 ﻿using System.Linq;
+using KekChessCore.BoardEnvironment;
 using KekChessCore.Domain;
 using KekChessCore.EnPassantUtility;
 
 namespace KekChessCore.TakeDetector
 {
-    public class TakeDetector : ITakeDetector
+    public class TakeDetector : ITakeDetector, IBoardEnvironmentComponent
     {
         private readonly IBoard _board;
         private readonly IEnPassantUtility _enPassantUtility;
@@ -32,6 +33,10 @@ namespace KekChessCore.TakeDetector
                 }
             }
         }
-        
+
+        public void Dispose()
+        {
+            // do nothing
+        }
     }
 }

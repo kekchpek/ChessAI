@@ -23,13 +23,15 @@ namespace KekChessCore.Domain.Impl
         {
             _pieceType = pieceType;
             _color = color;
-            ((IPiece)this).MoveTo(position);
+            _previousPosition = position;
+            _position = position;
         }
 
         void IPiece.MoveTo(BoardCoordinates boardCoordinates)
         {
             _previousPosition = _position;
             _position = boardCoordinates;
+            _isMoved = true;
             Moved?.Invoke();
         }
     }

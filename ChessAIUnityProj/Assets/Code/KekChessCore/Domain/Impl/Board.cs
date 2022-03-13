@@ -23,7 +23,7 @@ namespace KekChessCore.Domain.Impl
             PositionChanged?.Invoke(piece);
         }
 
-        public void PlacePiece(IPiece piece)
+        void IBoard.PlacePiece(IPiece piece)
         {
             var pieceOnSamePosition = _pieces.FirstOrDefault(x => x.Position == piece.Position);
             if (pieceOnSamePosition != null)

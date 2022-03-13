@@ -36,7 +36,7 @@ namespace KekChessCore.Tests
             var pieceToPlace = Substitute.For<IPiece>();
             
             // Act 
-            board.PlacePiece(pieceToPlace);
+            ((IBoard)board).PlacePiece(pieceToPlace);
             
             // Assert
             Assert.Contains(pieceToPlace, board.Pieces.ToArray());
@@ -52,7 +52,7 @@ namespace KekChessCore.Tests
             // Act 
             IPiece changedPositionPiece = null;
             board.PositionChanged += x => changedPositionPiece = x;
-            board.PlacePiece(pieceToPlace);
+            ((IBoard)board).PlacePiece(pieceToPlace);
             
             // Assert
             Assert.AreEqual(changedPositionPiece, pieceToPlace);
@@ -69,8 +69,8 @@ namespace KekChessCore.Tests
             pieceToPlace2.Position.Returns("c4");
             
             // Act
-            board.PlacePiece(pieceToPlace1);
-            board.PlacePiece(pieceToPlace2);
+            ((IBoard)board).PlacePiece(pieceToPlace1);
+            ((IBoard)board).PlacePiece(pieceToPlace2);
             
             // Assert
             Assert.Contains(pieceToPlace2, board.Pieces.ToArray());
@@ -87,7 +87,7 @@ namespace KekChessCore.Tests
             // Act 
             IPiece movedPiece = null;
             board.PieceMoved += x => movedPiece = x;
-            board.PlacePiece(pieceToPlace);
+            ((IBoard)board).PlacePiece(pieceToPlace);
             pieceToPlace.Moved += Raise.Event<Action>();
             
             // Assert
@@ -104,7 +104,7 @@ namespace KekChessCore.Tests
             // Act 
             IPiece movedPiece = null;
             board.PositionChanged += x => movedPiece = x;
-            board.PlacePiece(pieceToPlace);
+            ((IBoard)board).PlacePiece(pieceToPlace);
             pieceToPlace.Moved += Raise.Event<Action>();
             
             // Assert
@@ -119,7 +119,7 @@ namespace KekChessCore.Tests
             var pieceToPlace = Substitute.For<IPiece>();
             
             // Act 
-            board.PlacePiece(pieceToPlace);
+            ((IBoard)board).PlacePiece(pieceToPlace);
             board.RemovePiece(pieceToPlace);
             
             // Assert
@@ -134,7 +134,7 @@ namespace KekChessCore.Tests
             var pieceToPlace = Substitute.For<IPiece>();
             
             // Act 
-            board.PlacePiece(pieceToPlace);
+            ((IBoard)board).PlacePiece(pieceToPlace);
             IPiece positionChangedPiece = null;
             board.PositionChanged += x => positionChangedPiece = x;
             board.RemovePiece(pieceToPlace);
@@ -151,7 +151,7 @@ namespace KekChessCore.Tests
             var pieceToPlace = Substitute.For<IPiece>();
             
             // Act 
-            board.PlacePiece(pieceToPlace);
+            ((IBoard)board).PlacePiece(pieceToPlace);
             board.RemovePiece(pieceToPlace);
             IPiece movedPiece = null;
             board.PieceMoved += x => movedPiece = x;

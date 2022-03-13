@@ -1,10 +1,11 @@
-﻿using KekChessCore.BoardStateUtils;
+﻿using KekChessCore.BoardEnvironment;
+using KekChessCore.BoardStateUtils;
 using KekChessCore.CheckUtility;
 using KekChessCore.Domain;
 
 namespace KekChessCore.CheckDetector
 {
-    public class CheckDetector: ICheckDetector
+    public class CheckDetector: ICheckDetector, IBoardEnvironmentComponent
     {
         private readonly IBoard _board;
         private readonly IBoardStateSetter _boardStateSetter;
@@ -33,6 +34,11 @@ namespace KekChessCore.CheckDetector
                         break;
                 }
             }
+        }
+
+        public void Dispose()
+        {
+            _board.PositionChanged -= OnPositionChanged;
         }
     }
 }

@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using KekChessCore.BoardEnvironment;
 using KekChessCore.Domain;
 using KekChessCore.Domain.Impl;
 
 namespace KekChessCore.MoveUtility.PieceMoveUtilities.King
 {
-    public class KingMoveUtility : IKingMoveUtility
+    public class KingMoveUtility : IKingMoveUtility, IBoardEnvironmentComponent
     {
         private readonly IBoard _board;
 
@@ -36,6 +37,11 @@ namespace KekChessCore.MoveUtility.PieceMoveUtilities.King
 
             var allyPiecesPositions = _board.Pieces.Select(x => x.Position.ToNumeric());
             return availableMoves.Except(allyPiecesPositions).Select(x => (BoardCoordinates)x).ToArray();
+        }
+
+        public void Dispose()
+        {
+            // do nothing
         }
     }
 }

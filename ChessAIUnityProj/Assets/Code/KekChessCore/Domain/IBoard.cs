@@ -12,6 +12,6 @@ namespace KekChessCore.Domain
 
         void RemovePiece(IPiece piece);
 
-        void PlacePiece(IPiece piece);
+        internal void PlacePiece(IPiece piece);
     }
 }

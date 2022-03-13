@@ -1,18 +1,22 @@
 ﻿using System;
+using KekChessCore.BoardEnvironment;
 using KekChessCore.Domain;
 
 namespace KekChessCore.LastMovedPieceUtils
 {
-    public class LastMovedPieceUtility : ILastMovedPieceGetter, ILastMovedPieceObserver
+    public class LastMovedPieceUtility : ILastMovedPieceGetter, ILastMovedPieceObserver, IBoardEnvironmentComponent
     {
 
         public event Action<IPiece> LastMovedPieceChanged;
+
+        private readonly IBoard _board;
 
         private IPiece _lastMovedPiece;
 
         public LastMovedPieceUtility(IBoard board)
         {
-            board.PieceMoved += OnPieceMoved;
+            _board = board;
+            _board.PieceMoved += OnPieceMoved;
         }
 
         public IPiece GetLastMovedPiece() => _lastMovedPiece;
@@ -21,6 +25,11 @@ namespace KekChessCore.LastMovedPieceUtils
         {
             _lastMovedPiece = piece;
             LastMovedPieceChanged?.Invoke(piece);
+        }
+
+        public void Dispose()
+        {
+            _board.PieceMoved -= OnPieceMoved;
         }
     }
 }

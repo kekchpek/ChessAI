@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using KekChessCore.BoardEnvironment;
 using KekChessCore.Domain;
 using KekChessCore.XRayUtility.XRayPiecesUtilities.BishopXRayUtility;
 using KekChessCore.XRayUtility.XRayPiecesUtilities.QueenXRayUtility;
@@ -6,7 +7,7 @@ using KekChessCore.XRayUtility.XRayPiecesUtilities.RookXRayUtility;
 
 namespace KekChessCore.XRayUtility
 {
-    public class XRayUtility : IXRayUtility
+    public class XRayUtility : IXRayUtility, IBoardEnvironmentComponent
     {
 
         public IReadOnlyDictionary<IPiece, IReadOnlyList<IXRay>> TargetPieces => _targetPieces;
@@ -33,7 +34,7 @@ namespace KekChessCore.XRayUtility
             _queenMoveUtility = queenMoveUtility;
             _rookXRayUtility = rookXRayUtility;
             _bishopXRayUtility = bishopXRayUtility;
-            board.PositionChanged += OnPositionChanged;
+            _board.PositionChanged += OnPositionChanged;
         }
 
         private void OnPositionChanged(IPiece _)
@@ -64,6 +65,11 @@ namespace KekChessCore.XRayUtility
                 var targetXRayList = (List<IXRay>)_targetPieces[xRay.TargetPiece];
                 targetXRayList.Add(xRay);
             }
+        }
+
+        public void Dispose()
+        {
+            _board.PositionChanged -= OnPositionChanged;
         }
     }
 }

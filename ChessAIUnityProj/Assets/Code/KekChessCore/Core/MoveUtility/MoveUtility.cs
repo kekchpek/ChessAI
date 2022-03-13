@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using KekChessCore.AttackedCellsUtility;
+using KekChessCore.BoardEnvironment;
 using KekChessCore.BoardStateUtils;
 using KekChessCore.CheckBlockingUtility;
 using KekChessCore.CheckUtility;
@@ -11,7 +12,7 @@ using KekChessCore.XRayUtility;
 
 namespace KekChessCore.MoveUtility
 {
-    public class MoveUtility : IMoveUtility
+    public class MoveUtility : IMoveUtility, IBoardEnvironmentComponent
     {
         private readonly IPieceMoveUtilityFacade _pieceMoveUtilityFacade;
         private readonly IXRayUtility _xRayUtility;
@@ -86,6 +87,11 @@ namespace KekChessCore.MoveUtility
             var availableMovesOnCheck = new List<BoardCoordinates>(checkBlockingMoves);
             availableMovesOnCheck.Add(checkingPieces[0].Position);
             return defaultMoves.Intersect(availableMovesOnCheck).ToArray();
+        }
+
+        public void Dispose()
+        {
+            // do nothing
         }
     }
 }

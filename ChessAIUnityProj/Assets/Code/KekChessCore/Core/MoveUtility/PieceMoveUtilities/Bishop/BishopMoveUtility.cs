@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using KekChessCore.BoardEnvironment;
 using KekChessCore.Domain;
 using KekChessCore.Domain.Impl;
 
 namespace KekChessCore.MoveUtility.PieceMoveUtilities.Bishop
 {
-    public class BishopMoveUtility : IBishopMoveUtility
+    public class BishopMoveUtility : IBishopMoveUtility, IBoardEnvironmentComponent
     {
         private readonly IBoard _board;
 
@@ -123,6 +124,11 @@ namespace KekChessCore.MoveUtility.PieceMoveUtilities.Bishop
         {
             var (item1, item2) = cell;
             return item1 < 0 || item1 > 7 || item2 < 0 || item2 > 7;
+        }
+
+        public void Dispose()
+        {
+            // do nothing
         }
     }
 }

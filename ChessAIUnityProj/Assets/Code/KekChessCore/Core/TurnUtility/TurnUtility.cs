@@ -1,10 +1,12 @@
 ﻿using System;
+using KekChessCore.BoardEnvironment;
 using KekChessCore.Domain;
 
 namespace KekChessCore.TurnUtility
 {
-    public class TurnUtility : ITurnGetter, ITurnObserver, ITurnSetter
+    public class TurnUtility : ITurnGetter, ITurnObserver, ITurnSetter, IBoardEnvironmentComponent
     {
+        private readonly IBoard _board;
         public event Action<PieceColor> TurnChanged;
 
         private PieceColor _turnColor = PieceColor.White;
@@ -13,7 +15,8 @@ namespace KekChessCore.TurnUtility
         
         public TurnUtility(IBoard board)
         {
-            board.PieceMoved += OnPieceMoved;
+            _board = board;
+            _board.PieceMoved += OnPieceMoved;
         }
         
         public void SetTurn(PieceColor pieceColor)
@@ -32,6 +35,11 @@ namespace KekChessCore.TurnUtility
             {
                 SetTurn(PieceColor.White);
             }
+        }
+
+        public void Dispose()
+        {
+            _board.PieceMoved -= OnPieceMoved;
         }
     }
 }

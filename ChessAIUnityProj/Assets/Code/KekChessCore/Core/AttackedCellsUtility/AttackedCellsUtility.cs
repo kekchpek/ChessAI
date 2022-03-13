@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
+using KekChessCore.BoardEnvironment;
 using KekChessCore.Domain;
 using KekChessCore.Domain.Impl;
 using KekChessCore.MoveUtility;
 
 namespace KekChessCore.AttackedCellsUtility
 {
-    public class AttackedCellsUtility : IAttackedCellsUtility
+    public class AttackedCellsUtility : IAttackedCellsUtility, IBoardEnvironmentComponent
     {
         private readonly IPieceMoveUtilityFacade _pieceMoveUtilityFacade;
         private readonly IBoard _board;
@@ -53,6 +54,11 @@ namespace KekChessCore.AttackedCellsUtility
                     }
                 }
             }
+        }
+
+        public void Dispose()
+        {
+            _board.PositionChanged -= OnPositionChanged;
         }
     }
 }

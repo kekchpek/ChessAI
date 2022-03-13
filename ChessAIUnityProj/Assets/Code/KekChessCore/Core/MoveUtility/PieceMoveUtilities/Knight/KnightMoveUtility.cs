@@ -1,10 +1,11 @@
 ﻿using System.Linq;
+using KekChessCore.BoardEnvironment;
 using KekChessCore.Domain;
 using KekChessCore.Domain.Impl;
 
 namespace KekChessCore.MoveUtility.PieceMoveUtilities.Knight
 {
-    public class KnightMoveUtility : IKnightMoveUtility
+    public class KnightMoveUtility : IKnightMoveUtility, IBoardEnvironmentComponent
     {
         private readonly IBoard _board;
 
@@ -34,6 +35,11 @@ namespace KekChessCore.MoveUtility.PieceMoveUtilities.Knight
                 .Where(x => x.Item1 >= 0 && x.Item1 <= 7 && x.Item2 >= 0 && x.Item2 <= 7)
                 .Select(x => (BoardCoordinates)x)
                 .Except(allyPiecesPositions).ToArray();
+        }
+
+        public void Dispose()
+        {
+            // do nothing
         }
     }
 }

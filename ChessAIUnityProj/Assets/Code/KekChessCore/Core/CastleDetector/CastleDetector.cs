@@ -1,10 +1,11 @@
 ﻿using System.Linq;
+using KekChessCore.BoardEnvironment;
 using KekChessCore.Domain;
 using KekChessCore.Domain.Impl;
 
 namespace KekChessCore.CastleDetector
 {
-    public class CastleDetector
+    public class CastleDetector : ICastleDetector, IBoardEnvironmentComponent
     {
 
         private static readonly BoardCoordinates WhiteKingStartPos = "e1";
@@ -70,6 +71,11 @@ namespace KekChessCore.CastleDetector
                     rook!.MoveTo(RightBlackRookCastlePos);
                 }
             }
+        }
+
+        public void Dispose()
+        {
+            _board.PositionChanged -= OnPositionChanged;
         }
     }
 }

@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using KekChessCore.BoardEnvironment;
 using KekChessCore.Domain;
 using KekChessCore.Domain.Impl;
 
 namespace KekChessCore.MoveUtility.PieceMoveUtilities.Rook
 {
-    public class RookMoveUtility : IRookMoveUtility
+    public class RookMoveUtility : IRookMoveUtility, IBoardEnvironmentComponent
     {
         private readonly IBoard _board;
 
@@ -101,6 +102,11 @@ namespace KekChessCore.MoveUtility.PieceMoveUtilities.Rook
             }
 
             return availableMoves.ToArray();
+        }
+
+        public void Dispose()
+        {
+            // do nothing
         }
     }
 }

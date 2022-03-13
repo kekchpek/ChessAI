@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using KekChessCore.BoardEnvironment;
 using KekChessCore.Domain;
 using KekChessCore.MoveUtility;
 
 namespace KekChessCore.CheckUtility
 {
-    public class CheckUtility : ICheckUtility
+    public class CheckUtility : ICheckUtility, IBoardEnvironmentComponent
     {
         private readonly IBoard _board;
         private readonly IPieceMoveUtilityFacade _pieceMoveUtilityFacade;
@@ -84,6 +85,11 @@ namespace KekChessCore.CheckUtility
                     _checkedColor = PieceColor.Black;
                 }
             }
+        }
+
+        public void Dispose()
+        {
+            _board.PositionChanged -= OnPositionChanged;
         }
     }
 }

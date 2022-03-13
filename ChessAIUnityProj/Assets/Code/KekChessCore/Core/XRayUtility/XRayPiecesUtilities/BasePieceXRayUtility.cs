@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using KekChessCore.BoardEnvironment;
 using KekChessCore.Domain;
 using KekChessCore.Domain.Impl;
 
 namespace KekChessCore.XRayUtility.XRayPiecesUtilities
 {
-    public abstract class BasePieceXRayUtility : IPieceXRayUtility
+    public abstract class BasePieceXRayUtility : IPieceXRayUtility, IBoardEnvironmentComponent
     {
         private readonly IBoard _board;
 
@@ -52,6 +53,11 @@ namespace KekChessCore.XRayUtility.XRayPiecesUtilities
             }
 
             return xRays.ToArray();
+        }
+
+        public void Dispose()
+        {
+            // do nothing
         }
     }
 }

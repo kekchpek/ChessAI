@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using KekChessCore.BoardEnvironment;
 using KekChessCore.Domain;
 using KekChessCore.Domain.Impl;
 
 namespace KekChessCore.MoveUtility.PieceMoveUtilities.Pawn
 {
-    public class PawnMoveUtility : IPawnMoveUtility
+    public class PawnMoveUtility : IPawnMoveUtility, IBoardEnvironmentComponent
     {
         private readonly IBoard _board;
 
@@ -76,6 +77,11 @@ namespace KekChessCore.MoveUtility.PieceMoveUtilities.Pawn
             }
 
             return availableMoves.Select(x => (BoardCoordinates)x).ToArray();
+        }
+
+        public void Dispose()
+        {
+            // do nothing
         }
         
     }

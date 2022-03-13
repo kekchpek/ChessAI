@@ -110,6 +110,25 @@ namespace KekChessCore.Tests
         }
         
         [Test]
+        public void Moved_CorrectCoordinates_IsMovedBecomesTrue()
+        {
+            // Assert
+            var pieceType = PieceType.King;
+            var pieceColor = PieceColor.White;
+            BoardCoordinates boardCoordinates = "a1";
+            var piece = CreatePiece(pieceType,
+                pieceColor,
+                boardCoordinates);
+            BoardCoordinates newPosition = "e1";
+            
+            // Act
+            ((IPiece)piece).MoveTo(newPosition);
+            
+            // Assert
+            Assert.IsTrue(piece.IsMoved);
+        }
+        
+        [Test]
         public void Move_CorrectCoordinates_PreviousCoordinateNotChanged()
         {
             // Assert
@@ -162,6 +181,21 @@ namespace KekChessCore.Tests
             
             // Assert
             Assert.AreEqual(boardCoordinates, piece.PreviousPosition);
+        }
+        
+        [Test]
+        public void Creation_IsMovedFalse()
+        {
+            // Assert
+            var pieceType = PieceType.King;
+            var pieceColor = PieceColor.White;
+            BoardCoordinates boardCoordinates = "a1";
+            var piece = CreatePiece(pieceType,
+                pieceColor,
+                boardCoordinates);
+            
+            // Assert
+            Assert.IsFalse(piece.IsMoved);
         }
     }
 }

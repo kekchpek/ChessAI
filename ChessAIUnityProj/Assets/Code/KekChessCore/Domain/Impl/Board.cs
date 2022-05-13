@@ -11,9 +11,9 @@ namespace KekChessCore.Domain.Impl
 
         public IReadOnlyList<IPiece> Pieces => _pieces;
 
-        private readonly List<IPiece> _pieces = new List<IPiece>();
+        private readonly List<IPiece> _pieces = new();
 
-        private readonly Dictionary<IPiece, Action> _pieceMoveCallbacks = new Dictionary<IPiece, Action>();
+        private readonly Dictionary<IPiece, Action> _pieceMoveCallbacks = new();
         
         public void RemovePiece(IPiece piece)
         {

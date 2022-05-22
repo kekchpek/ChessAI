@@ -1,6 +1,8 @@
-﻿namespace KChess.Core.XRayUtility.XRayPiecesUtilities.QueenXRayUtility
+﻿using KChess.Core.BoardEnvironment;
+
+namespace KChess.Core.XRayUtility.XRayPiecesUtilities.QueenXRayUtility
 {
-    public interface IQueenXRayUtility : IPieceXRayUtility
+    public interface IQueenXRayUtility : IPieceXRayUtility, IBoardEnvironmentComponent
     {
         
     }

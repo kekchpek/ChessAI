@@ -8,7 +8,7 @@ using KChess.Domain.Impl;
 
 namespace KChess.Core.API.PlayerFacade
 {
-    public class PlayerFacade : IPlayerFacade
+    public class ManagedPlayerFacade : IManagedPlayerFacade
     {
         private readonly IMoveUtility _moveUtility;
         private readonly ITurnGetter _turnGetter;
@@ -18,7 +18,7 @@ namespace KChess.Core.API.PlayerFacade
         private readonly IBoard _board;
         private readonly PieceColor _pieceColor;
 
-        public PlayerFacade(IMoveUtility moveUtility, ITurnGetter turnGetter,
+        public ManagedPlayerFacade(IMoveUtility moveUtility, ITurnGetter turnGetter,
             ITurnObserver turnObserver, IBoardStateGetter boardStateGetter,
             IBoardStateObserver boardStateObserver, IBoard board,
             PieceColor pieceColor)
@@ -78,6 +78,12 @@ namespace KChess.Core.API.PlayerFacade
         private void OnBoardStateChanged(BoardState boardState)
         {
             BoardStateChanged?.Invoke(boardState);
+        }
+
+        public void Dispose()
+        {
+            _boardStateObserver.StateChanged -= OnBoardStateChanged;
+            _turnObserver.TurnChanged -= OnTurnChanged;
         }
     }
 }

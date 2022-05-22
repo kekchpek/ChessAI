@@ -48,5 +48,10 @@ namespace KChess.Core.MoveUtility
                 _ => Array.Empty<BoardCoordinates>()
             };
         }
+
+        public void Dispose()
+        {
+            // do nothing
+        }
     }
 }

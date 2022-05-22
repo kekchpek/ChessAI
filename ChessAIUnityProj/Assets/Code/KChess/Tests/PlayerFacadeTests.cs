@@ -14,7 +14,7 @@ namespace KChess.Tests
     public class PlayerFacadeTests
     {
 
-        private PlayerFacade CreatePlayerFacade(
+        private ManagedPlayerFacade CreatePlayerFacade(
             out IMoveUtility moveUtility,
             out ITurnGetter turnGetter,
             out ITurnObserver turnObserver, 
@@ -29,7 +29,7 @@ namespace KChess.Tests
             boardStateGetter = Substitute.For<IBoardStateGetter>();
             boardStateObserver = Substitute.For<IBoardStateObserver>();
             board = Substitute.For<IBoard>();
-            return new PlayerFacade(moveUtility, turnGetter, turnObserver,
+            return new ManagedPlayerFacade(moveUtility, turnGetter, turnObserver,
                 boardStateGetter, boardStateObserver, board, pieceColor);
         }
 

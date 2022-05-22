@@ -22,5 +22,10 @@ namespace KChess.Core.XRayUtility.XRayPiecesUtilities.QueenXRayUtility
                 .Concat(_rookXRayUtility.GetXRays(piece))
                 .ToArray();
         }
+
+        public void Dispose()
+        {
+            // do nothing
+        }
     }
 }

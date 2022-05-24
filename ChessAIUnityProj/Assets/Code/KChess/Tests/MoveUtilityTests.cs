@@ -136,6 +136,9 @@ namespace KChess.Tests
                 {
                     "b3", "a1"
                 });
+
+            checkUtility.GetCheckingPieces().Returns(new []{Substitute.For<IPiece>()});
+            checkUtility.GetCheckingPieces()[0].Position.Returns("h8");
             
             // Act
             var moves = moveUtility.GetAvailableMoves(piece);

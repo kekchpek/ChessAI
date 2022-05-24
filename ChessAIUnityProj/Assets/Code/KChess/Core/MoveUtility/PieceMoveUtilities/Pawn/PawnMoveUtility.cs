@@ -20,11 +20,11 @@ namespace KChess.Core.MoveUtility.PieceMoveUtilities.Pawn
             var availableMoves = new List<(int, int)>();
             
             var allyPiecesPositions = _board.Pieces
-                .Where(x => x.Color == color)
-                .ToDictionary(x => x.Position.ToNumeric());
+                .Where(x => x.Color == color && x.Position.HasValue)
+                .ToDictionary(x => x.Position.Value.ToNumeric());
             var enemyPiecesPositions = _board.Pieces
-                .Where(x => x.Color != color)
-                .ToDictionary(x => x.Position.ToNumeric());
+                .Where(x => x.Color != color && x.Position.HasValue)
+                .ToDictionary(x => x.Position.Value.ToNumeric());
             
             var moveDirection = color == PieceColor.White ? 1 : -1;
             var startHorizontal = color == PieceColor.White ? 1 : 6;

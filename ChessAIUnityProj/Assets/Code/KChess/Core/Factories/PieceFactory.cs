@@ -1,4 +1,5 @@
-﻿using KChess.Domain;
+﻿using System;
+using KChess.Domain;
 using KChess.Domain.Impl;
 
 namespace KChess.Core.Factories
@@ -15,9 +16,16 @@ namespace KChess.Core.Factories
 
         public IPiece Copy(IPiece piece, IBoard boardToPlace)
         {
-            var createdPiece = new Piece(piece.Type, piece.Position, piece.Color);
-            boardToPlace.PlacePiece(createdPiece);
-            return createdPiece;
+            if (piece.Position.HasValue)
+            {
+                var createdPiece = new Piece(piece.Type, piece.Position.Value, piece.Color);
+                boardToPlace.PlacePiece(createdPiece);
+                return createdPiece;
+            }
+            else
+            {
+                throw new InvalidOperationException("Can not copy piece removed from a board.");
+            }
         }
     }
 }

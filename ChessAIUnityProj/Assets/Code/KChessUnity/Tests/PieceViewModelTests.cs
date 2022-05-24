@@ -25,7 +25,8 @@ namespace KChessUnity.Tests
             var piece = container.Resolve<IPiece>();
             piece.Position.Returns("d3");
             var boardPos = new Vector3(234f, 1f, 12f);
-            boardViewModel.GetWorldPosition(piece.Position).Returns(boardPos);
+            // ReSharper disable once PossibleInvalidOperationException
+            boardViewModel.GetWorldPosition(piece.Position.Value).Returns(boardPos);
 
             // Act
             pieceViewModel.Initialize();

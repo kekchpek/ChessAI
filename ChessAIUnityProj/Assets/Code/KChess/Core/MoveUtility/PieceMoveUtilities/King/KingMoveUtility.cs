@@ -32,10 +32,10 @@ namespace KChess.Core.MoveUtility.PieceMoveUtilities.King
             }
 
             availableMoves = availableMoves
-                .Where(x => x.Item1 >= 0 && x.Item1 <= 7 && x.Item2 >= 0 && x.Item1 <= 7)
+                .Where(x => x.Item1 is >= 0 and <= 7 && x.Item2 is >= 0 and <= 7)
                 .ToList();
 
-            var allyPiecesPositions = _board.Pieces.Select(x => x.Position.ToNumeric());
+            var allyPiecesPositions = _board.Pieces.Where(x => x.Position.HasValue).Select(x => x.Position.Value.ToNumeric());
             return availableMoves.Except(allyPiecesPositions).Select(x => (BoardCoordinates)x).ToArray();
         }
 

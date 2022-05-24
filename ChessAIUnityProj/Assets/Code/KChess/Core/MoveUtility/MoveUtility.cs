@@ -9,6 +9,7 @@ using KChess.Core.CheckUtility;
 using KChess.Core.XRayUtility;
 using KChess.Domain;
 using KChess.Domain.Impl;
+using UnityEngine.Assertions;
 
 namespace KChess.Core.MoveUtility
 {
@@ -71,7 +72,8 @@ namespace KChess.Core.MoveUtility
                     if (linkXRay != null)
                     {
                         var availableLinkMoves = new List<BoardCoordinates>(linkXRay.CellsBetween); 
-                        availableLinkMoves.Add(linkXRay.AttackingPiece.Position);
+                        Assert.IsTrue(linkXRay.AttackingPiece.Position.HasValue);
+                        availableLinkMoves.Add(linkXRay.AttackingPiece.Position.Value);
                         var moves = defaultMoves.Intersect(availableLinkMoves);
                         return moves.ToArray();
                     }
@@ -85,7 +87,8 @@ namespace KChess.Core.MoveUtility
                 return Array.Empty<BoardCoordinates>();
             var checkBlockingMoves = _checkBlockingUtility.GetMovesForCheckBlocking(piece.Color);
             var availableMovesOnCheck = new List<BoardCoordinates>(checkBlockingMoves);
-            availableMovesOnCheck.Add(checkingPieces[0].Position);
+            Assert.IsTrue(checkingPieces[0].Position.HasValue);
+            availableMovesOnCheck.Add(checkingPieces[0].Position.Value);
             return defaultMoves.Intersect(availableMovesOnCheck).ToArray();
         }
 

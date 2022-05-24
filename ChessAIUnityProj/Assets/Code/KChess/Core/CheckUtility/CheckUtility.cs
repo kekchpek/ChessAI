@@ -4,6 +4,7 @@ using System.Linq;
 using KChess.Core.BoardEnvironment;
 using KChess.Core.MoveUtility;
 using KChess.Domain;
+using UnityEngine.Assertions;
 
 namespace KChess.Core.CheckUtility
 {
@@ -60,10 +61,11 @@ namespace KChess.Core.CheckUtility
                                                               && x.Type == PieceType.King);
             if (whiteKing != null)
             {
+                Assert.IsTrue(whiteKing.Position.HasValue);
                 var checkingPieces = _board.Pieces
                     .Where(x => x.Color == PieceColor.Black)
                     .Where(x => _pieceMoveUtilityFacade.GetAvailableMoves(x)
-                        .Contains(whiteKing.Position)).ToArray();
+                        .Contains(whiteKing.Position.Value)).ToArray();
                 if (checkingPieces.Any())
                 {
                     _checkingPieces = checkingPieces;
@@ -75,10 +77,11 @@ namespace KChess.Core.CheckUtility
                                                               && x.Type == PieceType.King);
             if (blackKing != null)
             {
+                Assert.IsTrue(blackKing.Position.HasValue);
                 var checkingPieces = _board.Pieces
                     .Where(x => x.Color == PieceColor.White)
                     .Where(x => _pieceMoveUtilityFacade.GetAvailableMoves(x)
-                        .Contains(blackKing.Position)).ToArray();
+                        .Contains(blackKing.Position.Value)).ToArray();
                 if (checkingPieces.Any())
                 {
                     _checkingPieces = checkingPieces;

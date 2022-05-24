@@ -32,7 +32,11 @@ namespace KChess.Domain.Impl
                 RemovePiece(pieceOnSamePosition);
             }
             _pieces.Add(piece);
-            _pieceMoveCallbacks.Add(piece, () => PieceMoved?.Invoke(piece));
+            _pieceMoveCallbacks.Add(piece, () =>
+            {
+                PieceMoved?.Invoke(piece);
+                PositionChanged?.Invoke(piece);
+            });
             piece.Moved += _pieceMoveCallbacks[piece];
             
             PositionChanged?.Invoke(piece);

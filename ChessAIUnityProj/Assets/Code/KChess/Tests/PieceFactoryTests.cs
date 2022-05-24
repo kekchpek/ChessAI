@@ -81,6 +81,7 @@ namespace KChess.Tests
             var pieceFactory = CreatePieceFactory();
             var copiedPiece = Substitute.For<IPiece>();
             copiedPiece.Color.Returns(pieceColor);
+            copiedPiece.Position.Returns("h8");
             var board = Substitute.For<IBoard>();
 
             // Act 
@@ -99,6 +100,7 @@ namespace KChess.Tests
             var pieceFactory = CreatePieceFactory();
             var copiedPiece = Substitute.For<IPiece>();
             copiedPiece.Type.Returns(pieceType);
+            copiedPiece.Position.Returns("h8");
             var board = Substitute.For<IBoard>();
 
             // Act 
@@ -131,9 +133,12 @@ namespace KChess.Tests
             // Arrange
             var pieceFactory = CreatePieceFactory();
             var board = Substitute.For<IBoard>();
+            
+            var copiedPiece = Substitute.For<IPiece>();
+            copiedPiece.Position.Returns("h8");
 
             // Act 
-            var createdPiece = pieceFactory.Copy(Substitute.For<IPiece>(), board);
+            var createdPiece = pieceFactory.Copy(copiedPiece, board);
             
             // Assert
             board.Received().PlacePiece(createdPiece);

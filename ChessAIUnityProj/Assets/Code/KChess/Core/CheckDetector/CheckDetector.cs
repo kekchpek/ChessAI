@@ -34,6 +34,10 @@ namespace KChess.Core.CheckDetector
                         break;
                 }
             }
+            else
+            {
+                _boardStateSetter.Set(BoardState.Regular);
+            }
         }
 
         public void Dispose()

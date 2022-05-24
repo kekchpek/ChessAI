@@ -17,23 +17,24 @@ namespace KChess.Core.EnPassantUtility
         
         public bool IsFigureWasTakenWithEnPassant(IPiece movedPiece, IBoard board, out IPiece takenPiece)
         {
-            if (movedPiece.Type != PieceType.Pawn)
+            if (movedPiece.Type != PieceType.Pawn || !movedPiece.Position.HasValue)
             {
                 takenPiece = default;
                 return false;
             }
 
-            var numericPos = movedPiece.Position.ToNumeric();
+            var numericPos = movedPiece.Position.Value.ToNumeric();
             var moveDir = movedPiece.Color == PieceColor.Black ? -1 : 1;
             var enemyPiecesPositions = board.Pieces
-                .Where(x => x.Color != movedPiece.Color)
-                .ToDictionary(x => x.Position.ToNumeric());
+                .Where(x => x.Color != movedPiece.Color && x.Position.HasValue)
+                .ToDictionary(x => x.Position.Value.ToNumeric());
 
             var posBehind = (numericPos.Item1, numericPos.Item2 - moveDir);
             if (enemyPiecesPositions.TryGetValue(posBehind, out var enemyPiece) &&
                 enemyPiece.Type == PieceType.Pawn &&
                 _lastMovedPieceGetter.GetLastMovedPiece() == enemyPiece &&
-                Math.Abs(enemyPiece.Position.ToNumeric().Item2 - enemyPiece.PreviousPosition.ToNumeric().Item2) == 2)
+                enemyPiece.Position.HasValue &&
+                Math.Abs(enemyPiece.Position.Value.ToNumeric().Item2 - enemyPiece.PreviousPosition.ToNumeric().Item2) == 2)
             {
                 takenPiece = enemyPiece;
                 return true;

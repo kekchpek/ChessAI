@@ -55,6 +55,7 @@ namespace KChess.Tests
 
             var pawn = Substitute.For<IPiece>();
             pawn.Type.Returns(PieceType.Pawn);
+            pawn.Position.Returns("h8");
             
             // Act
             var availableMoves = pieceMoveUtilityFacade.GetAvailableMoves(pawn);
@@ -84,6 +85,7 @@ namespace KChess.Tests
 
             var rook = Substitute.For<IPiece>();
             rook.Type.Returns(PieceType.Rook);
+            rook.Position.Returns("h8");
             
             // Act
             var availableMoves = pieceMoveUtilityFacade.GetAvailableMoves(rook);
@@ -113,6 +115,7 @@ namespace KChess.Tests
 
             var knight = Substitute.For<IPiece>();
             knight.Type.Returns(PieceType.Knight);
+            knight.Position.Returns("h8");
             
             // Act
             var availableMoves = pieceMoveUtilityFacade.GetAvailableMoves(knight);
@@ -142,6 +145,7 @@ namespace KChess.Tests
 
             var bishop = Substitute.For<IPiece>();
             bishop.Type.Returns(PieceType.Bishop);
+            bishop.Position.Returns("h8");
             
             // Act
             var availableMoves = pieceMoveUtilityFacade.GetAvailableMoves(bishop);
@@ -171,6 +175,7 @@ namespace KChess.Tests
 
             var queen = Substitute.For<IPiece>();
             queen.Type.Returns(PieceType.Queen);
+            queen.Position.Returns("h8");
             
             // Act
             var availableMoves = pieceMoveUtilityFacade.GetAvailableMoves(queen);
@@ -200,6 +205,7 @@ namespace KChess.Tests
 
             var king = Substitute.For<IPiece>();
             king.Type.Returns(PieceType.King);
+            king.Position.Returns("h8");
             
             // Act
             var availableMoves = pieceMoveUtilityFacade.GetAvailableMoves(king);

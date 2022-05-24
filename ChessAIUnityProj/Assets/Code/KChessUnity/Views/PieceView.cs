@@ -27,6 +27,13 @@ namespace KChessUnity.Views
             
             SubscribeForPropertyChange<Sprite>(nameof(ViewModel.Image), OnImageChanged);
             OnImageChanged(ViewModel.Image);
+
+            ViewModel.Disposed += OnDisposed;
+        }
+
+        private void OnDisposed()
+        {
+            Destroy(gameObject);
         }
 
         private void OnPositionChanged(Vector3 position)

@@ -20,12 +20,12 @@ namespace KChess.Core.MoveUtility.PieceMoveUtilities.Bishop
             var availableMoves = new List<BoardCoordinates>();
 
             var allyPiecesPositions = _board.Pieces
-                .Where(x => x.Color == color)
-                .Select(x => x.Position.ToNumeric()).ToArray();
+                .Where(x => x.Color == color && x.Position.HasValue)
+                .Select(x => x.Position.Value.ToNumeric()).ToArray();
             
             var enemyPiecesPositions = _board.Pieces
-                .Where(x => x.Color != color)
-                .Select(x => x.Position.ToNumeric()).ToArray();
+                .Where(x => x.Color != color && x.Position.HasValue)
+                .Select(x => x.Position.Value.ToNumeric()).ToArray();
 
             (int, int) processingCell;
             

@@ -96,7 +96,7 @@ namespace KChess.Tests
         }
 
         [Test]
-        public void PieceMoved_EventCalled()
+        public void PieceMoved_EventCalled_PieceMoved()
         {
             // Arrange
             var board = CreateBoard();
@@ -106,6 +106,23 @@ namespace KChess.Tests
             IPiece movedPiece = null;
             board.PieceMoved += x => movedPiece = x;
             ((IBoard)board).PlacePiece(pieceToPlace);
+            pieceToPlace.Moved += Raise.Event<Action>();
+            
+            // Assert
+            Assert.AreEqual(pieceToPlace, movedPiece);
+        }
+        
+        [Test]
+        public void PieceMoved_EventCalled_PositionChanged()
+        {
+            // Arrange
+            var board = CreateBoard();
+            var pieceToPlace = Substitute.For<IPiece>();
+            
+            // Act 
+            IPiece movedPiece = null;
+            ((IBoard)board).PlacePiece(pieceToPlace);
+            board.PositionChanged += x => movedPiece = x;
             pieceToPlace.Moved += Raise.Event<Action>();
             
             // Assert

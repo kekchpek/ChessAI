@@ -78,7 +78,14 @@ namespace KChessUnity.ViewModels.Piece
 
         private void UpdatePositionBasedOnPiece()
         {
-            Position = _boardViewModel.GetWorldPosition(_piece.Position);
+            if (_piece.Position.HasValue)
+            {
+                Position = _boardViewModel.GetWorldPosition(_piece.Position.Value);
+            }
+            else
+            {
+                Dispose();
+            }
         }
 
         private void OnMouseDown(Vector2 mousePosition)

@@ -17,12 +17,19 @@ namespace KChess.Domain
         event Action Removed;
         
         PieceType Type { get; }
-        BoardCoordinates Position { get; }
+        
+        /// <summary>
+        /// Equals to null if it is removed from a board.
+        /// </summary>
+        BoardCoordinates? Position { get; }
+        
         PieceColor Color { get; }
+        
         /// <summary>
         /// Equals to <see cref="Position"/> if there was no any move.
         /// </summary>
         BoardCoordinates PreviousPosition { get; }
+        
         bool IsMoved { get; }
 
         internal void Remove();

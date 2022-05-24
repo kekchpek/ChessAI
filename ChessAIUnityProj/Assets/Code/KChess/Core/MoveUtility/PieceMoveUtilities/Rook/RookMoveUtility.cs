@@ -22,12 +22,12 @@ namespace KChess.Core.MoveUtility.PieceMoveUtilities.Rook
             var availableMoves = new List<BoardCoordinates>();
 
             var allyPiecesPositions = _board.Pieces
-                .Where(x => x.Color == color)
-                .Select(x => x.Position.ToNumeric()).ToArray();
+                .Where(x => x.Color == color && x.Position.HasValue)
+                .Select(x => x.Position.Value.ToNumeric()).ToArray();
             
             var enemyPiecesPositions = _board.Pieces
-                .Where(x => x.Color != color)
-                .Select(x => x.Position.ToNumeric()).ToArray();
+                .Where(x => x.Color != color && x.Position.HasValue)
+                .Select(x => x.Position.Value.ToNumeric()).ToArray();
             
             // up
             for (var i = numericPosition.Item1 + 1; i < 8; i++)

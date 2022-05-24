@@ -29,7 +29,8 @@ namespace KChess.Core.MoveUtility.PieceMoveUtilities.Knight
             availableMoves[7] = (numericCoords.Item1 + 1, numericCoords.Item2 + 2);
 
             var allyPiecesPositions = _board.Pieces.Where(x => x.Color == color)
-                .Select(x => x.Position);
+                .Where(x => x.Position.HasValue)
+                .Select(x => x.Position.Value);
             
             return availableMoves
                 .Where(x => x.Item1 >= 0 && x.Item1 <= 7 && x.Item2 >= 0 && x.Item2 <= 7)

@@ -37,16 +37,21 @@ namespace KChess.Core.MoveUtility
         
         public BoardCoordinates[] GetAvailableMoves(IPiece piece)
         {
-            return piece.Type switch
+            if (piece.Position.HasValue)
             {
-                PieceType.Pawn => _pawnMoveUtility.GetMoves(piece.Position, piece.Color),
-                PieceType.Rook => _rookMoveUtility.GetMoves(piece.Position, piece.Color),
-                PieceType.Knight => _knightMoveUtility.GetMoves(piece.Position, piece.Color),
-                PieceType.Bishop => _bishopXRayUtility.GetMoves(piece.Position, piece.Color),
-                PieceType.Queen => _queenMoveUtility.GetMoves(piece.Position, piece.Color),
-                PieceType.King => _kingMoveUtility.GetMoves(piece.Position, piece.Color),
-                _ => Array.Empty<BoardCoordinates>()
-            };
+                return piece.Type switch
+                {
+                    PieceType.Pawn => _pawnMoveUtility.GetMoves(piece.Position.Value, piece.Color),
+                    PieceType.Rook => _rookMoveUtility.GetMoves(piece.Position.Value, piece.Color),
+                    PieceType.Knight => _knightMoveUtility.GetMoves(piece.Position.Value, piece.Color),
+                    PieceType.Bishop => _bishopXRayUtility.GetMoves(piece.Position.Value, piece.Color),
+                    PieceType.Queen => _queenMoveUtility.GetMoves(piece.Position.Value, piece.Color),
+                    PieceType.King => _kingMoveUtility.GetMoves(piece.Position.Value, piece.Color),
+                    _ => Array.Empty<BoardCoordinates>()
+                };
+            }
+
+            return Array.Empty<BoardCoordinates>();
         }
 
         public void Dispose()

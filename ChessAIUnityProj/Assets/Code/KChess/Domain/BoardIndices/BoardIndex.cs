@@ -17,7 +17,14 @@ namespace KChess.Domain.BoardIndices
                 board.PositionChanged += OnPositionChanged;
                 foreach (var piece in board.Pieces)
                 {
-                    _piecesByPosition.Add(piece.Position, piece);
+                    if (piece.Position.HasValue)
+                    {
+                        _piecesByPosition.Add(piece.Position.Value, piece);
+                    }
+                    else
+                    {
+                        Debug.LogWarning("Removed piece is still in board pieces collection!");
+                    }
                 }
             }
             else
@@ -37,7 +44,14 @@ namespace KChess.Domain.BoardIndices
                 Debug.LogError("Unexpected behaviour! Piece moved, but previous position was not indexed");
             }
 
-            _piecesByPosition[piece.Position] = piece;
+            if (piece.Position.HasValue)
+            {
+                _piecesByPosition[piece.Position.Value] = piece;
+            }
+            else
+            {
+                // Piece was removed.
+            }
         }
 
         public IPiece GetPieceOn(BoardCoordinates boardCoordinates)
@@ -48,6 +62,11 @@ namespace KChess.Domain.BoardIndices
             }
 
             return null;
+        }
+
+        public IReadOnlyDictionary<BoardCoordinates, IPiece> GetPiecePositionMap()
+        {
+            return (IReadOnlyDictionary<BoardCoordinates, IPiece>) _piecesByPosition;
         }
     }
 }

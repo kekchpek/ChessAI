@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 
 namespace KChess.Domain.Impl
 {
@@ -8,7 +9,7 @@ namespace KChess.Domain.Impl
         public event Action Removed;
 
         public PieceType Type => _pieceType;
-        public BoardCoordinates Position => _position;
+        public BoardCoordinates? Position => _position;
         public PieceColor Color => _color;
         public BoardCoordinates PreviousPosition => _previousPosition;
         public bool IsMoved => _isMoved;
@@ -16,7 +17,7 @@ namespace KChess.Domain.Impl
         private readonly PieceType _pieceType;
         private readonly PieceColor _color;
 
-        private BoardCoordinates _position;
+        private BoardCoordinates? _position;
         private BoardCoordinates _previousPosition;
         private bool _isMoved;
 
@@ -30,15 +31,31 @@ namespace KChess.Domain.Impl
 
         void IPiece.Remove()
         {
-            Removed?.Invoke();
+            if (_position.HasValue)
+            {
+                _previousPosition = _position.Value;
+                _position = null;
+                Removed?.Invoke();
+            }
+            else
+            {
+                Debug.LogError("Can not remove removed piece");
+            }
         }
 
         void IPiece.MoveTo(BoardCoordinates boardCoordinates)
         {
-            _previousPosition = _position;
-            _position = boardCoordinates;
-            _isMoved = true;
-            Moved?.Invoke();
+            if (_position.HasValue)
+            {
+                _previousPosition = _position.Value;
+                _position = boardCoordinates;
+                _isMoved = true;
+                Moved?.Invoke();
+            }
+            else
+            {
+                Debug.LogError("Can not move removed piece");
+            }
         }
     }
 }

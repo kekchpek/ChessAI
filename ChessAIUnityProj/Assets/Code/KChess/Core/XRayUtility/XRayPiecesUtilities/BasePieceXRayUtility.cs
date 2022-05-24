@@ -2,7 +2,9 @@
 using System.Linq;
 using KChess.Core.BoardEnvironment;
 using KChess.Domain;
+using KChess.Domain.Extensions;
 using KChess.Domain.Impl;
+using UnityEngine.Assertions;
 
 namespace KChess.Core.XRayUtility.XRayPiecesUtilities
 {
@@ -17,7 +19,7 @@ namespace KChess.Core.XRayUtility.XRayPiecesUtilities
 
         public IXRay[] GetXRays(IPiece piece)
         {
-            var boardPiecesMap = _board.Pieces.ToDictionary(x => x.Position);
+            var boardPiecesMap = _board.GetPiecePositionsMap();
             var xRays = Enumerable.Empty<IXRay>();
             xRays = GetDirections().Aggregate(xRays, (current, direction) => current.Concat(GetXRaysFromDirection(direction, piece, boardPiecesMap)));
             return xRays.ToArray();
@@ -28,7 +30,8 @@ namespace KChess.Core.XRayUtility.XRayPiecesUtilities
         protected IXRay[] GetXRaysFromDirection((int, int) direction, IPiece piece, IReadOnlyDictionary<BoardCoordinates, IPiece> pieces)
         {
             var xRays = new List<IXRay>();
-            var numericPosition = piece.Position.ToNumeric();
+            Assert.IsTrue(piece.Position.HasValue);
+            var numericPosition = piece.Position.Value.ToNumeric();
             var blockingPieces = new List<IPiece>();
             var cellsBetween = new List<BoardCoordinates>();
             while (true)

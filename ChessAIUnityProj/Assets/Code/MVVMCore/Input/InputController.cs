@@ -10,7 +10,7 @@ namespace MVVMCore.Input
         public event Action<Vector2> MousePositionChanged;
 
         private Camera _camera;
-        private Resolution _screenResolution;
+        private (int width, int height) _screenResolution;
         private float _screenScale;
         private Vector3 _bottomLeftScreenPoint;
 
@@ -31,9 +31,9 @@ namespace MVVMCore.Input
 
         public void Update()
         {
-            if (_screenResolution.width != Screen.currentResolution.width || _screenResolution.height != Screen.currentResolution.height) {
+            if (_screenResolution.width != Screen.width || _screenResolution.height != Screen.height) {
                 
-                _screenResolution = Screen.currentResolution;
+                _screenResolution = (Screen.width, Screen.height);
                 _bottomLeftScreenPoint = _camera.ScreenToWorldPoint(Vector3.zero);
                 var topRightScreenPoint = _camera.ScreenToWorldPoint(new Vector3(_screenResolution.width, _screenResolution.height, 0f));
                 _screenScale = (topRightScreenPoint.x - _bottomLeftScreenPoint.x) / _screenResolution.width;

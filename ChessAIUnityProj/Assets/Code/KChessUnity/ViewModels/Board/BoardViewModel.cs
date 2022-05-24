@@ -24,7 +24,7 @@ namespace KChessUnity.ViewModels.Board
             return _bottomLeftCorner +
                    Vector3.Scale(_size,
                        new Vector3(numericCoords.Item1 / BoardSize, numericCoords.Item2 / BoardSize, 0f)) +
-                   new Vector3(0.5f, 0.5f);
+                   new Vector3(_size.x / 16f, _size.y / 16f);
         }
 
         public BoardCoordinates? GetCellCoords(Vector3 worldPosition)
@@ -32,8 +32,8 @@ namespace KChessUnity.ViewModels.Board
             var x = worldPosition.x - _bottomLeftCorner.x;
             var y = worldPosition.y - _bottomLeftCorner.y;
             
-            if (!(x < _bottomLeftCorner.x + _size.x) || !(x > _bottomLeftCorner.x) ||
-                !(y < _bottomLeftCorner.y + _size.y) || !(y > _bottomLeftCorner.y)) 
+            if (!(x < _size.x) || !(x > 0f) ||
+                !(y < _size.y) || !(y > 0f)) 
                 return null;
             
             var vertical = (int) Mathf.Floor(x * BoardSize / _size.x);

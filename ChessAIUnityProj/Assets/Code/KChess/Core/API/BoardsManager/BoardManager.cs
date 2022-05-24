@@ -6,13 +6,13 @@ using KChess.Core.Factories;
 
 namespace KChess.Core.API.BoardsManager
 {
-    public class BoardManager : IBoardsManger
+    public class BoardManager : IBoardsManager
     {
         private readonly IBoardEnvironmentFactory _boardEnvironmentFactory;
 
         private readonly IList<IBoardEnvironment> _boardEnvironments = new List<IBoardEnvironment>();
 
-        private BoardManager()
+        public BoardManager()
         {
             var pieceFactory = new PieceFactory();
             var boardFactory = new BoardFactory(pieceFactory);

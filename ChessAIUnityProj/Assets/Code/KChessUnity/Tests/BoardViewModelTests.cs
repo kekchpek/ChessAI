@@ -29,7 +29,6 @@ namespace KChessUnity.Tests
             Assert.IsTrue(y - Delta < worldPosition.y && worldPosition.y < y + Delta);
         }
         
-        
         [TestCase(0.324f, 0.987f, 0, 0)]
         [TestCase(7.001f, 7.555f, 7, 7)]
         [TestCase(2.5f, 3.735f, 2, 3)]
@@ -41,6 +40,25 @@ namespace KChessUnity.Tests
             
             // Act
             boardViewModel.SetCornerPoints(Vector3.zero, new Vector3(8f, 8f, 0f));
+            var cellCoords = boardViewModel.GetCellCoords(new Vector3(x, y));
+            
+            // Assert
+            Assert.IsTrue(cellCoords.HasValue);
+            Assert.AreEqual(cellCoords.Value, (BoardCoordinates)(vertical, horizontal));
+        }
+        
+        
+        [TestCase(0.324f - 4f, 0.987f - 4f, 0, 0)]
+        [TestCase(7.001f - 4f, 7.555f - 4f, 7, 7)]
+        [TestCase(2.5f - 4f, 3.735f - 4f, 2, 3)]
+        [TestCase(4.5f - 4f, 6.5f - 4f, 4, 6)]
+        public void GetCellPosition_CornersSetWithNegativeCoords_PositionCorrect(float x, float y, int vertical, int horizontal)
+        {
+            // Arrange
+            TestHelper.CreateContainerFor<BoardViewModel>(out var boardViewModel);
+            
+            // Act
+            boardViewModel.SetCornerPoints(new Vector3(-4f, -4f, 0f), new Vector3(4f, 4f, 0f));
             var cellCoords = boardViewModel.GetCellCoords(new Vector3(x, y));
             
             // Assert

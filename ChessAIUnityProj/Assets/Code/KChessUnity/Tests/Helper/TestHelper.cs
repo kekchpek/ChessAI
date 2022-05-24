@@ -34,16 +34,9 @@ namespace KChessUnity.Tests.Helper
                 }
                 else
                 {
-                    try
-                    {
-                        container.Bind(argType)
-                            .FromInstance(Substitute.For(new[] {argType}, Array.Empty<object>()))
-                            .AsSingle();
-                    }
-                    catch (Exception e)
-                    {
-                        throw;
-                    }
+                    container.Bind(argType)
+                        .FromInstance(Substitute.For(new[] {argType}, Array.Empty<object>()))
+                        .AsSingle();
                 }
             }
             container.Bind<T>().ToSelf().AsSingle();

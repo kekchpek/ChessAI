@@ -2,7 +2,7 @@
 
 namespace KChess.Core.API.BoardsManager
 {
-    public interface IBoardsManger
+    public interface IBoardsManager
     {
         void CreateBoard(out IPlayerFacade whitePlayer, out IPlayerFacade blackPlayer);
     }

@@ -43,15 +43,15 @@ namespace KChessUnity.ViewModels.Piece
         }
 
         public PieceViewModel(
-            IPlayerFacade playerFacade, 
-            IPiece piece, 
-            IMovesDisplayerViewModel movesDisplayerViewModel, 
-            IBoardViewModel boarViewModel,
             IResetSelectionTrigger resetSelectionTrigger,
-            IInputController inputController)
+            IInputController inputController,
+            IBoardViewModel boardViewModel,
+            IMovesDisplayerViewModel movesDisplayerViewModel,
+            IPiece piece,
+            IPlayerFacade playerFacade)
         {
             _movesDisplayerViewModel = movesDisplayerViewModel;
-            _boardViewModel = boarViewModel;
+            _boardViewModel = boardViewModel;
             _resetSelectionTrigger = resetSelectionTrigger;
             _inputController = inputController;
             _piece = piece;

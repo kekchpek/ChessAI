@@ -34,8 +34,8 @@ namespace KChess.Domain.Impl
             _pieces.Add(piece);
             _pieceMoveCallbacks.Add(piece, () =>
             {
-                PieceMoved?.Invoke(piece);
                 PositionChanged?.Invoke(piece);
+                PieceMoved?.Invoke(piece);
             });
             piece.Moved += _pieceMoveCallbacks[piece];
             

@@ -1,4 +1,5 @@
 ﻿using KChess.Domain;
+using KChess.Domain.Extensions;
 using KChess.Domain.Impl;
 
 namespace KChess.Core.Factories
@@ -11,10 +12,17 @@ namespace KChess.Core.Factories
         {
             _pieceFactory = pieceFactory;
         }
+
+        private Board CreateBoard()
+        {
+            var board = new Board();
+            board.GetPiecePositionsMap(); // to start indexing
+            return board;
+        }
         
         public IBoard CreateStandardBoard()
         {
-            var board = new Board();
+            var board = CreateBoard();
             
             // White
             _pieceFactory.Create(PieceType.Pawn, PieceColor.White, "a2", board);
@@ -59,7 +67,7 @@ namespace KChess.Core.Factories
 
         public IBoard Copy(IBoard sourceBoard)
         {
-            var board = new Board();
+            var board = CreateBoard();
 
             foreach (var piece in sourceBoard.Pieces)
             {

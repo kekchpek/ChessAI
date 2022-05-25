@@ -39,10 +39,6 @@ namespace KChess.Domain.BoardIndices
             {
                 _piecesByPosition.Remove(piece.PreviousPosition);
             }
-            else
-            {
-                Debug.LogError("Unexpected behaviour! Piece moved, but previous position was not indexed");
-            }
 
             if (piece.Position.HasValue)
             {

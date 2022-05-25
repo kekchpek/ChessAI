@@ -2,7 +2,8 @@
     "name": "KChessTests",
     "rootNamespace": "KChess.Tests",
     "references": [
-        "GUID:34206672ad7985a4294979bf07b9cc62"
+        "GUID:34206672ad7985a4294979bf07b9cc62",
+        "GUID:0d8beb7f090555447a6cf5ce9e54dbb4"
     ],
     "includePlatforms": [
         "Editor"

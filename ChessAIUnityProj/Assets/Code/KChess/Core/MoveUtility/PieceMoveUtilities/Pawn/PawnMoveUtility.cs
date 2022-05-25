@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using KChess.Core.BoardEnvironment;
+using KChess.Core.LastMovedPieceUtils;
 using KChess.Domain;
 using KChess.Domain.Impl;
 
@@ -9,10 +10,12 @@ namespace KChess.Core.MoveUtility.PieceMoveUtilities.Pawn
     public class PawnMoveUtility : IPawnMoveUtility, IBoardEnvironmentComponent
     {
         private readonly IBoard _board;
+        private readonly ILastMovedPieceGetter _lastMovedPieceGetter;
 
-        public PawnMoveUtility(IBoard board)
+        public PawnMoveUtility(IBoard board, ILastMovedPieceGetter lastMovedPieceGetter)
         {
             _board = board;
+            _lastMovedPieceGetter = lastMovedPieceGetter;
         }
         
         public BoardCoordinates[] GetMoves(BoardCoordinates position, PieceColor color)
@@ -47,12 +50,11 @@ namespace KChess.Core.MoveUtility.PieceMoveUtilities.Pawn
             }
 
             // Take
-            for (var i = -1; i <= 1; i += 2)
+            foreach (var attackedCell in GetAttackedCells(position, color))
             {
-                var processingTakeCell = (numericPosition.Item1 + i, numericPosition.Item2 + moveDirection);
-                if (enemyPiecesPositions.ContainsKey(processingTakeCell))
+                if (enemyPiecesPositions.ContainsKey(attackedCell.ToNumeric()))
                 {
-                    availableMoves.Add(processingTakeCell);
+                    availableMoves.Add(attackedCell.ToNumeric());
                 }
             }
             
@@ -68,7 +70,8 @@ namespace KChess.Core.MoveUtility.PieceMoveUtilities.Pawn
                     {
                         var enemyPiece = enemyPiecesPositions[processingEnPassantCell];
                         if (enemyPiece.Type == PieceType.Pawn && enemyPiece.Color != color
-                            && enemyPiece.PreviousPosition.ToNumeric().Item2 == enemyPreviousPosHorizontal)
+                            && enemyPiece.PreviousPosition.ToNumeric().Item2 == enemyPreviousPosHorizontal
+                            && _lastMovedPieceGetter.GetLastMovedPiece() == enemyPiece)
                         {
                             availableMoves.Add((numericPosition.Item1 + i, numericPosition.Item2 + moveDirection));
                         }
@@ -77,6 +80,23 @@ namespace KChess.Core.MoveUtility.PieceMoveUtilities.Pawn
             }
 
             return availableMoves.Select(x => (BoardCoordinates)x).ToArray();
+        }
+
+        public BoardCoordinates[] GetAttackedCells(BoardCoordinates position, PieceColor pieceColor)
+        {
+            var moveDirection = pieceColor == PieceColor.White ? 1 : -1;
+            var numericPosition = position.ToNumeric();
+            var attackingCells = new List<BoardCoordinates>();
+            for (var i = -1; i <= 1; i += 2)
+            {
+                var attackingCoords = (numericPosition.Item1 + i, numericPosition.Item2 + moveDirection);
+                if (attackingCoords.Item1 is <= 7 and >= 0 && attackingCoords.Item2 is <= 7 and >= 0)
+                {
+                    attackingCells.Add(attackingCoords);
+                }
+            }
+
+            return attackingCells.ToArray();
         }
 
         public void Dispose()

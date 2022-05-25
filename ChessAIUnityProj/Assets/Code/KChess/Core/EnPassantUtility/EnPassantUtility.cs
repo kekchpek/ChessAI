@@ -3,6 +3,7 @@ using System.Linq;
 using KChess.Core.BoardEnvironment;
 using KChess.Core.LastMovedPieceUtils;
 using KChess.Domain;
+using KChess.Domain.Extensions;
 
 namespace KChess.Core.EnPassantUtility
 {
@@ -25,18 +26,17 @@ namespace KChess.Core.EnPassantUtility
 
             var numericPos = movedPiece.Position.Value.ToNumeric();
             var moveDir = movedPiece.Color == PieceColor.Black ? -1 : 1;
-            var enemyPiecesPositions = board.Pieces
-                .Where(x => x.Color != movedPiece.Color && x.Position.HasValue)
-                .ToDictionary(x => x.Position.Value.ToNumeric());
 
             var posBehind = (numericPos.Item1, numericPos.Item2 - moveDir);
-            if (enemyPiecesPositions.TryGetValue(posBehind, out var enemyPiece) &&
-                enemyPiece.Type == PieceType.Pawn &&
-                _lastMovedPieceGetter.GetLastMovedPiece() == enemyPiece &&
-                enemyPiece.Position.HasValue &&
-                Math.Abs(enemyPiece.Position.Value.ToNumeric().Item2 - enemyPiece.PreviousPosition.ToNumeric().Item2) == 2)
+            var pieceBehind = board.GetPieceOn(posBehind);
+            if (pieceBehind != null &&
+                pieceBehind.Color != movedPiece.Color &&
+                pieceBehind.Type == PieceType.Pawn &&
+                _lastMovedPieceGetter.GetLastMovedPiece() == pieceBehind &&
+                pieceBehind.Position.HasValue &&
+                Math.Abs(pieceBehind.Position.Value.ToNumeric().Item2 - pieceBehind.PreviousPosition.ToNumeric().Item2) == 2)
             {
-                takenPiece = enemyPiece;
+                takenPiece = pieceBehind;
                 return true;
             }
 

@@ -4,6 +4,7 @@ using System.Linq;
 using KChess.Core.AttackedCellsUtility;
 using KChess.Core.BoardEnvironment;
 using KChess.Core.BoardStateUtils;
+using KChess.Core.CastleMoveUtility;
 using KChess.Core.CheckBlockingUtility;
 using KChess.Core.CheckUtility;
 using KChess.Core.XRayUtility;
@@ -21,6 +22,7 @@ namespace KChess.Core.MoveUtility
         private readonly IBoardStateGetter _boardStateGetter;
         private readonly ICheckBlockingUtility _checkBlockingUtility;
         private readonly ICheckUtility _checkUtility;
+        private readonly ICastleMoveUtility _castleMoveUtility;
 
         public MoveUtility(
             IPieceMoveUtilityFacade pieceMoveUtilityFacade,
@@ -28,7 +30,8 @@ namespace KChess.Core.MoveUtility
             IAttackedCellsUtility attackedCellsUtility,
             IBoardStateGetter boardStateGetter,
             ICheckBlockingUtility checkBlockingUtility,
-            ICheckUtility checkUtility)
+            ICheckUtility checkUtility,
+            ICastleMoveUtility castleMoveUtility)
         {
             _pieceMoveUtilityFacade = pieceMoveUtilityFacade;
             _xRayUtility = xRayUtility;
@@ -36,6 +39,7 @@ namespace KChess.Core.MoveUtility
             _boardStateGetter = boardStateGetter;
             _checkBlockingUtility = checkBlockingUtility;
             _checkUtility = checkUtility;
+            _castleMoveUtility = castleMoveUtility;
         }
         
         public BoardCoordinates[] GetAvailableMoves(IPiece piece)
@@ -47,18 +51,25 @@ namespace KChess.Core.MoveUtility
                 _ => throw new ArgumentOutOfRangeException()
             };
             
-            // king
-            if (piece.Type == PieceType.King)
-            {
-                return _pieceMoveUtilityFacade.GetAvailableMoves(piece)
-                    .Where(x => !_attackedCellsUtility.IsCellAttacked(x, oppositeColor))
-                    .ToArray();
-            }
-
-            // not check
             var isCheck =
                 piece.Color == PieceColor.Black && _boardStateGetter.Get() == BoardState.CheckToBlack ||
                 piece.Color == PieceColor.White && _boardStateGetter.Get() == BoardState.CheckToWhite;
+            
+            // king
+            if (piece.Type == PieceType.King)
+            {
+                var moves = _pieceMoveUtilityFacade.GetAvailableMoves(piece)
+                    .Where(x => !_attackedCellsUtility.IsCellAttacked(x, oppositeColor))
+                    .ToArray();
+                if (!isCheck)
+                {
+                    moves = moves.Concat(_castleMoveUtility.GetCastleMoves(piece.Color)).ToArray();
+                }
+
+                return moves;
+            }
+
+            // not check
             var defaultMoves = _pieceMoveUtilityFacade.GetAvailableMoves(piece);
             if (!isCheck)
             {
@@ -78,6 +89,7 @@ namespace KChess.Core.MoveUtility
                         return moves.ToArray();
                     }
                 }
+
                 return defaultMoves;
             }
 
@@ -90,6 +102,11 @@ namespace KChess.Core.MoveUtility
             Assert.IsTrue(checkingPieces[0].Position.HasValue);
             availableMovesOnCheck.Add(checkingPieces[0].Position.Value);
             return defaultMoves.Intersect(availableMovesOnCheck).ToArray();
+        }
+
+        public BoardCoordinates[] GetAttackedMoves(IPiece piece)
+        {
+            return _pieceMoveUtilityFacade.GetAttackedCells(piece);
         }
 
         public void Dispose()

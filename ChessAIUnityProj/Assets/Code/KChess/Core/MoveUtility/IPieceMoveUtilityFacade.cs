@@ -7,5 +7,6 @@ namespace KChess.Core.MoveUtility
     public interface IPieceMoveUtilityFacade : IBoardEnvironmentComponent
     {
         BoardCoordinates[] GetAvailableMoves(IPiece piece);
+        BoardCoordinates[] GetAttackedCells(IPiece piece);
     }
 }

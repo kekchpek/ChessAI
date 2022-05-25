@@ -15,9 +15,9 @@ namespace KChess.Core.XRayUtility
         
         
         private readonly Dictionary<IPiece, IReadOnlyList<IXRay>> _targetPieces =
-            new Dictionary<IPiece, IReadOnlyList<IXRay>>();
+            new();
         private readonly Dictionary<IPiece, IReadOnlyList<IXRay>> _attackingPieces =
-            new Dictionary<IPiece, IReadOnlyList<IXRay>>();
+            new();
 
         private readonly IBoard _board;
         private readonly IQueenXRayUtility _queenMoveUtility;

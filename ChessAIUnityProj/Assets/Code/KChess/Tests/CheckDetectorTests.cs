@@ -20,23 +20,6 @@ namespace KChess.Tests
             checkUtility = Substitute.For<ICheckUtility>();
             return new CheckDetector(board, boardStateSetter, checkUtility);
         }
-
-        [Test]
-        public void NoCheck_BoardStateNotSet()
-        {
-            // Arrange 
-            var checkDecorator = CreateCheckDetector(
-                out var board,
-                out var boardStateSetter,
-                out var checkUtility);
-            checkUtility.IsPositionWithCheck(out Arg.Any<PieceColor>()).Returns(false);
-
-            // Act
-            board.PositionChanged += Raise.Event<Action<IPiece>>(Substitute.For<IPiece>());
-
-            // Assert
-            boardStateSetter.DidNotReceiveWithAnyArgs().Set(default);
-        }
         
         [Test]
         public void CheckToWhite_BoardStateSet()

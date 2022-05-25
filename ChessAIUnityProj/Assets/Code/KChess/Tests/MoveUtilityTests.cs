@@ -1,12 +1,14 @@
 ﻿using System.Collections.Generic;
 using KChess.Core.AttackedCellsUtility;
 using KChess.Core.BoardStateUtils;
+using KChess.Core.CastleMoveUtility;
 using KChess.Core.CheckBlockingUtility;
 using KChess.Core.CheckUtility;
 using KChess.Core.MoveUtility;
 using KChess.Core.XRayUtility;
 using KChess.Domain;
 using KChess.Domain.Impl;
+using KChessUnity.Tests.Helper;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -14,23 +16,26 @@ namespace KChess.Tests
 {
     public class MoveUtilityTests
     {
-        private MoveUtility CreateMoveUtility(
-            out IPieceMoveUtilityFacade pieceMoveUtilityFacade,
-            out IXRayUtility xRayUtility,
-            out IAttackedCellsUtility attackedCellsUtility,
-            out IBoardStateGetter boardStateGetter,
-            out ICheckBlockingUtility checkBlockingUtility,
-            out ICheckUtility checkUtility)
+
+        [Test]
+        public void GetAttackedCells_ReturnsFormFacade()
         {
-            pieceMoveUtilityFacade = Substitute.For<IPieceMoveUtilityFacade>();
-            xRayUtility = Substitute.For<IXRayUtility>();
-            attackedCellsUtility = Substitute.For<IAttackedCellsUtility>();
-            boardStateGetter = Substitute.For<IBoardStateGetter>();
-            checkBlockingUtility = Substitute.For<ICheckBlockingUtility>();
-            checkUtility = Substitute.For<ICheckUtility>();
-            return new MoveUtility(pieceMoveUtilityFacade,
-                xRayUtility, attackedCellsUtility, boardStateGetter, checkBlockingUtility,
-                checkUtility);
+            // Arrange
+            var container = TestHelper.CreateContainerFor<MoveUtility>(out var moveUtility);
+            var pieceMoveUtilityFacade = container.Resolve<IPieceMoveUtilityFacade>();
+
+            var pieceSub = Substitute.For<IPiece>();
+
+            pieceMoveUtilityFacade.GetAttackedCells(pieceSub).Returns(new BoardCoordinates[]
+            {
+                "d3", "a1", "b3", "c5", "c6"
+            });
+
+            // Act
+            var attackedCells = moveUtility.GetAttackedMoves(pieceSub);
+
+            // Assert
+            Assert.AreEqual(pieceMoveUtilityFacade.GetAttackedCells(pieceSub), attackedCells);
         }
 
         [TestCase(PieceColor.White, PieceColor.Black)]
@@ -40,13 +45,10 @@ namespace KChess.Tests
             PieceColor oppositeColor)
         {
             // Arrange
-            var moveUtility = CreateMoveUtility(
-                out var pieceMoveUtilityFacade,
-                out var xRayUtility,
-                out var attackedCellsUtility,
-                out var boardStateGetter,
-                out var checkBlockingUtility,
-                out var checkUtility);
+            var container = TestHelper.CreateContainerFor<MoveUtility>(out var moveUtility);
+            var pieceMoveUtilityFacade = container.Resolve<IPieceMoveUtilityFacade>();
+            var attackedCellsUtility = container.Resolve<IAttackedCellsUtility>();
+            
             attackedCellsUtility.IsCellAttacked("d3", oppositeColor).Returns(true);
             attackedCellsUtility.IsCellAttacked("c5", oppositeColor).Returns(true);
 
@@ -78,13 +80,11 @@ namespace KChess.Tests
             BoardState boardState)
         {
             // Arrange
-            var moveUtility = CreateMoveUtility(
-                out var pieceMoveUtilityFacade,
-                out var xRayUtility,
-                out var attackedCellsUtility,
-                out var boardStateGetter,
-                out var checkBlockingUtility,
-                out var checkUtility);
+            var container = TestHelper.CreateContainerFor<MoveUtility>(out var moveUtility);
+            var pieceMoveUtilityFacade = container.Resolve<IPieceMoveUtilityFacade>();
+            var attackedCellsUtility = container.Resolve<IAttackedCellsUtility>();
+            var boardStateGetter = container.Resolve<IBoardStateGetter>();
+            
             attackedCellsUtility.IsCellAttacked("d3", oppositeColor).Returns(true);
             attackedCellsUtility.IsCellAttacked("c5", oppositeColor).Returns(true);
 
@@ -110,16 +110,78 @@ namespace KChess.Tests
         }
 
         [Test]
+        public void NoCheck_CastleMovesAvailable()
+        {
+            // Arrange
+            var container = TestHelper.CreateContainerFor<MoveUtility>(out var moveUtility);
+            var pieceMoveUtilityFacade = container.Resolve<IPieceMoveUtilityFacade>();
+            var attackedCellsUtility = container.Resolve<IAttackedCellsUtility>();
+            var boardStateGetter = container.Resolve<IBoardStateGetter>();
+            var castleUtility = container.Resolve<ICastleMoveUtility>();
+
+            boardStateGetter.Get().Returns(BoardState.Regular);
+            attackedCellsUtility.IsCellAttacked(Arg.Any<BoardCoordinates>(), PieceColor.Black).Returns(false);
+
+            var king = Substitute.For<IPiece>();
+            king.Color.Returns(PieceColor.White);
+            king.Position.Returns("a1");
+            king.Type.Returns(PieceType.King);
+            
+            pieceMoveUtilityFacade.GetAvailableMoves(king).Returns(new BoardCoordinates[] {"d3", "c1", "h3"});
+            castleUtility.GetCastleMoves(PieceColor.White).Returns(new BoardCoordinates[] {"a2", "a3"});
+
+            // Act
+            var moves = moveUtility.GetAvailableMoves(king);
+
+            // Assert
+            Assert.AreEqual(5, moves.Length);
+            Assert.Contains((BoardCoordinates) "d3", moves);
+            Assert.Contains((BoardCoordinates) "c1", moves);
+            Assert.Contains((BoardCoordinates) "h3", moves);
+            Assert.Contains((BoardCoordinates) "a2", moves);
+            Assert.Contains((BoardCoordinates) "a3", moves);
+        }
+
+        [Test]
+        public void Check_CastleMovesNotAvailable()
+        {
+            // Arrange
+            var container = TestHelper.CreateContainerFor<MoveUtility>(out var moveUtility);
+            var pieceMoveUtilityFacade = container.Resolve<IPieceMoveUtilityFacade>();
+            var attackedCellsUtility = container.Resolve<IAttackedCellsUtility>();
+            var boardStateGetter = container.Resolve<IBoardStateGetter>();
+            var castleUtility = container.Resolve<ICastleMoveUtility>();
+
+            boardStateGetter.Get().Returns(BoardState.CheckToWhite);
+            attackedCellsUtility.IsCellAttacked(Arg.Any<BoardCoordinates>(), PieceColor.Black).Returns(false);
+
+            var king = Substitute.For<IPiece>();
+            king.Color.Returns(PieceColor.White);
+            king.Position.Returns("a1");
+            king.Type.Returns(PieceType.King);
+            
+            pieceMoveUtilityFacade.GetAvailableMoves(king).Returns(new BoardCoordinates[] {"d3", "c1", "h3"});
+            castleUtility.GetCastleMoves(PieceColor.White).Returns(new BoardCoordinates[] {"a2", "a3"});
+
+            // Act
+            var moves = moveUtility.GetAvailableMoves(king);
+
+            // Assert
+            Assert.AreEqual(3, moves.Length);
+            Assert.Contains((BoardCoordinates) "d3", moves);
+            Assert.Contains((BoardCoordinates) "c1", moves);
+            Assert.Contains((BoardCoordinates) "h3", moves);
+        }
+
+        [Test]
         public void Check_PieceCanOnlyBlock()
         {
             // Arrange
-            var moveUtility = CreateMoveUtility(
-                out var pieceMoveUtilityFacade,
-                out var xRayUtility,
-                out var attackedCellsUtility,
-                out var boardStateGetter,
-                out var checkBlockingUtility,
-                out var checkUtility);
+            var container = TestHelper.CreateContainerFor<MoveUtility>(out var moveUtility);
+            var pieceMoveUtilityFacade = container.Resolve<IPieceMoveUtilityFacade>();
+            var boardStateGetter = container.Resolve<IBoardStateGetter>();
+            var checkBlockingUtility = container.Resolve<ICheckBlockingUtility>();
+            var checkUtility = container.Resolve<ICheckUtility>();
 
             var piece = Substitute.For<IPiece>();
             piece.Color.Returns(PieceColor.Black);
@@ -153,13 +215,10 @@ namespace KChess.Tests
         public void Check_OneFigureChecking_CanTakeIt()
         {
             // Arrange
-            var moveUtility = CreateMoveUtility(
-                out var pieceMoveUtilityFacade,
-                out var xRayUtility,
-                out var attackedCellsUtility,
-                out var boardStateGetter,
-                out var checkBlockingUtility,
-                out var checkUtility);
+            var container = TestHelper.CreateContainerFor<MoveUtility>(out var moveUtility);
+            var pieceMoveUtilityFacade = container.Resolve<IPieceMoveUtilityFacade>();
+            var boardStateGetter = container.Resolve<IBoardStateGetter>();
+            var checkUtility = container.Resolve<ICheckUtility>();
 
             var piece = Substitute.For<IPiece>();
             piece.Color.Returns(PieceColor.Black);
@@ -189,13 +248,10 @@ namespace KChess.Tests
         public void Check_TwoFigureChecking_NoMoves()
         {
             // Arrange
-            var moveUtility = CreateMoveUtility(
-                out var pieceMoveUtilityFacade,
-                out var xRayUtility,
-                out var attackedCellsUtility,
-                out var boardStateGetter,
-                out var checkBlockingUtility,
-                out var checkUtility);
+            var container = TestHelper.CreateContainerFor<MoveUtility>(out var moveUtility);
+            var pieceMoveUtilityFacade = container.Resolve<IPieceMoveUtilityFacade>();
+            var boardStateGetter = container.Resolve<IBoardStateGetter>();
+            var checkUtility = container.Resolve<ICheckUtility>();
 
             var piece = Substitute.For<IPiece>();
             piece.Color.Returns(PieceColor.Black);
@@ -228,13 +284,10 @@ namespace KChess.Tests
         public void NoCheck_PieceLinked_MovesBetweenOrTake()
         {
             // Arrange
-            var moveUtility = CreateMoveUtility(
-                out var pieceMoveUtilityFacade,
-                out var xRayUtility,
-                out var attackedCellsUtility,
-                out var boardStateGetter,
-                out var checkBlockingUtility,
-                out var checkUtility);
+            var container = TestHelper.CreateContainerFor<MoveUtility>(out var moveUtility);
+            var pieceMoveUtilityFacade = container.Resolve<IPieceMoveUtilityFacade>();
+            var boardStateGetter = container.Resolve<IBoardStateGetter>();
+            var xRayUtility = container.Resolve<IXRayUtility>();
 
             var piece = Substitute.For<IPiece>();
             piece.Color.Returns(PieceColor.Black);
@@ -277,13 +330,9 @@ namespace KChess.Tests
         public void NoCheck_PieceCanMoveAnywhere()
         {
             // Arrange
-            var moveUtility = CreateMoveUtility(
-                out var pieceMoveUtilityFacade,
-                out var xRayUtility,
-                out var attackedCellsUtility,
-                out var boardStateGetter,
-                out var checkBlockingUtility,
-                out var checkUtility);
+            var container = TestHelper.CreateContainerFor<MoveUtility>(out var moveUtility);
+            var pieceMoveUtilityFacade = container.Resolve<IPieceMoveUtilityFacade>();
+            var boardStateGetter = container.Resolve<IBoardStateGetter>();
 
             var piece = Substitute.For<IPiece>();
             piece.Color.Returns(PieceColor.Black);

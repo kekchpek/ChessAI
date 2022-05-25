@@ -29,8 +29,10 @@ namespace KChess.Core.BoardEnvironment.Factory
         public IBoardEnvironment Create()
         {
             var board = _boardFactory.CreateStandardBoard();
+            
+            var lastMovedPieceUtility = new LastMovedPieceUtility(board);
 
-            var pawnMoveUtility = new PawnMoveUtility(board);
+            var pawnMoveUtility = new PawnMoveUtility(board, lastMovedPieceUtility);
             var knightMoveUtility = new KnightMoveUtility(board);
             var bishopMoveUtility = new BishopMoveUtility(board);
             var rookMoveUtility = new RookMoveUtility(board);
@@ -49,13 +51,14 @@ namespace KChess.Core.BoardEnvironment.Factory
             var checkDetector = new CheckDetector.CheckDetector(board, boardStateContainer, checkUtility);
             var checkBlockingUtility = new CheckBlockingUtility.CheckBlockingUtility(xRayUtility);
 
-            var lastMovedPieceUtility = new LastMovedPieceUtility(board);
             var enPassantUtility = new EnPassantUtility.EnPassantUtility(lastMovedPieceUtility);
             var attackedCellUtility = new AttackedCellsUtility.AttackedCellsUtility(piecesMovesFacade, board);
+            var castleMoveUtility = new CastleMoveUtility.CastleMoveUtility(board, attackedCellUtility);
 
             var takeDetector = new TakeDetector.TakeDetector(board, enPassantUtility);
             var moveUtility = new MoveUtility.MoveUtility(piecesMovesFacade, xRayUtility, attackedCellUtility,
-                boardStateContainer, checkBlockingUtility, checkUtility);
+                boardStateContainer, checkBlockingUtility, checkUtility, castleMoveUtility);
+            var castleDetector = new CastleDetector.CastleDetector(board);
 
             var turnContainer = new TurnUtility.TurnUtility(board);
 
@@ -86,7 +89,8 @@ namespace KChess.Core.BoardEnvironment.Factory
                 attackedCellUtility,
                 takeDetector,
                 moveUtility,
-                turnContainer
+                turnContainer,
+                castleDetector
             };
             return new BoardEnvironment(blackPlayerFacade, whitePlayerFacade, components);
         }

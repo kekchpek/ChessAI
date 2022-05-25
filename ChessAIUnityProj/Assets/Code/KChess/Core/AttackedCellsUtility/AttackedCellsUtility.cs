@@ -41,7 +41,7 @@ namespace KChess.Core.AttackedCellsUtility
             _attackedByWhite.Clear();
             foreach (var piece in _board.Pieces)
             {
-                var availableMoves = _pieceMoveUtilityFacade.GetAvailableMoves(piece);
+                var availableMoves = _pieceMoveUtilityFacade.GetAttackedCells(piece);
                 foreach (var availableMove in availableMoves)
                 {
                     if (piece.Color == PieceColor.Black && !_attackedByBlack.Contains(availableMove))

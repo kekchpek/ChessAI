@@ -73,7 +73,7 @@ namespace KChess.Tests
 
         [TestCase(PieceColor.Black, false)]
         [TestCase(PieceColor.White, true)]
-        public void WhitePieceAttacks(PieceColor attackingColor, bool expectedResult)
+        public void PieceAttacks_NotPawn(PieceColor attackingColor, bool expectedResult)
         {
             // Arrange
             var attackedCellsUtility = CreateAttackedCellsUtility(
@@ -85,7 +85,7 @@ namespace KChess.Tests
 
             board.Pieces.Returns(new[] {whitePiece});
 
-            pieceMoveUtilityFacade.GetAvailableMoves(whitePiece).Returns(new BoardCoordinates[]{"c3"});
+            pieceMoveUtilityFacade.GetAttackedCells(whitePiece).Returns(new BoardCoordinates[]{"c3"});
             
             // Act
             board.PositionChanged += Raise.Event<Action<IPiece>>(whitePiece);

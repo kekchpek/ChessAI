@@ -54,6 +54,24 @@ namespace KChess.Core.MoveUtility
             return Array.Empty<BoardCoordinates>();
         }
 
+        public BoardCoordinates[] GetAttackedCells(IPiece piece)
+        {
+            if (piece.Position.HasValue)
+            {
+                return piece.Type switch
+                {
+                    PieceType.Pawn => _pawnMoveUtility.GetAttackedCells(piece.Position.Value, piece.Color),
+                    PieceType.Rook => _rookMoveUtility.GetMoves(piece.Position.Value, piece.Color),
+                    PieceType.Knight => _knightMoveUtility.GetMoves(piece.Position.Value, piece.Color),
+                    PieceType.Bishop => _bishopXRayUtility.GetMoves(piece.Position.Value, piece.Color),
+                    PieceType.Queen => _queenMoveUtility.GetMoves(piece.Position.Value, piece.Color),
+                    PieceType.King => _kingMoveUtility.GetMoves(piece.Position.Value, piece.Color),
+                    _ => Array.Empty<BoardCoordinates>()
+                };
+            }
+            return Array.Empty<BoardCoordinates>();
+        }
+
         public void Dispose()
         {
             // do nothing

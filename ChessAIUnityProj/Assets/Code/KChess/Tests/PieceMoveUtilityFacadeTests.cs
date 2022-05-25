@@ -35,6 +35,36 @@ namespace KChess.Tests
         }
 
         [Test]
+        public void PawnAttackingCells()
+        {
+            // Arrange 
+            var pieceMoveUtilityFacade = CreatePieceMoveUtilityFacade(
+                out var pawnMoveUtility,
+                out var rookMoveUtility,
+                out var knightMoveUtility,
+                out var bishopMoveUtility,
+                out var queenMoveUtility,
+                out var kingMoveUtility);
+
+            var pawnAttackingCells = new BoardCoordinates[]
+            {
+                "a1", "a2", "a3", "f7",
+            };
+            pawnMoveUtility.GetAttackedCells(Arg.Any<BoardCoordinates>(), Arg.Any<PieceColor>())
+                .Returns(pawnAttackingCells);
+
+            var pawn = Substitute.For<IPiece>();
+            pawn.Type.Returns(PieceType.Pawn);
+            pawn.Position.Returns("h8");
+            
+            // Act
+            var availableMoves = pieceMoveUtilityFacade.GetAttackedCells(pawn);
+            
+            // Assert
+            Assert.AreEqual(pawnAttackingCells, availableMoves);
+        }
+
+        [Test]
         public void Pawn()
         {
             // Arrange 
@@ -89,9 +119,11 @@ namespace KChess.Tests
             
             // Act
             var availableMoves = pieceMoveUtilityFacade.GetAvailableMoves(rook);
+            var attackedCells = pieceMoveUtilityFacade.GetAttackedCells(rook);
             
             // Assert
             Assert.AreEqual(rookMoves, availableMoves);
+            Assert.AreEqual(rookMoves, attackedCells);
         }
 
         [Test]
@@ -119,9 +151,11 @@ namespace KChess.Tests
             
             // Act
             var availableMoves = pieceMoveUtilityFacade.GetAvailableMoves(knight);
+            var attackedCells = pieceMoveUtilityFacade.GetAttackedCells(knight);
             
             // Assert
             Assert.AreEqual(knightMoves, availableMoves);
+            Assert.AreEqual(knightMoves, attackedCells);
         }
 
         [Test]
@@ -149,9 +183,11 @@ namespace KChess.Tests
             
             // Act
             var availableMoves = pieceMoveUtilityFacade.GetAvailableMoves(bishop);
+            var attackedCells = pieceMoveUtilityFacade.GetAttackedCells(bishop);
             
             // Assert
             Assert.AreEqual(bishopMoves, availableMoves);
+            Assert.AreEqual(bishopMoves, attackedCells);
         }
 
         [Test]
@@ -179,9 +215,11 @@ namespace KChess.Tests
             
             // Act
             var availableMoves = pieceMoveUtilityFacade.GetAvailableMoves(queen);
+            var attackedCells = pieceMoveUtilityFacade.GetAttackedCells(queen);
             
             // Assert
             Assert.AreEqual(queenMoves, availableMoves);
+            Assert.AreEqual(queenMoves, attackedCells);
         }
 
         [Test]
@@ -209,9 +247,11 @@ namespace KChess.Tests
             
             // Act
             var availableMoves = pieceMoveUtilityFacade.GetAvailableMoves(king);
+            var attackedCells = pieceMoveUtilityFacade.GetAttackedCells(king);
             
             // Assert
             Assert.AreEqual(kingMoves, availableMoves);
+            Assert.AreEqual(kingMoves, attackedCells);
         }
         
     }

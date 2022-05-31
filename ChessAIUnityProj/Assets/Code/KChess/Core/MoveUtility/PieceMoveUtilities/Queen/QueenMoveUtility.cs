@@ -25,6 +25,13 @@ namespace KChess.Core.MoveUtility.PieceMoveUtilities.Queen
                 .ToArray();
         }
 
+        public BoardCoordinates[] GetAttackedCells(BoardCoordinates position, PieceColor pieceColor)
+        {
+            return _bishopMoveUtility.GetAttackedCells(position, pieceColor)
+                .Concat(_rookMoveUtility.GetAttackedCells(position, pieceColor))
+                .ToArray();
+        }
+
         public void Dispose()
         {
             // do nothing

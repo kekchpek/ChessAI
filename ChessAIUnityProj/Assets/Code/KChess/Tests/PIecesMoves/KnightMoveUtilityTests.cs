@@ -4,7 +4,7 @@ using KChess.Domain.Impl;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace KChess.Tests.PIecesMoves
+namespace KChess.Tests.PiecesMoves
 {
     public class KnightMoveUtilityTests
     {
@@ -86,5 +86,36 @@ namespace KChess.Tests.PIecesMoves
             Assert.AreEqual(6, moves.Length);
         }
         
+        [Test]
+        public void GetAttackedCells_AllyPiecesBlocks_AllyPositionsInclude()
+        {
+            // Arrange
+            var knightMoveUtility = CreateKnightMoveUtility(
+                out var board);
+
+            var piece1 = Substitute.For<IPiece>();
+            piece1.Color.Returns(PieceColor.Black);
+            piece1.Position.Returns("c2");
+
+            var piece2 = Substitute.For<IPiece>();
+            piece2.Color.Returns(PieceColor.Black);
+            piece2.Position.Returns("e6");
+
+            board.Pieces.Returns(new[] {piece1, piece2});
+
+            // Act
+            var attackedCells = knightMoveUtility.GetAttackedCells("d4", PieceColor.Black);
+
+            // Assert
+            Assert.Contains((BoardCoordinates)"b5", attackedCells);
+            Assert.Contains((BoardCoordinates)"b3", attackedCells);
+            Assert.Contains((BoardCoordinates)"c6", attackedCells);
+            Assert.Contains((BoardCoordinates)"f5", attackedCells);
+            Assert.Contains((BoardCoordinates)"f3", attackedCells);
+            Assert.Contains((BoardCoordinates)"e2", attackedCells);
+            Assert.Contains((BoardCoordinates)"e6", attackedCells);
+            Assert.Contains((BoardCoordinates)"c2", attackedCells);
+            Assert.AreEqual(8, attackedCells.Length);
+        }
     }
 }

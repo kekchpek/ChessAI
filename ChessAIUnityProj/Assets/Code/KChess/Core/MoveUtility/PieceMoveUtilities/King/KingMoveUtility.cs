@@ -17,6 +17,15 @@ namespace KChess.Core.MoveUtility.PieceMoveUtilities.King
         
         public BoardCoordinates[] GetMoves(BoardCoordinates position, PieceColor color)
         {
+            var allyPiecesPositions = _board.Pieces
+                .Where(x => x.Position.HasValue && x.Color == color)
+                .Select(x => x.Position.Value);
+            
+            return GetAttackedCells(position, color).Except(allyPiecesPositions).ToArray();
+        }
+
+        public BoardCoordinates[] GetAttackedCells(BoardCoordinates position, PieceColor pieceColor)
+        {
             var numericPos = position.ToNumeric();
             var availableMoves = new List<(int, int)>();
             
@@ -31,12 +40,10 @@ namespace KChess.Core.MoveUtility.PieceMoveUtilities.King
                 }
             }
 
-            availableMoves = availableMoves
+            return availableMoves
                 .Where(x => x.Item1 is >= 0 and <= 7 && x.Item2 is >= 0 and <= 7)
-                .ToList();
-
-            var allyPiecesPositions = _board.Pieces.Where(x => x.Position.HasValue).Select(x => x.Position.Value.ToNumeric());
-            return availableMoves.Except(allyPiecesPositions).Select(x => (BoardCoordinates)x).ToArray();
+                .Select(x => (BoardCoordinates) x)
+                .ToArray();
         }
 
         public void Dispose()

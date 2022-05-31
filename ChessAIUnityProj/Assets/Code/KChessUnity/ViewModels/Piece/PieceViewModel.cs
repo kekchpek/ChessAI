@@ -90,18 +90,17 @@ namespace KChessUnity.ViewModels.Piece
 
         private void OnMouseDown(Vector2 mousePosition)
         {
-            _resetSelectionTrigger.Trigger();
+            if (_playerFacade.GetTurn() != _piece.Color)
+                return;
             var clickPosition = _boardViewModel.GetCellCoords(mousePosition);
             if (clickPosition.HasValue)
             {
-                if (!_isSelected)
+                if (clickPosition.Value == _piece.Position)
                 {
-                    if (clickPosition.Value == _piece.Position)
-                    {
-                        Drag();
-                    }
+                    ReleaseSelection();
+                    Drag();
                 }
-                else
+                else if (_isSelected)
                 {
                     _cellToMove = clickPosition.Value;
                 }
@@ -110,6 +109,8 @@ namespace KChessUnity.ViewModels.Piece
 
         private void OnMouseUp(Vector2 mousePosition)
         {
+            if (_playerFacade.GetTurn() != _piece.Color)
+                return;
             var clickPosition = _boardViewModel.GetCellCoords(mousePosition);
             if (_isDragged)
             {
@@ -139,6 +140,9 @@ namespace KChessUnity.ViewModels.Piece
 
         private void Drag()
         {
+            if (_isDragged)
+                return;
+            _resetSelectionTrigger.Trigger();
             Position = _inputController.MousePosition;
             _isDragged = true;
             _inputController.MousePositionChanged += OnMousePositionChanged;
@@ -154,6 +158,7 @@ namespace KChessUnity.ViewModels.Piece
 
         private void Select()
         {
+            _resetSelectionTrigger.Trigger();
             _isSelected = true;
             _movesDisplayerViewModel.ShowMoves(_playerFacade.GetAvailableMoves(_piece));
         }

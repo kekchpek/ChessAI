@@ -2,6 +2,7 @@
 using System.Linq;
 using KChess.Core.BoardEnvironment;
 using KChess.Domain;
+using KChess.Domain.Extensions;
 using KChess.Domain.Impl;
 
 namespace KChess.Core.MoveUtility.PieceMoveUtilities.Bishop
@@ -17,15 +18,16 @@ namespace KChess.Core.MoveUtility.PieceMoveUtilities.Bishop
         
         public BoardCoordinates[] GetMoves(BoardCoordinates position, PieceColor color)
         {
-            var availableMoves = new List<BoardCoordinates>();
+            var allyPiecesPositions = _board.Pieces.Where(x => x.Color == color)
+                .Where(x => x.Position.HasValue)
+                .Select(x => x.Position.Value);
 
-            var allyPiecesPositions = _board.Pieces
-                .Where(x => x.Color == color && x.Position.HasValue)
-                .Select(x => x.Position.Value.ToNumeric()).ToArray();
-            
-            var enemyPiecesPositions = _board.Pieces
-                .Where(x => x.Color != color && x.Position.HasValue)
-                .Select(x => x.Position.Value.ToNumeric()).ToArray();
+            return GetAttackedCells(position, color).Except(allyPiecesPositions).ToArray();
+        }
+
+        public BoardCoordinates[] GetAttackedCells(BoardCoordinates position, PieceColor pieceColor)
+        {
+            var availableMoves = new List<BoardCoordinates>();
 
             (int, int) processingCell;
             
@@ -39,16 +41,11 @@ namespace KChess.Core.MoveUtility.PieceMoveUtilities.Bishop
                 {
                     break;
                 }
-                if (allyPiecesPositions.Contains(processingCell))
-                {
-                    break;
-                }
-                if (enemyPiecesPositions.Contains(processingCell))
-                {
-                    availableMoves.Add(processingCell);
-                    break;
-                }
                 availableMoves.Add(processingCell);
+                if (_board.GetPieceOn(processingCell) is not null)
+                {
+                    break;
+                }
             }
             
             // down-right
@@ -61,16 +58,11 @@ namespace KChess.Core.MoveUtility.PieceMoveUtilities.Bishop
                 {
                     break;
                 }
-                if (allyPiecesPositions.Contains(processingCell))
-                {
-                    break;
-                }
-                if (enemyPiecesPositions.Contains(processingCell))
-                {
-                    availableMoves.Add(processingCell);
-                    break;
-                }
                 availableMoves.Add(processingCell);
+                if (_board.GetPieceOn(processingCell) is not null)
+                {
+                    break;
+                }
             }
             
             // down-left
@@ -83,16 +75,11 @@ namespace KChess.Core.MoveUtility.PieceMoveUtilities.Bishop
                 {
                     break;
                 }
-                if (allyPiecesPositions.Contains(processingCell))
-                {
-                    break;
-                }
-                if (enemyPiecesPositions.Contains(processingCell))
-                {
-                    availableMoves.Add(processingCell);
-                    break;
-                }
                 availableMoves.Add(processingCell);
+                if (_board.GetPieceOn(processingCell) is not null)
+                {
+                    break;
+                }
             }
             
             // up-left
@@ -105,16 +92,11 @@ namespace KChess.Core.MoveUtility.PieceMoveUtilities.Bishop
                 {
                     break;
                 }
-                if (allyPiecesPositions.Contains(processingCell))
-                {
-                    break;
-                }
-                if (enemyPiecesPositions.Contains(processingCell))
-                {
-                    availableMoves.Add(processingCell);
-                    break;
-                }
                 availableMoves.Add(processingCell);
+                if (_board.GetPieceOn(processingCell) is not null)
+                {
+                    break;
+                }
             }
 
             return availableMoves.ToArray();

@@ -35,9 +35,9 @@ namespace KChess.Domain.BoardIndices
 
         private void OnPositionChanged(IPiece piece)
         {
-            if (_piecesByPosition.ContainsKey(piece.PreviousPosition))
+            if (_piecesByPosition.TryGetValue(piece.PreviousPosition, out var previousPiece) && previousPiece == piece)
             {
-                _piecesByPosition.Remove(piece.PreviousPosition);
+                _piecesByPosition.Remove(piece.PreviousPosition); // piece was removed
             }
 
             if (piece.Position.HasValue)

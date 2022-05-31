@@ -6,7 +6,7 @@ using KChessUnity.Tests.Helper;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace KChess.Tests.PIecesMoves
+namespace KChess.Tests.PiecesMoves
 {
     public class PawnMoveUtilityTests
     {
@@ -250,6 +250,60 @@ namespace KChess.Tests.PIecesMoves
             Assert.Contains((BoardCoordinates)"c6", availableMoves);
             Assert.Contains((BoardCoordinates)"d6", availableMoves);
             Assert.AreEqual(2, availableMoves.Length);
+        }
+
+        [TestCase(PieceColor.Black, -1)]
+        [TestCase(PieceColor.White, 1)]
+        public void GetAttackedCells_AllyPieceOnAttackedPosition_ReturnsAllyPosition(
+            PieceColor pieceColor, int direction)
+        {
+            // Arrange
+            var container = TestHelper.CreateContainerFor<PawnMoveUtility>(out var pawnMoveUtility);
+            var board = container.Resolve<IBoard>();
+
+            var pawnPosition = (BoardCoordinates) "c5";
+            
+            var piece = Substitute.For<IPiece>();
+            piece.Color.Returns(pieceColor);
+            piece.Type.Returns(PieceType.Bishop);
+            // ReSharper disable once PossibleInvalidOperationException
+            var piecePosition = pawnPosition.ToNumeric();
+            piecePosition = (piecePosition.Item1 - 1, piecePosition.Item2 + direction);
+            piece.Position.Returns(piecePosition);
+
+            board.Pieces.Returns(new[] {piece});
+            
+            // Act
+            var attackedCells = pawnMoveUtility.GetAttackedCells(pawnPosition, pieceColor);
+            
+            // Assert
+            // ReSharper disable once PossibleInvalidOperationException
+            Assert.Contains(piece.Position.Value, attackedCells);
+        }
+        
+
+        [TestCase(PieceColor.Black, -1)]
+        [TestCase(PieceColor.White, 1)]
+        public void GetAttackedCells_PawnOnBoardCenter_ReturnsFrontDiagonals(
+            PieceColor pieceColor, int direction)
+        {
+            // Arrange
+            var container = TestHelper.CreateContainerFor<PawnMoveUtility>(out var pawnMoveUtility);
+            
+            var pawnPosition = (BoardCoordinates) "c5";
+            
+            // Act
+            var attackedCells = pawnMoveUtility.GetAttackedCells(pawnPosition, pieceColor);
+            
+            // Assert
+            var pawnPositionNumeric = pawnPosition.ToNumeric();
+            var attackedPosition1 =
+                (BoardCoordinates) (pawnPositionNumeric.Item1 + 1, pawnPositionNumeric.Item2 + direction);
+            var attackedPosition2 =
+                (BoardCoordinates) (pawnPositionNumeric.Item1 - 1, pawnPositionNumeric.Item2 + direction);
+            Assert.AreEqual(2, attackedCells.Length);
+            Assert.Contains(attackedPosition1, attackedCells);
+            Assert.Contains(attackedPosition2, attackedCells);
         }
         
     }

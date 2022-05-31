@@ -38,7 +38,13 @@ namespace KChessUnity.Views
 
         private void OnPositionChanged(Vector3 position)
         {
-            transform.position = position;
+            var transformCatch = transform;
+            var maxIndex = transformCatch.childCount - 1;
+            if (transformCatch.GetSiblingIndex() != maxIndex)
+            {
+                transformCatch.SetSiblingIndex(maxIndex);
+            }
+            transformCatch.position = position;
         }
 
         private void OnImageChanged(Sprite image)

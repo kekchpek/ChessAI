@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using KChess.Core.BoardEnvironment;
 using KChess.Domain;
 using KChess.Domain.Impl;
@@ -16,6 +17,25 @@ namespace KChess.Core.MoveUtility.PieceMoveUtilities.Knight
         
         public BoardCoordinates[] GetMoves(BoardCoordinates position, PieceColor color)
         {
+            var attackedCells = GetAttackedPositionsNumeric(position);
+
+            var allyPiecesPositions = _board.Pieces.Where(x => x.Color == color)
+                .Where(x => x.Position.HasValue)
+                .Select(x => x.Position.Value);
+            
+            return attackedCells
+                .Where(x => x.Item1 >= 0 && x.Item1 <= 7 && x.Item2 >= 0 && x.Item2 <= 7)
+                .Select(x => (BoardCoordinates)x)
+                .Except(allyPiecesPositions).ToArray();
+        }
+
+        public BoardCoordinates[] GetAttackedCells(BoardCoordinates position, PieceColor pieceColor)
+        {
+            return GetAttackedPositionsNumeric(position).Select(x => (BoardCoordinates) x).ToArray();
+        }
+
+        private (int, int)[] GetAttackedPositionsNumeric(BoardCoordinates position)
+        {
             var numericCoords = position.ToNumeric();
 
             var availableMoves = new (int, int)[8];
@@ -28,14 +48,7 @@ namespace KChess.Core.MoveUtility.PieceMoveUtilities.Knight
             availableMoves[6] = (numericCoords.Item1 + 1, numericCoords.Item2 - 2);
             availableMoves[7] = (numericCoords.Item1 + 1, numericCoords.Item2 + 2);
 
-            var allyPiecesPositions = _board.Pieces.Where(x => x.Color == color)
-                .Where(x => x.Position.HasValue)
-                .Select(x => x.Position.Value);
-            
-            return availableMoves
-                .Where(x => x.Item1 >= 0 && x.Item1 <= 7 && x.Item2 >= 0 && x.Item2 <= 7)
-                .Select(x => (BoardCoordinates)x)
-                .Except(allyPiecesPositions).ToArray();
+            return availableMoves;
         }
 
         public void Dispose()

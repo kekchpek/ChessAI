@@ -21,7 +21,8 @@ namespace KChess.Core.XRayUtility.XRayPiecesUtilities
         {
             var boardPiecesMap = _board.GetPiecePositionsMap();
             var xRays = Enumerable.Empty<IXRay>();
-            xRays = GetDirections().Aggregate(xRays, (current, direction) => current.Concat(GetXRaysFromDirection(direction, piece, boardPiecesMap)));
+            xRays = GetDirections()
+                .Aggregate(xRays, (current, direction) => current.Concat(GetXRaysFromDirection(direction, piece, boardPiecesMap)));
             return xRays.ToArray();
         }
 
@@ -34,6 +35,10 @@ namespace KChess.Core.XRayUtility.XRayPiecesUtilities
             var numericPosition = piece.Position.Value.ToNumeric();
             var blockingPieces = new List<IPiece>();
             var cellsBetween = new List<BoardCoordinates>();
+            var cellsBehind = new List<BoardCoordinates>();
+            (IPiece TargetPiece, IPiece AttackingPiece, IEnumerable<IPiece> BlockingPieces,
+                IEnumerable<BoardCoordinates> CellsBetween)? 
+                xRayData = null;
             while (true)
             {
                 numericPosition = (numericPosition.Item1 + direction.Item1, numericPosition.Item2 + direction.Item2);
@@ -44,15 +49,31 @@ namespace KChess.Core.XRayUtility.XRayPiecesUtilities
                 }
                 
                 cellsBetween.Add(numericPosition);
+                cellsBehind.Add(numericPosition);
 
                 if (pieces.ContainsKey(numericPosition))
                 {
                     if (pieces[numericPosition].Color != piece.Color)
                     {
-                        xRays.Add(new XRay(pieces[numericPosition], piece, blockingPieces, cellsBetween));
+                        if (xRayData.HasValue)
+                        {
+                            xRays.Add(new XRay(xRayData.Value.TargetPiece, xRayData.Value.AttackingPiece,
+                                xRayData.Value.BlockingPieces, xRayData.Value.CellsBetween, cellsBehind.ToArray()));
+                        }
+
+                        xRayData = (pieces[numericPosition],
+                            piece, blockingPieces.ToArray(),
+                            cellsBetween.ToArray());
+                        cellsBehind.Clear();
                     }
                     blockingPieces.Add(pieces[numericPosition]);
                 }
+            }
+            if (xRayData.HasValue) // process last xRay
+            {
+                xRays.Add(new XRay(xRayData.Value.TargetPiece, xRayData.Value.AttackingPiece,
+                    xRayData.Value.BlockingPieces, xRayData.Value.CellsBetween, cellsBehind.ToArray()));
+                cellsBehind.Clear();
             }
 
             return xRays.ToArray();

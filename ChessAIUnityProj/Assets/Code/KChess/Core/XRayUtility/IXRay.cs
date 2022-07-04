@@ -14,6 +14,8 @@ namespace KChess.Core.XRayUtility
         IReadOnlyList<IPiece> BlockingPieces { get; }
 
         IReadOnlyList<BoardCoordinates> CellsBetween { get; }
+        
+        IReadOnlyList<BoardCoordinates> CellsBehind { get; }
 
     }
 }

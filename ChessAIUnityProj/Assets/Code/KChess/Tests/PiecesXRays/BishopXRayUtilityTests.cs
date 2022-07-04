@@ -107,12 +107,12 @@ namespace KChess.Tests.PiecesXRays
                 out var board);
 
             var bishop = Substitute.For<IPiece>();
-            bishop.Position.Returns("d4");
+            bishop.Position.Returns("a1");
             bishop.Color.Returns(PieceColor.Black);
 
             var piece1 = Substitute.For<IPiece>();
             piece1.Color.Returns(PieceColor.White);
-            piece1.Position.Returns("a1");
+            piece1.Position.Returns("d4");
 
             board.Pieces.Returns(new[] {bishop, piece1});
             
@@ -125,6 +125,10 @@ namespace KChess.Tests.PiecesXRays
             Assert.AreEqual(xRays[0].TargetPiece, piece1);
             Assert.IsTrue(xRays[0].CellsBetween.Contains("b2"));
             Assert.IsTrue(xRays[0].CellsBetween.Contains("c3"));
+            Assert.IsTrue(xRays[0].CellsBehind.Contains("e5"));
+            Assert.IsTrue(xRays[0].CellsBehind.Contains("f6"));
+            Assert.IsTrue(xRays[0].CellsBehind.Contains("g7"));
+            Assert.IsTrue(xRays[0].CellsBehind.Contains("h8"));
         }
 
         [Test]
@@ -159,12 +163,14 @@ namespace KChess.Tests.PiecesXRays
             var xRayWithPiece1 = xRays.First(x => x.TargetPiece == piece1);
             Assert.AreEqual(xRayWithPiece1.AttackingPiece, bishop);
             Assert.AreEqual(xRayWithPiece1.TargetPiece, piece1);
+            Assert.IsEmpty(xRayWithPiece1.CellsBehind);
             Assert.IsTrue(xRayWithPiece1.CellsBetween.Contains("b2"));
             Assert.IsTrue(xRayWithPiece1.CellsBetween.Contains("c3"));
             Assert.IsTrue(xRayWithPiece1.CellsBetween.Contains("d4"));
             Assert.IsTrue(xRayWithPiece1.CellsBetween.Contains("e5"));
             Assert.IsTrue(xRayWithPiece1.BlockingPieces.Contains(blockingPiece1));
             Assert.IsTrue(xRayWithPiece1.BlockingPieces.Contains(blockingPiece2));
+            Assert.AreEqual(2, xRayWithPiece1.BlockingPieces.Count);
         }
     }
 }

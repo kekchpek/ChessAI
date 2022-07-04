@@ -59,7 +59,12 @@ namespace KChess.Core.MoveUtility
             if (piece.Type == PieceType.King)
             {
                 var moves = _pieceMoveUtilityFacade.GetAvailableMoves(piece)
+                    // cell is not attacked
                     .Where(x => !_attackedCellsUtility.IsCellAttacked(x, oppositeColor))
+                    // cell is not placed behind attacked king
+                    .Where(x => !_xRayUtility.TargetPieces.ContainsKey(piece) ||
+                                             _xRayUtility.TargetPieces[piece].All(xRay => !(xRay.BlockingPieces.Count == 0 &&
+                                                                             xRay.CellsBehind.Contains(x))))
                     .ToArray();
                 if (!isCheck)
                 {

@@ -69,9 +69,9 @@ namespace KChess.Core.BoardEnvironment.Factory
             var turnContainer = new TurnUtility.TurnUtility(board);
 
             var whitePlayerFacade = new ManagedPlayerFacade(moveUtility, turnContainer, turnContainer,
-                boardStateContainer, boardStateContainer, board, PieceColor.White);
+                boardStateContainer, boardStateContainer, board, pawnTransformationUtility, PieceColor.White);
             var blackPlayerFacade = new ManagedPlayerFacade(moveUtility, turnContainer, turnContainer,
-                boardStateContainer, boardStateContainer, board, PieceColor.Black);
+                boardStateContainer, boardStateContainer, board, pawnTransformationUtility, PieceColor.Black);
 
             var components = new IBoardEnvironmentComponent[]
             {

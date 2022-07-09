@@ -1,4 +1,5 @@
 ﻿using System;
+using KChess.Core.PawnTransformation;
 using KChess.Domain;
 using KChess.Domain.Impl;
 
@@ -9,9 +10,15 @@ namespace KChess.Core.API.PlayerFacade
         event Action<PieceColor> TurnChanged;
         event Action<BoardState> BoardStateChanged;
 
+        event Action<IPiece> PieceRequiredToBeTransformed;
+
         IBoard GetBoard();
         
         bool TryMovePiece(IPiece piece, BoardCoordinates position);
+
+        bool TryTransform(PawnTransformationVariant pawnTransformationVariant);
+
+        IPiece GetTransformingPiece();
 
         BoardCoordinates[] GetAvailableMoves(IPiece piece);
 

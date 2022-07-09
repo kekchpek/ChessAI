@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using NSubstitute;
@@ -8,6 +9,7 @@ namespace KChessUnity.Tests.Helper
 {
     public static class TestHelper
     {
+
         /// <summary>
         /// Creates a container filled with substitutes and one specified real object.
         /// </summary>
@@ -15,6 +17,18 @@ namespace KChessUnity.Tests.Helper
         /// <typeparam name="T">The type of real object that should be created.</typeparam>
         /// <returns>The container filled with substitutes and one specified real object.</returns>
         public static DiContainer CreateContainerFor<T>(out T createdObj)
+        {
+            return CreateContainerFor(out createdObj, new Dictionary<Type, object>());
+        }
+
+        /// <summary>
+        /// Creates a container filled with substitutes and one specified real object.
+        /// </summary>
+        /// <param name="createdObj">Created object</param>
+        /// <param name="explicitDependencies">Explicitly specified dependencies of created object.</param>
+        /// <typeparam name="T">The type of real object that should be created.</typeparam>
+        /// <returns>The container filled with substitutes and one specified real object.</returns>
+        public static DiContainer CreateContainerFor<T>(out T createdObj, IReadOnlyDictionary<Type, object> explicitDependencies)
         {
             var type = typeof(T);
             var container = new DiContainer();
@@ -27,17 +41,26 @@ namespace KChessUnity.Tests.Helper
             }
             foreach (var argType in constructorInfos.First().GetParameters().Select(x => x.ParameterType))
             {
-                // IInstantiator should be rebind because it is bind by default
-                if (argType == typeof(IInstantiator)) 
+                if (!explicitDependencies.ContainsKey(argType))
                 {
-                    container.Rebind(argType)
-                        .FromInstance(Substitute.For(new[] {argType}, Array.Empty<object>()))
-                        .AsSingle();
+                    // IInstantiator should be rebind because it is bind by default
+                    if (argType == typeof(IInstantiator))
+                    {
+                        container.Rebind(argType)
+                            .FromInstance(Substitute.For(new[] {argType}, Array.Empty<object>()))
+                            .AsSingle();
+                    }
+                    else
+                    {
+                        container.Bind(argType)
+                            .FromInstance(Substitute.For(new[] {argType}, Array.Empty<object>()))
+                            .AsSingle();
+                    }
                 }
                 else
                 {
                     container.Bind(argType)
-                        .FromInstance(Substitute.For(new[] {argType}, Array.Empty<object>()))
+                        .FromInstance(explicitDependencies[argType])
                         .AsSingle();
                 }
             }

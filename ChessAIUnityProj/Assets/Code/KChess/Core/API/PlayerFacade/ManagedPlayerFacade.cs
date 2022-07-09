@@ -2,6 +2,7 @@
 using System.Linq;
 using KChess.Core.BoardStateUtils;
 using KChess.Core.MoveUtility;
+using KChess.Core.PawnTransformation;
 using KChess.Core.TurnUtility;
 using KChess.Domain;
 using KChess.Domain.Impl;
@@ -10,17 +11,23 @@ namespace KChess.Core.API.PlayerFacade
 {
     public class ManagedPlayerFacade : IManagedPlayerFacade
     {
+
+        public event Action<PieceColor> TurnChanged;
+        public event Action<BoardState> BoardStateChanged;
+        public event Action<IPiece> PieceRequiredToBeTransformed;
+        
         private readonly IMoveUtility _moveUtility;
         private readonly ITurnGetter _turnGetter;
         private readonly ITurnObserver _turnObserver;
         private readonly IBoardStateGetter _boardStateGetter;
         private readonly IBoardStateObserver _boardStateObserver;
         private readonly IBoard _board;
+        private readonly IPawnTransformationUtility _pawnTransformationUtility;
         private readonly PieceColor _pieceColor;
 
         public ManagedPlayerFacade(IMoveUtility moveUtility, ITurnGetter turnGetter,
             ITurnObserver turnObserver, IBoardStateGetter boardStateGetter,
-            IBoardStateObserver boardStateObserver, IBoard board,
+            IBoardStateObserver boardStateObserver, IBoard board, IPawnTransformationUtility pawnTransformationUtility,
             PieceColor pieceColor)
         {
             _moveUtility = moveUtility;
@@ -29,13 +36,17 @@ namespace KChess.Core.API.PlayerFacade
             _boardStateGetter = boardStateGetter;
             _boardStateObserver = boardStateObserver;
             _board = board;
+            _pawnTransformationUtility = pawnTransformationUtility;
             _pieceColor = pieceColor;
             _boardStateObserver.StateChanged += OnBoardStateChanged;
             _turnObserver.TurnChanged += OnTurnChanged;
+            _pawnTransformationUtility.TransformationBecomesRequired += OnTransformationBecomesRequired;
         }
 
-        public event Action<PieceColor> TurnChanged;
-        public event Action<BoardState> BoardStateChanged;
+        private void OnTransformationBecomesRequired(IPiece piece)
+        {
+            PieceRequiredToBeTransformed?.Invoke(piece);
+        }
 
         public IBoard GetBoard()
         {
@@ -53,6 +64,16 @@ namespace KChess.Core.API.PlayerFacade
             
             piece.MoveTo(position);
             return true;
+        }
+
+        public bool TryTransform(PawnTransformationVariant pawnTransformationVariant)
+        {
+            return _pawnTransformationUtility.TryTransform(pawnTransformationVariant);
+        }
+
+        public IPiece GetTransformingPiece()
+        {
+            return _pawnTransformationUtility.GetTransformingPiece();
         }
 
         public BoardCoordinates[] GetAvailableMoves(IPiece piece)

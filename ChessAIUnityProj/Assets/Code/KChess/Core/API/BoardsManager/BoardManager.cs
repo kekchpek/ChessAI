@@ -16,7 +16,7 @@ namespace KChess.Core.API.BoardsManager
         {
             var pieceFactory = new PieceFactory();
             var boardFactory = new BoardFactory(pieceFactory);
-            _boardEnvironmentFactory = new BoardEnvironmentFactory(boardFactory);
+            _boardEnvironmentFactory = new BoardEnvironmentFactory(boardFactory, pieceFactory);
         }
         
         public void CreateBoard(out IPlayerFacade whitePlayer, out IPlayerFacade blackPlayer)

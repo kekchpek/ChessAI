@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Reflection;
 using NSubstitute;
 using Zenject;
 
@@ -17,7 +18,8 @@ namespace KChessUnity.Tests.Helper
         {
             var type = typeof(T);
             var container = new DiContainer();
-            var constructorInfos = type.GetConstructors();
+            var constructorInfos = type.GetConstructors(
+                BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
             if (constructorInfos.Length != 1)
             {
                 throw new InvalidOperationException(

@@ -17,11 +17,14 @@ namespace KChess.Domain.Impl
         
         public void RemovePiece(IPiece piece)
         {
-            _pieces.Remove(piece);
-            piece.Moved -= _pieceMoveCallbacks[piece];
-            piece.Remove();
-            _pieceMoveCallbacks.Remove(piece);
-            PositionChanged?.Invoke(piece);
+            if (_pieces.Contains(piece))
+            {
+                _pieces.Remove(piece);
+                piece.Moved -= _pieceMoveCallbacks[piece];
+                piece.Remove();
+                _pieceMoveCallbacks.Remove(piece);
+                PositionChanged?.Invoke(piece);
+            }
         }
 
         void IBoard.PlacePiece(IPiece piece)

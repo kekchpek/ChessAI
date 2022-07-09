@@ -7,6 +7,7 @@ using KChess.Core.BoardStateUtils;
 using KChess.Core.CastleMoveUtility;
 using KChess.Core.CheckBlockingUtility;
 using KChess.Core.CheckUtility;
+using KChess.Core.PawnTransformation;
 using KChess.Core.XRayUtility;
 using KChess.Domain;
 using KChess.Domain.Impl;
@@ -23,6 +24,7 @@ namespace KChess.Core.MoveUtility
         private readonly ICheckBlockingUtility _checkBlockingUtility;
         private readonly ICheckUtility _checkUtility;
         private readonly ICastleMoveUtility _castleMoveUtility;
+        private readonly IPawnTransformationUtility _pawnTransformationUtility;
 
         public MoveUtility(
             IPieceMoveUtilityFacade pieceMoveUtilityFacade,
@@ -31,7 +33,8 @@ namespace KChess.Core.MoveUtility
             IBoardStateGetter boardStateGetter,
             ICheckBlockingUtility checkBlockingUtility,
             ICheckUtility checkUtility,
-            ICastleMoveUtility castleMoveUtility)
+            ICastleMoveUtility castleMoveUtility,
+            IPawnTransformationUtility pawnTransformationUtility)
         {
             _pieceMoveUtilityFacade = pieceMoveUtilityFacade;
             _xRayUtility = xRayUtility;
@@ -40,10 +43,14 @@ namespace KChess.Core.MoveUtility
             _checkBlockingUtility = checkBlockingUtility;
             _checkUtility = checkUtility;
             _castleMoveUtility = castleMoveUtility;
+            _pawnTransformationUtility = pawnTransformationUtility;
         }
         
         public BoardCoordinates[] GetAvailableMoves(IPiece piece)
         {
+            if (_pawnTransformationUtility.GetTransformingPiece() != null)
+                return Array.Empty<BoardCoordinates>();
+            
             var oppositeColor = piece.Color switch
             {
                 PieceColor.Black => PieceColor.White,

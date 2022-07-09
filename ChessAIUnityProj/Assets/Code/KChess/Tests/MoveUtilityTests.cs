@@ -5,6 +5,7 @@ using KChess.Core.CastleMoveUtility;
 using KChess.Core.CheckBlockingUtility;
 using KChess.Core.CheckUtility;
 using KChess.Core.MoveUtility;
+using KChess.Core.PawnTransformation;
 using KChess.Core.XRayUtility;
 using KChess.Domain;
 using KChess.Domain.Impl;
@@ -23,6 +24,9 @@ namespace KChess.Tests
             // Arrange
             var container = TestHelper.CreateContainerFor<MoveUtility>(out var moveUtility);
             var pieceMoveUtilityFacade = container.Resolve<IPieceMoveUtilityFacade>();
+            var pawnTransformationUtility = container.Resolve<IPawnTransformationUtility>();
+
+            pawnTransformationUtility.GetTransformingPiece().Returns((IPiece)null);
 
             var pieceSub = Substitute.For<IPiece>();
 
@@ -48,6 +52,9 @@ namespace KChess.Tests
             var container = TestHelper.CreateContainerFor<MoveUtility>(out var moveUtility);
             var pieceMoveUtilityFacade = container.Resolve<IPieceMoveUtilityFacade>();
             var attackedCellsUtility = container.Resolve<IAttackedCellsUtility>();
+            var pawnTransformationUtility = container.Resolve<IPawnTransformationUtility>();
+
+            pawnTransformationUtility.GetTransformingPiece().Returns((IPiece)null);
             
             attackedCellsUtility.IsCellAttacked("d3", oppositeColor).Returns(true);
             attackedCellsUtility.IsCellAttacked("c5", oppositeColor).Returns(true);
@@ -84,6 +91,9 @@ namespace KChess.Tests
             var pieceMoveUtilityFacade = container.Resolve<IPieceMoveUtilityFacade>();
             var attackedCellsUtility = container.Resolve<IAttackedCellsUtility>();
             var boardStateGetter = container.Resolve<IBoardStateGetter>();
+            var pawnTransformationUtility = container.Resolve<IPawnTransformationUtility>();
+
+            pawnTransformationUtility.GetTransformingPiece().Returns((IPiece)null);
             
             attackedCellsUtility.IsCellAttacked("d3", oppositeColor).Returns(true);
             attackedCellsUtility.IsCellAttacked("c5", oppositeColor).Returns(true);
@@ -118,6 +128,9 @@ namespace KChess.Tests
             var attackedCellsUtility = container.Resolve<IAttackedCellsUtility>();
             var boardStateGetter = container.Resolve<IBoardStateGetter>();
             var castleUtility = container.Resolve<ICastleMoveUtility>();
+            var pawnTransformationUtility = container.Resolve<IPawnTransformationUtility>();
+
+            pawnTransformationUtility.GetTransformingPiece().Returns((IPiece)null);
 
             boardStateGetter.Get().Returns(BoardState.Regular);
             attackedCellsUtility.IsCellAttacked(Arg.Any<BoardCoordinates>(), PieceColor.Black).Returns(false);
@@ -151,6 +164,9 @@ namespace KChess.Tests
             var attackedCellsUtility = container.Resolve<IAttackedCellsUtility>();
             var boardStateGetter = container.Resolve<IBoardStateGetter>();
             var castleUtility = container.Resolve<ICastleMoveUtility>();
+            var pawnTransformationUtility = container.Resolve<IPawnTransformationUtility>();
+
+            pawnTransformationUtility.GetTransformingPiece().Returns((IPiece)null);
 
             boardStateGetter.Get().Returns(BoardState.CheckToWhite);
             attackedCellsUtility.IsCellAttacked(Arg.Any<BoardCoordinates>(), PieceColor.Black).Returns(false);
@@ -182,6 +198,9 @@ namespace KChess.Tests
             var boardStateGetter = container.Resolve<IBoardStateGetter>();
             var checkBlockingUtility = container.Resolve<ICheckBlockingUtility>();
             var checkUtility = container.Resolve<ICheckUtility>();
+            var pawnTransformationUtility = container.Resolve<IPawnTransformationUtility>();
+
+            pawnTransformationUtility.GetTransformingPiece().Returns((IPiece)null);
 
             var piece = Substitute.For<IPiece>();
             piece.Color.Returns(PieceColor.Black);
@@ -219,6 +238,9 @@ namespace KChess.Tests
             var pieceMoveUtilityFacade = container.Resolve<IPieceMoveUtilityFacade>();
             var boardStateGetter = container.Resolve<IBoardStateGetter>();
             var checkUtility = container.Resolve<ICheckUtility>();
+            var pawnTransformationUtility = container.Resolve<IPawnTransformationUtility>();
+
+            pawnTransformationUtility.GetTransformingPiece().Returns((IPiece)null);
 
             var piece = Substitute.For<IPiece>();
             piece.Color.Returns(PieceColor.Black);
@@ -252,6 +274,9 @@ namespace KChess.Tests
             var pieceMoveUtilityFacade = container.Resolve<IPieceMoveUtilityFacade>();
             var boardStateGetter = container.Resolve<IBoardStateGetter>();
             var checkUtility = container.Resolve<ICheckUtility>();
+            var pawnTransformationUtility = container.Resolve<IPawnTransformationUtility>();
+
+            pawnTransformationUtility.GetTransformingPiece().Returns((IPiece)null);
 
             var piece = Substitute.For<IPiece>();
             piece.Color.Returns(PieceColor.Black);
@@ -288,6 +313,9 @@ namespace KChess.Tests
             var pieceMoveUtilityFacade = container.Resolve<IPieceMoveUtilityFacade>();
             var boardStateGetter = container.Resolve<IBoardStateGetter>();
             var xRayUtility = container.Resolve<IXRayUtility>();
+            var pawnTransformationUtility = container.Resolve<IPawnTransformationUtility>();
+
+            pawnTransformationUtility.GetTransformingPiece().Returns((IPiece)null);
 
             var piece = Substitute.For<IPiece>();
             piece.Color.Returns(PieceColor.Black);
@@ -327,12 +355,43 @@ namespace KChess.Tests
         }
         
         [Test]
+        public void NoCheck_TransformationRequired_PieceCanNotMove()
+        {
+            // Arrange
+            var container = TestHelper.CreateContainerFor<MoveUtility>(out var moveUtility);
+            var pieceMoveUtilityFacade = container.Resolve<IPieceMoveUtilityFacade>();
+            var boardStateGetter = container.Resolve<IBoardStateGetter>();
+            var pawnTransformationUtility = container.Resolve<IPawnTransformationUtility>();
+
+            pawnTransformationUtility.GetTransformingPiece().Returns(Substitute.For<IPiece>());
+
+            var piece = Substitute.For<IPiece>();
+            piece.Color.Returns(PieceColor.Black);
+
+            boardStateGetter.Get().Returns(BoardState.Regular);
+
+            pieceMoveUtilityFacade.GetAvailableMoves(piece).Returns(new BoardCoordinates[]
+            {
+                "d3", "a1", "b3", "c5", "c6"
+            });
+            
+            // Act
+            var moves = moveUtility.GetAvailableMoves(piece);
+            
+            // Assert
+            Assert.IsEmpty(moves);
+        }
+        
+        [Test]
         public void NoCheck_PieceCanMoveAnywhere()
         {
             // Arrange
             var container = TestHelper.CreateContainerFor<MoveUtility>(out var moveUtility);
             var pieceMoveUtilityFacade = container.Resolve<IPieceMoveUtilityFacade>();
             var boardStateGetter = container.Resolve<IBoardStateGetter>();
+            var pawnTransformationUtility = container.Resolve<IPawnTransformationUtility>();
+
+            pawnTransformationUtility.GetTransformingPiece().Returns((IPiece)null);
 
             var piece = Substitute.For<IPiece>();
             piece.Color.Returns(PieceColor.Black);

@@ -9,6 +9,7 @@ using KChess.Core.MoveUtility.PieceMoveUtilities.Knight;
 using KChess.Core.MoveUtility.PieceMoveUtilities.Pawn;
 using KChess.Core.MoveUtility.PieceMoveUtilities.Queen;
 using KChess.Core.MoveUtility.PieceMoveUtilities.Rook;
+using KChess.Core.PawnTransformation;
 using KChess.Core.XRayUtility.XRayPiecesUtilities.BishopXRayUtility;
 using KChess.Core.XRayUtility.XRayPiecesUtilities.QueenXRayUtility;
 using KChess.Core.XRayUtility.XRayPiecesUtilities.RookXRayUtility;
@@ -21,9 +22,10 @@ namespace KChess.Core.BoardEnvironment.Factory
         private readonly IBoardFactory _boardFactory;
         private readonly IPieceFactory _pieceFactory;
 
-        public BoardEnvironmentFactory(IBoardFactory boardFactory)
+        public BoardEnvironmentFactory(IBoardFactory boardFactory, IPieceFactory pieceFactory)
         {
             _boardFactory = boardFactory;
+            _pieceFactory = pieceFactory;
         }
         
         public IBoardEnvironment Create()
@@ -55,9 +57,13 @@ namespace KChess.Core.BoardEnvironment.Factory
             var attackedCellUtility = new AttackedCellsUtility.AttackedCellsUtility(piecesMovesFacade, board);
             var castleMoveUtility = new CastleMoveUtility.CastleMoveUtility(board, attackedCellUtility);
 
+            var pawnTransformationUtility = new PawnTransformationUtility(board, _pieceFactory);
+            var pawnTransformationDetector = new PawnTransformationDetector(pawnTransformationUtility, board);
+
             var takeDetector = new TakeDetector.TakeDetector(board, enPassantUtility);
             var moveUtility = new MoveUtility.MoveUtility(piecesMovesFacade, xRayUtility, attackedCellUtility,
-                boardStateContainer, checkBlockingUtility, checkUtility, castleMoveUtility);
+                boardStateContainer, checkBlockingUtility, checkUtility, castleMoveUtility,
+                pawnTransformationUtility);
             var castleDetector = new CastleDetector.CastleDetector(board);
 
             var turnContainer = new TurnUtility.TurnUtility(board);
@@ -90,7 +96,9 @@ namespace KChess.Core.BoardEnvironment.Factory
                 takeDetector,
                 moveUtility,
                 turnContainer,
-                castleDetector
+                castleDetector,
+                pawnTransformationDetector,
+                pawnTransformationUtility
             };
             return new BoardEnvironment(blackPlayerFacade, whitePlayerFacade, components);
         }

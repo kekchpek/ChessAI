@@ -12,7 +12,8 @@
     "overrideReferences": true,
     "precompiledReferences": [
         "UnityAuxiliaryTools.dll",
-        "Zenject-usage.dll"
+        "Zenject-usage.dll",
+        "UnityMVVM.dll"
     ],
     "autoReferenced": true,
     "defineConstraints": [],

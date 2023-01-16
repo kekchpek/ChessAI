@@ -2,12 +2,12 @@
 using KChess.Core.API.PlayerFacade;
 using KChess.Domain;
 using KChess.Domain.Impl;
+using KChessUnity.Input;
 using KChessUnity.Tests.Helper;
 using KChessUnity.ViewModels.Board;
 using KChessUnity.ViewModels.MovesDisplayer;
 using KChessUnity.ViewModels.Piece;
 using KChessUnity.ViewModels.Triggers;
-using MVVMCore.Input;
 using NSubstitute;
 using NUnit.Framework;
 using UnityEngine;

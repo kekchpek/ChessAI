@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace MVVMCore.Input
+namespace KChessUnity.Input
 {
     public interface IInputController
     {

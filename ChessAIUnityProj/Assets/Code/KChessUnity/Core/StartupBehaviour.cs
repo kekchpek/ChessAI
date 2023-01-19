@@ -2,10 +2,8 @@
 using KChess.Core.API.PlayerFacade;
 using KChess.Domain;
 using KChessUnity.ViewModels.Board;
-using KChessUnity.ViewModels.MovesDisplayer;
-using KChessUnity.ViewModels.Piece;
-using MVVMCore.ViewModelsFactory;
 using UnityEngine;
+using UnityMVVM.ViewManager;
 using Zenject;
 
 namespace KChessUnity.Core
@@ -13,9 +11,7 @@ namespace KChessUnity.Core
     public class StartupBehaviour : MonoBehaviour
     {
 
-        private IViewFactory<IBoardViewModel> _boardFactory;
-        private IViewFactory<IPieceViewModel, IBoardViewModel, IMovesDisplayerViewModel, IPlayerFacade, IPiece> _pieceFactory;
-        private IViewFactory<IMovesDisplayerViewModel, IBoardViewModel> _movesDisplayerFactory;
+        private IViewManager _viewManager;
 
         private IBoardsManager _boardsManager;
 
@@ -23,27 +19,16 @@ namespace KChessUnity.Core
         private IPlayerFacade _blackPlayerFacade;
         
         [Inject]
-        public void Construct(IViewFactory<IBoardViewModel> boardFactory,
-            IViewFactory<IPieceViewModel, IBoardViewModel, IMovesDisplayerViewModel, IPlayerFacade, IPiece> pieceFactory,
-            IViewFactory<IMovesDisplayerViewModel, IBoardViewModel> movesDisplayerFactory)
+        public void Construct(IViewManager viewManager)
         {
-            _boardFactory = boardFactory;
-            _pieceFactory = pieceFactory;
-            _movesDisplayerFactory = movesDisplayerFactory;
+            _viewManager = viewManager;
         }
         
         private void Awake()
         {
             _boardsManager = new BoardManager();
             _boardsManager.CreateBoard(out _whitePlayerFacade, out _blackPlayerFacade);
-            var board = _boardFactory.Create();
-            var movesDisplayer = _movesDisplayerFactory.Create(board);
-
-            foreach (var piece in _whitePlayerFacade.GetBoard().Pieces)
-            {
-                    _pieceFactory.Create(
-                        board, movesDisplayer, piece.Color == PieceColor.White ? _whitePlayerFacade : _blackPlayerFacade, piece);
-            }
+            _viewManager.Open<IBoardViewModel>(VIewLayersIds.Main, new BoardViewModelPayload(_whitePlayerFacade, _blackPlayerFacade));
         }
     }
 }

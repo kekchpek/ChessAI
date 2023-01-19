@@ -1,42 +1,45 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using KChess.Domain.Impl;
-using KChessUnity.ViewModels.Board;
-using MVVMCore;
+using KChessUnity.Models;
+using KChessUnity.Models.Board;
 using UnityEngine;
+using UnityMVVM.ViewModelCore;
+using UnityMVVM.ViewModelCore.Bindable;
+using Zenject;
 
 namespace KChessUnity.ViewModels.MovesDisplayer
 {
-    public class MovesDisplayerViewModel : ViewModel, IMovesDisplayerViewModel
+    public class MovesDisplayerViewModel : ViewModel, IInitializable, IMovesDisplayerViewModel
     {
-        private readonly IBoardViewModel _boardViewModel;
+        private readonly IHighlightedCellsModel _highlightedCellsModel;
+        private readonly IBoardWorldPositionsCalculator _boardWorldPositionsCalculator;
 
-        private IReadOnlyCollection<Vector3> _highlightedPositions;
+        private Mutable<IReadOnlyCollection<Vector3>> _highlightedPositions = new();
 
-        public IReadOnlyCollection<Vector3> HighlightedPositions
+        public IBindable<IReadOnlyCollection<Vector3>> HighlightedPositions => _highlightedPositions;
+
+        public MovesDisplayerViewModel(IHighlightedCellsModel highlightedCellsModel, IMovesDisplayerPayload payload)
         {
-            get => _highlightedPositions;
-            set => SetAndRaiseIfChanged(nameof(HighlightedPositions), value, ref _highlightedPositions);
+            _highlightedCellsModel = highlightedCellsModel;
+            _boardWorldPositionsCalculator = payload.BoardWorldPositionsCalculator;
         }
 
-        public MovesDisplayerViewModel(IBoardViewModel boardViewModel)
+        public void Initialize()
         {
-            _boardViewModel = boardViewModel;
+            _highlightedCellsModel.HighlightedCells.Bind(ShowMoves);
         }
         
-        public void ShowMoves(BoardCoordinates[] availableMoves)
+        private void ShowMoves(IEnumerable<BoardCoordinates> availableMoves)
         {
-            var highlightedMoves = new Vector3[availableMoves.Length];
-            for (var i = 0; i < availableMoves.Length; i++)
+            var array = availableMoves.ToArray();
+            var highlightedMoves = new Vector3[array.Length];
+            for (var i = 0; i < array.Length; i++)
             {
-                highlightedMoves[i] = _boardViewModel.GetWorldPosition(availableMoves[i]);
+                highlightedMoves[i] = _boardWorldPositionsCalculator.GetWorldPosition(array[i]);
             }
-            HighlightedPositions = highlightedMoves;
-        }
-
-        public void HideMoves()
-        {
-            HighlightedPositions = Array.Empty<Vector3>();
+            _highlightedPositions.Value = highlightedMoves;
         }
     }
 }

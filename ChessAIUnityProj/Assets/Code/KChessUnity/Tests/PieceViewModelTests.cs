@@ -1,11 +1,9 @@
 ﻿using System;
 using KChess.Core.API.PlayerFacade;
-using KChess.Domain;
 using KChess.Domain.Impl;
 using KChessUnity.Input;
+using KChessUnity.Models;
 using KChessUnity.Tests.Helper;
-using KChessUnity.ViewModels.Board;
-using KChessUnity.ViewModels.MovesDisplayer;
 using KChessUnity.ViewModels.Piece;
 using KChessUnity.ViewModels.Triggers;
 using NSubstitute;
@@ -20,26 +18,27 @@ namespace KChessUnity.Tests
         public void Initialization_BoardMocked_PositionSet()
         {
             // Arrange
-            var container = TestHelper.CreateContainerFor<PieceViewModel>(out var pieceViewModel);
-            var boardViewModel = container.Resolve<IBoardViewModel>();
-            var piece = container.Resolve<IPiece>();
+            var container = TestHelper.CreateContainerForViewModel<PieceViewModel>(out var pieceViewModel);
+            var payload = container.Resolve<IPieceViewModelPayload>();
+            var positionCalculator = payload.BoardWorldPositionsCalculator;
+            var piece = payload.Piece;
             piece.Position.Returns("d3");
             var boardPos = new Vector3(234f, 1f, 12f);
             // ReSharper disable once PossibleInvalidOperationException
-            boardViewModel.GetWorldPosition(piece.Position.Value).Returns(boardPos);
+            positionCalculator.GetWorldPosition(piece.Position.Value).Returns(boardPos);
 
             // Act
             pieceViewModel.Initialize();
 
             // Assert
-            Assert.AreEqual(boardPos, pieceViewModel.Position);
+            Assert.AreEqual(boardPos, pieceViewModel.Position.Value);
         }
         
         [Test]
         public void Initialization_BoardMocked_ImageSetSet()
         {
             // Arrange
-            TestHelper.CreateContainerFor<PieceViewModel>(out var pieceViewModel);
+            TestHelper.CreateContainerForViewModel<PieceViewModel>(out var pieceViewModel);
 
             // Act
             pieceViewModel.Initialize();
@@ -52,8 +51,9 @@ namespace KChessUnity.Tests
         public void PieceRemovedFromBoard_EventFired_DisposedEventFired()
         {
             // Arrange
-            var container = TestHelper.CreateContainerFor<PieceViewModel>(out var pieceViewModel);
-            var piece = container.Resolve<IPiece>();
+            var container = TestHelper.CreateContainerForViewModel<PieceViewModel>(out var pieceViewModel);
+            var payload = container.Resolve<IPieceViewModelPayload>();
+            var piece = payload.Piece;
             var isDisposed = false;
             pieceViewModel.Disposed += () => isDisposed = true;
 
@@ -69,11 +69,12 @@ namespace KChessUnity.Tests
         public void PieceDragged_ReleaseOnTheOtherCell_PieceMoved()
         {
             // Arrange
-            var container = TestHelper.CreateContainerFor<PieceViewModel>(out var pieceViewModel);
-            var boardViewModel = container.Resolve<IBoardViewModel>();
+            var container = TestHelper.CreateContainerForViewModel<PieceViewModel>(out var pieceViewModel);
+            var payload = container.Resolve<IPieceViewModelPayload>();
+            var positionCalculator = payload.BoardWorldPositionsCalculator;
             var inputController = container.Resolve<IInputController>();
-            var piece = container.Resolve<IPiece>();
-            var playerFacade = container.Resolve<IPlayerFacade>();
+            var piece = payload.Piece;
+            var playerFacade = payload.PlayerFacade;
 
             var piecePosition = (BoardCoordinates) "a3";
             var clickPosition = new Vector2(34f, 223f);
@@ -82,8 +83,8 @@ namespace KChessUnity.Tests
 
             piece.Position.Returns(piecePosition);
 
-            boardViewModel.GetCellCoords(clickPosition).Returns(piecePosition);
-            boardViewModel.GetCellCoords(movedPosition).Returns(newCell);
+            positionCalculator.GetCellCoords(clickPosition).Returns(piecePosition);
+            positionCalculator.GetCellCoords(movedPosition).Returns(newCell);
 
             // Act
             pieceViewModel.Initialize();
@@ -98,16 +99,17 @@ namespace KChessUnity.Tests
         public void PieceClicked_ResetSelectionTrigger_Triggered()
         {
             // Arrange
-            var container = TestHelper.CreateContainerFor<PieceViewModel>(out var pieceViewModel);
+            var container = TestHelper.CreateContainerForViewModel<PieceViewModel>(out var pieceViewModel);
             var resetSelectionTrigger = container.Resolve<IResetSelectionTrigger>();
-            var boardViewModel = container.Resolve<IBoardViewModel>();
+            var payload = container.Resolve<IPieceViewModelPayload>();
+            var positionCalculator = payload.BoardWorldPositionsCalculator;
             var inputController = container.Resolve<IInputController>();
-            var piece = container.Resolve<IPiece>();
+            var piece = payload.Piece;
 
             var piecePosition = (BoardCoordinates) "a3";
             var clickPosition = new Vector2(34f, 223f);
 
-            boardViewModel.GetCellCoords(clickPosition).Returns(piecePosition);
+            positionCalculator.GetCellCoords(clickPosition).Returns(piecePosition);
 
             piece.Position.Returns(piecePosition);
 
@@ -124,17 +126,18 @@ namespace KChessUnity.Tests
         public void PieceClickDown_AvailableMovesShown()
         {
             // Arrange
-            var container = TestHelper.CreateContainerFor<PieceViewModel>(out var pieceViewModel);
-            var movesDisplayer = container.Resolve<IMovesDisplayerViewModel>();
-            var boardViewModel = container.Resolve<IBoardViewModel>();
+            var container = TestHelper.CreateContainerForViewModel<PieceViewModel>(out var pieceViewModel);
+            var payload = container.Resolve<IPieceViewModelPayload>();
+            var movesDisplayer = container.Resolve<IHighlightedCellsService>();
+            var positionCalculator = payload.BoardWorldPositionsCalculator;
             var inputController = container.Resolve<IInputController>();
-            var piece = container.Resolve<IPiece>();
-            var playerFacade = container.Resolve<IPlayerFacade>();
+            var piece = payload.Piece;
+            var playerFacade = payload.PlayerFacade;
 
             var piecePosition = (BoardCoordinates) "a3";
             var clickPosition = new Vector2(34f, 223f);
 
-            boardViewModel.GetCellCoords(clickPosition).Returns(piecePosition);
+            positionCalculator.GetCellCoords(clickPosition).Returns(piecePosition);
 
             piece.Position.Returns(piecePosition);
 
@@ -151,7 +154,7 @@ namespace KChessUnity.Tests
             inputController.MouseDown += Raise.Event<Action<Vector2>>(clickPosition);
 
             // Assert
-            movesDisplayer.Received().ShowMoves(availableMoves);
+            movesDisplayer.Received().SetHighlightedCells(availableMoves);
         }
         
         [Test]
@@ -159,20 +162,21 @@ namespace KChessUnity.Tests
             [Values(true, false)] bool isPieceMoved)
         {
             // Arrange
-            var container = TestHelper.CreateContainerFor<PieceViewModel>(out var pieceViewModel);
-            var movesDisplayer = container.Resolve<IMovesDisplayerViewModel>();
-            var boardViewModel = container.Resolve<IBoardViewModel>();
+            var container = TestHelper.CreateContainerForViewModel<PieceViewModel>(out var pieceViewModel);
+            var payload = container.Resolve<IPieceViewModelPayload>();
+            var movesDisplayer = container.Resolve<IHighlightedCellsService>();
+            var positionCalculator = payload.BoardWorldPositionsCalculator;
             var inputController = container.Resolve<IInputController>();
-            var piece = container.Resolve<IPiece>();
-            var playerFacade = container.Resolve<IPlayerFacade>();
+            var piece = payload.Piece;
+            var playerFacade = payload.PlayerFacade;
 
             var piecePosition = (BoardCoordinates) "a3";
             var clickPosition = new Vector2(34f, 223f);
             var movedPosition = new Vector2(333f, 111f);
             var newCell = (BoardCoordinates) "d6";
 
-            boardViewModel.GetCellCoords(clickPosition).Returns(piecePosition);
-            boardViewModel.GetCellCoords(movedPosition).Returns(newCell);
+            positionCalculator.GetCellCoords(clickPosition).Returns(piecePosition);
+            positionCalculator.GetCellCoords(movedPosition).Returns(newCell);
 
             piece.Position.Returns(piecePosition);
 
@@ -184,24 +188,25 @@ namespace KChessUnity.Tests
             inputController.MouseUp += Raise.Event<Action<Vector2>>(movedPosition);
 
             // Assert
-            movesDisplayer.Received().HideMoves();
+            movesDisplayer.Received().ClearHighlightedCells();
         }
         
         [Test]
         public void PieceSelected_AvailableMovesNotHid()
         {
             // Arrange
-            var container = TestHelper.CreateContainerFor<PieceViewModel>(out var pieceViewModel);
-            var movesDisplayer = container.Resolve<IMovesDisplayerViewModel>();
-            var boardViewModel = container.Resolve<IBoardViewModel>();
+            var container = TestHelper.CreateContainerForViewModel<PieceViewModel>(out var pieceViewModel);
+            var payload = container.Resolve<IPieceViewModelPayload>();
+            var movesDisplayer = container.Resolve<IHighlightedCellsService>();
+            var positionCalculator = payload.BoardWorldPositionsCalculator;
             var inputController = container.Resolve<IInputController>();
-            var piece = container.Resolve<IPiece>();
-            var playerFacade = container.Resolve<IPlayerFacade>();
+            var piece = payload.Piece;
+            var playerFacade = payload.PlayerFacade;
 
             var piecePosition = (BoardCoordinates) "a3";
             var clickPosition = new Vector2(34f, 223f);
 
-            boardViewModel.GetCellCoords(clickPosition).Returns(piecePosition);
+            positionCalculator.GetCellCoords(clickPosition).Returns(piecePosition);
 
             piece.Position.Returns(piecePosition);
 
@@ -219,22 +224,23 @@ namespace KChessUnity.Tests
             inputController.MouseUp += Raise.Event<Action<Vector2>>(clickPosition);
 
             // Assert
-            movesDisplayer.DidNotReceive().HideMoves();
+            movesDisplayer.DidNotReceive().ClearHighlightedCells();
         }
 
         [Test]
         public void PieceClicked_MousePositionChanged_PiecePositionChanged()
         {
             // Arrange
-            var container = TestHelper.CreateContainerFor<PieceViewModel>(out var pieceViewModel);
-            var boardViewModel = container.Resolve<IBoardViewModel>();
+            var container = TestHelper.CreateContainerForViewModel<PieceViewModel>(out var pieceViewModel);
+            var payload = container.Resolve<IPieceViewModelPayload>();
+            var positionCalculator = payload.BoardWorldPositionsCalculator;
             var inputController = container.Resolve<IInputController>();
-            var piece = container.Resolve<IPiece>();
+            var piece = payload.Piece;
 
             var piecePosition = (BoardCoordinates) "a3";
             var clickPosition = new Vector2(34f, 223f);
 
-            boardViewModel.GetCellCoords(clickPosition).Returns(piecePosition);
+            positionCalculator.GetCellCoords(clickPosition).Returns(piecePosition);
 
             piece.Position.Returns(piecePosition);
             
@@ -246,24 +252,25 @@ namespace KChessUnity.Tests
             inputController.MousePositionChanged += Raise.Event<Action<Vector2>>(mousePos);
             
             // Assert 
-            Assert.AreEqual(mousePos.x, pieceViewModel.Position.x);
-            Assert.AreEqual(mousePos.y, pieceViewModel.Position.y);
+            Assert.AreEqual(mousePos.x, pieceViewModel.Position.Value.x);
+            Assert.AreEqual(mousePos.y, pieceViewModel.Position.Value.y);
         }
         
         [Test]
         public void PieceSelected_MousePositionChanged_PiecePositionNotChanged()
         {
             // Arrange
-            var container = TestHelper.CreateContainerFor<PieceViewModel>(out var pieceViewModel);
-            var boardViewModel = container.Resolve<IBoardViewModel>();
+            var container = TestHelper.CreateContainerForViewModel<PieceViewModel>(out var pieceViewModel);
+            var payload = container.Resolve<IPieceViewModelPayload>();
+            var positionCalculator = payload.BoardWorldPositionsCalculator;
             var inputController = container.Resolve<IInputController>();
-            var piece = container.Resolve<IPiece>();
+            var piece = payload.Piece;
 
             var piecePosition = (BoardCoordinates) "a3";
             var pieceWorldPosition = new Vector2(34f, 223f);
 
-            boardViewModel.GetCellCoords(pieceWorldPosition).Returns(piecePosition);
-            boardViewModel.GetWorldPosition(piecePosition).Returns((Vector3)pieceWorldPosition);
+            positionCalculator.GetCellCoords(pieceWorldPosition).Returns(piecePosition);
+            positionCalculator.GetWorldPosition(piecePosition).Returns((Vector3)pieceWorldPosition);
 
             piece.Position.Returns(piecePosition);
             
@@ -277,23 +284,24 @@ namespace KChessUnity.Tests
             inputController.MousePositionChanged += Raise.Event<Action<Vector2>>(mousePos);
             
             // Assert 
-            Assert.AreEqual((Vector3)pieceWorldPosition, pieceViewModel.Position);
+            Assert.AreEqual((Vector3)pieceWorldPosition, pieceViewModel.Position.Value);
         }
 
         [Test]
         public void BoardClicked_DownUpAtSameCell_PieceMoved()
         {
             // Arrange
-            var container = TestHelper.CreateContainerFor<PieceViewModel>(out var pieceViewModel);
+            var container = TestHelper.CreateContainerForViewModel<PieceViewModel>(out var pieceViewModel);
+            var payload = container.Resolve<IPieceViewModelPayload>();
             var inputController = container.Resolve<IInputController>();
-            var boardViewModel = container.Resolve<IBoardViewModel>();
-            var playerFacade = container.Resolve<IPlayerFacade>();
-            var piece = container.Resolve<IPiece>();
+            var positionCalculator = payload.BoardWorldPositionsCalculator;
+            var playerFacade = payload.PlayerFacade;
+            var piece = payload.Piece;
 
             var piecePosition = (BoardCoordinates) "a3";
             var clickPosition = new Vector2(34f, 223f);
 
-            boardViewModel.GetCellCoords(clickPosition).Returns(piecePosition);
+            positionCalculator.GetCellCoords(clickPosition).Returns(piecePosition);
 
             piece.Position.Returns(piecePosition);
             
@@ -301,8 +309,8 @@ namespace KChessUnity.Tests
             var mouseUpPos = new Vector2(12f, 23f);
 
             var boardCoords = (BoardCoordinates) "g5";
-            boardViewModel.GetCellCoords(mouseDownPos).Returns(boardCoords);
-            boardViewModel.GetCellCoords(mouseUpPos).Returns(boardCoords);
+            positionCalculator.GetCellCoords(mouseDownPos).Returns(boardCoords);
+            positionCalculator.GetCellCoords(mouseUpPos).Returns(boardCoords);
 
             // Act
             pieceViewModel.Initialize();
@@ -321,18 +329,19 @@ namespace KChessUnity.Tests
         public void PieceSelected_SelectionResetTriggered_MovesHid()
         {
             // Arrange
-            var container = TestHelper.CreateContainerFor<PieceViewModel>(out var pieceViewModel);
-            var boardViewModel = container.Resolve<IBoardViewModel>();
+            var container = TestHelper.CreateContainerForViewModel<PieceViewModel>(out var pieceViewModel);
+            var payload = container.Resolve<IPieceViewModelPayload>();
+            var positionCalculator = payload.BoardWorldPositionsCalculator;
             var inputController = container.Resolve<IInputController>();
-            var piece = container.Resolve<IPiece>();
+            var piece = payload.Piece;
             var selectionResetTrigger = container.Resolve<IResetSelectionTrigger>();
-            var movesDisplayer = container.Resolve<IMovesDisplayerViewModel>();
+            var movesDisplayer = container.Resolve<IHighlightedCellsService>();
 
             var piecePosition = (BoardCoordinates) "a3";
             var pieceWorldPosition = new Vector2(34f, 223f);
 
-            boardViewModel.GetCellCoords(pieceWorldPosition).Returns(piecePosition);
-            boardViewModel.GetWorldPosition(piecePosition).Returns((Vector3)pieceWorldPosition);
+            positionCalculator.GetCellCoords(pieceWorldPosition).Returns(piecePosition);
+            positionCalculator.GetWorldPosition(piecePosition).Returns((Vector3)pieceWorldPosition);
 
             piece.Position.Returns(piecePosition);
             
@@ -343,19 +352,20 @@ namespace KChessUnity.Tests
             selectionResetTrigger.OnTriggered += Raise.Event<Action>();
 
             // Assert
-            movesDisplayer.HideMoves();
+            movesDisplayer.ClearHighlightedCells();
         }
 
         [Test]
         public void PieceSelected_SelectionResetTriggered_PieceDoesntMove()
         {
             // Arrange
-            var container = TestHelper.CreateContainerFor<PieceViewModel>(out var pieceViewModel);
-            var boardViewModel = container.Resolve<IBoardViewModel>();
+            var container = TestHelper.CreateContainerForViewModel<PieceViewModel>(out var pieceViewModel);
+            var payload = container.Resolve<IPieceViewModelPayload>();
+            var positionCalculator = payload.BoardWorldPositionsCalculator;
             var inputController = container.Resolve<IInputController>();
-            var piece = container.Resolve<IPiece>();
+            var piece = payload.Piece;
             var selectionResetTrigger = container.Resolve<IResetSelectionTrigger>();
-            var playerFacade = container.Resolve<IPlayerFacade>();
+            var playerFacade = payload.PlayerFacade;
 
             var piecePosition = (BoardCoordinates) "a3";
             var pieceWorldPosition = new Vector2(34f, 223f);
@@ -364,10 +374,10 @@ namespace KChessUnity.Tests
             var mouseUpPos = new Vector2(12f, 23f);
 
             var boardCoords = (BoardCoordinates) "g5";
-            boardViewModel.GetCellCoords(mouseDownPos).Returns(boardCoords);
-            boardViewModel.GetCellCoords(mouseUpPos).Returns(boardCoords);
-            boardViewModel.GetCellCoords(pieceWorldPosition).Returns(piecePosition);
-            boardViewModel.GetWorldPosition(piecePosition).Returns((Vector3)pieceWorldPosition);
+            positionCalculator.GetCellCoords(mouseDownPos).Returns(boardCoords);
+            positionCalculator.GetCellCoords(mouseUpPos).Returns(boardCoords);
+            positionCalculator.GetCellCoords(pieceWorldPosition).Returns(piecePosition);
+            positionCalculator.GetWorldPosition(piecePosition).Returns((Vector3)pieceWorldPosition);
 
             piece.Position.Returns(piecePosition);
             
@@ -389,16 +399,17 @@ namespace KChessUnity.Tests
         public void BoardClicked_DownUpAtDifferentCells_PieceMoved()
         {
             // Arrange
-            var container = TestHelper.CreateContainerFor<PieceViewModel>(out var pieceViewModel);
+            var container = TestHelper.CreateContainerForViewModel<PieceViewModel>(out var pieceViewModel);
+            var payload = container.Resolve<IPieceViewModelPayload>();
             var inputController = container.Resolve<IInputController>();
-            var boardViewModel = container.Resolve<IBoardViewModel>();
-            var playerFacade = container.Resolve<IPlayerFacade>();
-            var piece = container.Resolve<IPiece>();
+            var positionCalculator = payload.BoardWorldPositionsCalculator;
+            var playerFacade = payload.PlayerFacade;
+            var piece = payload.Piece;
             
             var piecePosition = (BoardCoordinates) "a3";
             var clickPosition = new Vector2(34f, 223f);
 
-            boardViewModel.GetCellCoords(clickPosition).Returns(piecePosition);
+            positionCalculator.GetCellCoords(clickPosition).Returns(piecePosition);
 
             piece.Position.Returns(piecePosition);
             
@@ -407,8 +418,8 @@ namespace KChessUnity.Tests
 
             var boardDownCoords = (BoardCoordinates) "g5";
             var boardUpCoords = (BoardCoordinates) "f5";
-            boardViewModel.GetCellCoords(mouseDownPos).Returns(boardDownCoords);
-            boardViewModel.GetCellCoords(mouseUpPos).Returns(boardUpCoords);
+            positionCalculator.GetCellCoords(mouseDownPos).Returns(boardDownCoords);
+            positionCalculator.GetCellCoords(mouseUpPos).Returns(boardUpCoords);
 
             // Act
             pieceViewModel.Initialize();
@@ -427,17 +438,18 @@ namespace KChessUnity.Tests
         public void BoardClicked_PieceCantBeMoved_SelectionReset()
         {
             // Arrange
-            var container = TestHelper.CreateContainerFor<PieceViewModel>(out var pieceViewModel);
+            var container = TestHelper.CreateContainerForViewModel<PieceViewModel>(out var pieceViewModel);
+            var payload = container.Resolve<IPieceViewModelPayload>();
             var inputController = container.Resolve<IInputController>();
-            var boardViewModel = container.Resolve<IBoardViewModel>();
-            var playerFacade = container.Resolve<IPlayerFacade>();
+            var positionCalculator = payload.BoardWorldPositionsCalculator;
+            var playerFacade = payload.PlayerFacade;
             var resetSelectionTrigger = container.Resolve<IResetSelectionTrigger>();
-            var piece = container.Resolve<IPiece>();
+            var piece = payload.Piece;
             
             var piecePosition = (BoardCoordinates) "a3";
             var clickPosition = new Vector2(34f, 223f);
 
-            boardViewModel.GetCellCoords(clickPosition).Returns(piecePosition);
+            positionCalculator.GetCellCoords(clickPosition).Returns(piecePosition);
 
             piece.Position.Returns(piecePosition);
             
@@ -445,8 +457,8 @@ namespace KChessUnity.Tests
             var mouseUpPos = new Vector2(12f, 23f);
 
             var boardCoords = (BoardCoordinates) "g5";
-            boardViewModel.GetCellCoords(mouseDownPos).Returns(boardCoords);
-            boardViewModel.GetCellCoords(mouseUpPos).Returns(boardCoords);
+            positionCalculator.GetCellCoords(mouseDownPos).Returns(boardCoords);
+            positionCalculator.GetCellCoords(mouseUpPos).Returns(boardCoords);
 
             playerFacade.TryMovePiece(default, default).ReturnsForAnyArgs(false);
 

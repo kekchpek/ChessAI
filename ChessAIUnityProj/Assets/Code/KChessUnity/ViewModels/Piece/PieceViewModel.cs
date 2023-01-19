@@ -3,25 +3,26 @@ using KChess.Core.API.PlayerFacade;
 using KChess.Domain;
 using KChess.Domain.Impl;
 using KChessUnity.Input;
-using KChessUnity.ViewModels.Board;
-using KChessUnity.ViewModels.MovesDisplayer;
+using KChessUnity.Models;
+using KChessUnity.Models.Board;
 using KChessUnity.ViewModels.Triggers;
-using MVVMCore;
 using UnityEngine;
+using UnityMVVM.ViewModelCore;
+using UnityMVVM.ViewModelCore.Bindable;
 
 namespace KChessUnity.ViewModels.Piece
 {
     public class PieceViewModel : ViewModel, IPieceViewModel
     {
-        private readonly IMovesDisplayerViewModel _movesDisplayerViewModel;
-        private readonly IBoardViewModel _boardViewModel;
+        private readonly IHighlightedCellsService _highlightedCellsService;
+        private readonly IBoardWorldPositionsCalculator _boardWorldPositionsCalculator;
         private readonly IResetSelectionTrigger _resetSelectionTrigger;
         private readonly IInputController _inputController;
         private readonly IPiece _piece;
         private readonly IPlayerFacade _playerFacade;
         
-        private Vector3 _position;
-        private Sprite _image;
+        private readonly Mutable<Vector3> _position = new();
+        private readonly Mutable<Sprite> _image = new();
 
         private bool _isDragged;
         private bool _isSelected;
@@ -30,37 +31,27 @@ namespace KChessUnity.ViewModels.Piece
 
         public event Action Disposed;
 
-        public Vector3 Position
-        {
-            get => _position;
-            set => SetAndRaiseIfChanged(nameof(Position), value, ref _position);
-        }
-        
-        public Sprite Image
-        {
-            get => _image;
-            set => SetAndRaiseIfChanged(nameof(Image), value, ref _image);
-        }
+        public IBindable<Vector3> Position => _position;
+
+        public IBindable<Sprite> Image => _image;
 
         public PieceViewModel(
             IResetSelectionTrigger resetSelectionTrigger,
             IInputController inputController,
-            IBoardViewModel boardViewModel,
-            IMovesDisplayerViewModel movesDisplayerViewModel,
-            IPiece piece,
-            IPlayerFacade playerFacade)
+            IHighlightedCellsService highlightedCellsService,
+            IPieceViewModelPayload payload)
         {
-            _movesDisplayerViewModel = movesDisplayerViewModel;
-            _boardViewModel = boardViewModel;
+            _highlightedCellsService = highlightedCellsService;
+            _boardWorldPositionsCalculator = payload.BoardWorldPositionsCalculator;
             _resetSelectionTrigger = resetSelectionTrigger;
             _inputController = inputController;
-            _piece = piece;
-            _playerFacade = playerFacade;
+            _piece = payload.Piece;
+            _playerFacade = payload.PlayerFacade;
         }
 
         public void Initialize()
         {
-            Image = GetSprite(_piece.Color, _piece.Type);
+            _image.Value = GetSprite(_piece.Color, _piece.Type);
             UpdatePositionBasedOnPiece();
             _inputController.MouseDown += OnMouseDown;
             _inputController.MouseUp += OnMouseUp;
@@ -80,7 +71,7 @@ namespace KChessUnity.ViewModels.Piece
         {
             if (_piece.Position.HasValue)
             {
-                Position = _boardViewModel.GetWorldPosition(_piece.Position.Value);
+                _position.Value = _boardWorldPositionsCalculator.GetWorldPosition(_piece.Position.Value);
             }
             else
             {
@@ -92,7 +83,7 @@ namespace KChessUnity.ViewModels.Piece
         {
             if (_playerFacade.GetTurn() != _piece.Color)
                 return;
-            var clickPosition = _boardViewModel.GetCellCoords(mousePosition);
+            var clickPosition = _boardWorldPositionsCalculator.GetCellCoords(mousePosition);
             if (clickPosition.HasValue)
             {
                 if (clickPosition.Value == _piece.Position)
@@ -111,7 +102,7 @@ namespace KChessUnity.ViewModels.Piece
         {
             if (_playerFacade.GetTurn() != _piece.Color)
                 return;
-            var clickPosition = _boardViewModel.GetCellCoords(mousePosition);
+            var clickPosition = _boardWorldPositionsCalculator.GetCellCoords(mousePosition);
             if (_isDragged)
             {
                 ReleaseDrag();
@@ -120,7 +111,7 @@ namespace KChessUnity.ViewModels.Piece
                     if (clickPosition != _piece.Position)
                     {
                         _playerFacade.TryMovePiece(_piece, clickPosition.Value);
-                        _movesDisplayerViewModel.HideMoves();
+                        _highlightedCellsService.ClearHighlightedCells();
                     }
                     else
                     {
@@ -143,10 +134,10 @@ namespace KChessUnity.ViewModels.Piece
             if (_isDragged)
                 return;
             _resetSelectionTrigger.Trigger();
-            Position = _inputController.MousePosition;
+            _position.Value = _inputController.MousePosition;
             _isDragged = true;
             _inputController.MousePositionChanged += OnMousePositionChanged;
-            _movesDisplayerViewModel.ShowMoves(_playerFacade.GetAvailableMoves(_piece));
+            _highlightedCellsService.SetHighlightedCells(_playerFacade.GetAvailableMoves(_piece));
         }
 
         private void ReleaseDrag()
@@ -160,7 +151,7 @@ namespace KChessUnity.ViewModels.Piece
         {
             _resetSelectionTrigger.Trigger();
             _isSelected = true;
-            _movesDisplayerViewModel.ShowMoves(_playerFacade.GetAvailableMoves(_piece));
+            _highlightedCellsService.SetHighlightedCells(_playerFacade.GetAvailableMoves(_piece));
         }
 
         private void ReleaseSelection()
@@ -169,13 +160,13 @@ namespace KChessUnity.ViewModels.Piece
             {
                 _cellToMove = null;
                 _isSelected = false;
-                _movesDisplayerViewModel.HideMoves();
+                _highlightedCellsService.ClearHighlightedCells();
             }
         }
 
         private void OnMousePositionChanged(Vector2 mousePosition)
         {
-            Position = mousePosition;
+            _position.Value = mousePosition;
         }
 
         private Sprite GetSprite(PieceColor color, PieceType type)

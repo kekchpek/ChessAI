@@ -1,7 +1,7 @@
 ﻿using KChessUnity.ViewModels.Piece;
-using MVVMCore;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityMVVM;
 
 namespace KChessUnity.Views
 {
@@ -22,11 +22,8 @@ namespace KChessUnity.Views
         {
             base.OnViewModelSet();
             
-            SubscribeForPropertyChange<Vector3>(nameof(ViewModel.Position), OnPositionChanged);
-            OnPositionChanged(ViewModel.Position);
-            
-            SubscribeForPropertyChange<Sprite>(nameof(ViewModel.Image), OnImageChanged);
-            OnImageChanged(ViewModel.Image);
+            ViewModel!.Position.Bind(OnPositionChanged);
+            ViewModel.Image.Bind(OnImageChanged);
 
             ViewModel.Disposed += OnDisposed;
         }

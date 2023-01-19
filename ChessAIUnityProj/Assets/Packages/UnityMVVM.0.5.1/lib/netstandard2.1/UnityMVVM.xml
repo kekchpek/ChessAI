@@ -1,0 +1,348 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>UnityMVVM</name>
+    </assembly>
+    <members>
+        <member name="T:UnityMVVM.DI.IViewsContainerAdapter">
+            <summary>
+            The adapter for views DI container.
+            </summary>
+        </member>
+        <member name="M:UnityMVVM.DI.IViewsContainerAdapter.ResolveFactory``1">
+            <summary>
+            Resolve the factory for specified view models.
+            </summary>
+            <typeparam name="T">Type of view models to be created from factory.</typeparam>
+            <returns>The factory, that creates views and view models.</returns>
+        </member>
+        <member name="T:UnityMVVM.DI.MvvmSubContainer">
+            <summary>
+            Subcontainer for mvvm structure. It also modify parent container and inject there MVVM core control objects.
+            </summary>
+        </member>
+        <member name="M:UnityMVVM.DI.MvvmSubContainer.#ctor(Zenject.DiContainer,System.ValueTuple{System.String,UnityEngine.Transform}[])">
+            <summary>
+            Defautl constroctor.
+            </summary>
+            <param name="container">The parent container. There are MVVM core control object will be injected there.</param>
+            <param name="layersData">Data about presentation layers.</param>
+        </member>
+        <member name="M:UnityMVVM.DI.MvvmSubContainer.InstallFactoryFor``3(UnityEngine.GameObject)">
+            <summary>
+            Installs <see cref="T:UnityMVVM.ViewModelCore.ViewModelsFactory.IViewModelFactory`1"/> for specified View-ViewModel pair.
+            </summary>
+            <param name="viewPrefab">View prefab. It will be instantiated on creation. It should contains <typeparamref name="TView"/> component inside.</param>
+            <typeparam name="TView">The type of a view</typeparam>
+            <typeparam name="TViewModel">The type of a view model.</typeparam>
+            <typeparam name="TViewModelImpl">The type, that implements a view model.</typeparam>
+        </member>
+        <member name="T:UnityMVVM.DI.ViewsContainerAdapter">
+            <inheritdoc cref="T:UnityMVVM.DI.IViewsContainerAdapter"/>
+        </member>
+        <member name="M:UnityMVVM.DI.ViewsContainerAdapter.#ctor(Zenject.DiContainer)">
+            <summary>
+            Default constructor.
+            </summary>
+            <param name="viewsContainer">The container to adapt</param>
+        </member>
+        <member name="M:UnityMVVM.DI.ViewsContainerAdapter.ResolveFactory``1">
+            <inheritdoc cref="M:UnityMVVM.DI.IViewsContainerAdapter.ResolveFactory``1"/>
+        </member>
+        <member name="T:UnityMVVM.IViewInitializer`1">
+            <summary>
+            The interface for initialize the view.
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:UnityMVVM.IViewInitializer`1.SetViewModel(`0)">
+            <summary>
+            Sets the view model.
+            </summary>
+            <param name="viewModel"></param>
+        </member>
+        <member name="T:UnityMVVM.ViewBehaviour`1">
+            <summary>
+            Base class for views.
+            </summary>
+            <typeparam name="T">The view model type for this view.</typeparam>
+        </member>
+        <member name="P:UnityMVVM.ViewBehaviour`1.ViewModel">
+            <summary>
+            Current view model.
+            </summary>
+        </member>
+        <member name="M:UnityMVVM.ViewBehaviour`1.OnViewModelSet">
+            <summary>
+            Called after view model changed.
+            </summary>
+        </member>
+        <member name="M:UnityMVVM.ViewBehaviour`1.OnViewModelClear">
+            <summary>
+            Called just befor the view model and the view destroyed.
+            </summary>
+        </member>
+        <member name="T:UnityMVVM.ViewManager.IViewManager">
+            <summary>
+            Responsible for managing views and view models.
+            </summary>
+        </member>
+        <member name="M:UnityMVVM.ViewManager.IViewManager.Create``1(UnityMVVM.ViewModelCore.IViewModel,UnityMVVM.ViewModelCore.IPayload)">
+            <summary>
+            Creates viewModel and corresponding view.
+            </summary>
+            <typeparam name="T">A view model type.</typeparam>
+            <param name="parent">Parent view model.</param>
+            <param name="payload">View model payload.</param>
+            <returns>Returns created view model.</returns>
+        </member>
+        <member name="M:UnityMVVM.ViewManager.IViewManager.Open``1(System.String,UnityMVVM.ViewModelCore.IPayload)">
+            <summary>
+            Creates view model and corresponding view. Destroys all views on layers above specified.
+            </summary>
+            <typeparam name="T">A view model type</typeparam>
+            <param name="viewLayerId">A layer, where view should be created.</param>
+            <param name="payload">View model payload.</param>
+        </member>
+        <member name="M:UnityMVVM.ViewManager.IViewManager.Close(System.String)">
+            <summary>
+            Destroys all view on specified layer.
+            </summary>
+            <param name="viewLayerId">A layer on which views should be destroyed.</param>
+        </member>
+        <member name="T:UnityMVVM.ViewManager.ViewLayer.IViewLayer">
+            <summary>
+            The layer to place a views.
+            </summary>
+        </member>
+        <member name="P:UnityMVVM.ViewManager.ViewLayer.IViewLayer.Id">
+            <summary>
+            The layer id.
+            </summary>
+        </member>
+        <member name="P:UnityMVVM.ViewManager.ViewLayer.IViewLayer.Container">
+            <summary>
+            Container for views.
+            </summary>
+        </member>
+        <member name="M:UnityMVVM.ViewManager.ViewLayer.IViewLayer.Clear">
+            <summary>
+            Destroy root view model.
+            </summary>
+        </member>
+        <member name="M:UnityMVVM.ViewManager.ViewLayer.IViewLayer.Set(UnityMVVM.ViewModelCore.IViewModel)">
+            <summary>
+            Set root view model. Destroy previous if it exists.
+            </summary>
+            <param name="viewModel">View model to be set.</param>
+        </member>
+        <member name="T:UnityMVVM.ViewManager.ViewManagerImpl">
+            <inheritdoc cref="T:UnityMVVM.ViewManager.IViewManager"/>
+        </member>
+        <member name="M:UnityMVVM.ViewManager.ViewManagerImpl.#ctor(System.Collections.Generic.IEnumerable{UnityMVVM.ViewManager.ViewLayer.IViewLayer},UnityMVVM.DI.IViewsContainerAdapter)">
+            <summary>
+            Default constructor.
+            </summary>
+            <param name="layers">Layers to place views.</param>
+            <param name="viewsContainerAdapter">Adapter for views DI container.</param>
+        </member>
+        <member name="M:UnityMVVM.ViewManager.ViewManagerImpl.Close(System.String)">
+            <inheritdoc cref="M:UnityMVVM.ViewManager.IViewManager.Close(System.String)"/>
+        </member>
+        <member name="M:UnityMVVM.ViewManager.ViewManagerImpl.Create``1(UnityMVVM.ViewModelCore.IViewModel,UnityMVVM.ViewModelCore.IPayload)">
+            <inheritdoc cref="M:UnityMVVM.ViewManager.IViewManager.Create``1(UnityMVVM.ViewModelCore.IViewModel,UnityMVVM.ViewModelCore.IPayload)"/>
+        </member>
+        <member name="M:UnityMVVM.ViewManager.ViewManagerImpl.Open``1(System.String,UnityMVVM.ViewModelCore.IPayload)">
+            <inheritdoc cref="M:UnityMVVM.ViewManager.IViewManager.Open``1(System.String,UnityMVVM.ViewModelCore.IPayload)"/>
+        </member>
+        <member name="T:UnityMVVM.ViewModelCore.Bindable.IBindable`1">
+            <summary>
+            Value, changes of which could be handled with binded handlers.
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="P:UnityMVVM.ViewModelCore.Bindable.IBindable`1.Value">
+            <summary>
+            Current value.
+            </summary>
+        </member>
+        <member name="M:UnityMVVM.ViewModelCore.Bindable.IBindable`1.Bind(System.Action{`0},System.Boolean)">
+            <summary>
+            Bind a handler for value changing.
+            </summary>
+            <param name="handler">Value changing handler.</param>
+            <param name="callImmediately">Calls handler instantly when it is set.</param>
+            <exception cref="T:System.ArgumentNullException">Handler is null.</exception>
+        </member>
+        <member name="M:UnityMVVM.ViewModelCore.Bindable.IBindable`1.Bind(System.Action,System.Boolean)">
+            <inheritdoc cref="M:UnityMVVM.ViewModelCore.Bindable.IBindable`1.Bind(System.Action{`0},System.Boolean)"/>
+        </member>
+        <member name="M:UnityMVVM.ViewModelCore.Bindable.IBindable`1.Unbind(System.Action{`0})">
+            <summary>
+            Unbinds the value changing handler.
+            </summary>
+            <param name="handler">Value changing handler.</param>
+        </member>
+        <member name="M:UnityMVVM.ViewModelCore.Bindable.IBindable`1.Unbind(System.Action)">
+            <inheritdoc cref="M:UnityMVVM.ViewModelCore.Bindable.IBindable`1.Unbind(System.Action{`0})"/>
+        </member>
+        <member name="T:UnityMVVM.ViewModelCore.Bindable.IMutable`1">
+            <summary>
+            Class for representing changable bindable value.
+            </summary>
+            <typeparam name="T">Bindable value type.</typeparam>
+        </member>
+        <member name="P:UnityMVVM.ViewModelCore.Bindable.IMutable`1.Value">
+            <inheritdoc cref="P:UnityMVVM.ViewModelCore.Bindable.IBindable`1.Value"/>
+        </member>
+        <member name="T:UnityMVVM.ViewModelCore.Bindable.Mutable`1">
+            <inheritdoc cref="T:UnityMVVM.ViewModelCore.Bindable.IMutable`1"/>
+        </member>
+        <member name="P:UnityMVVM.ViewModelCore.Bindable.Mutable`1.Value">
+            <inheritdoc cref="P:UnityMVVM.ViewModelCore.Bindable.IMutable`1.Value"/>
+        </member>
+        <member name="M:UnityMVVM.ViewModelCore.Bindable.Mutable`1.#ctor(`0)">
+            <summary>
+            Default constructor to create changable mutable value.
+            </summary>
+            <param name="initialValue">Initial value.</param>
+        </member>
+        <member name="M:UnityMVVM.ViewModelCore.Bindable.Mutable`1.Bind(System.Action{`0},System.Boolean)">
+            <inheritdoc cref="M:UnityMVVM.ViewModelCore.Bindable.IBindable`1.Bind(System.Action{`0},System.Boolean)"/>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:UnityMVVM.ViewModelCore.Bindable.Mutable`1.Bind(System.Action,System.Boolean)">
+            <inheritdoc cref="M:UnityMVVM.ViewModelCore.Bindable.IBindable`1.Bind(System.Action,System.Boolean)"/>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:UnityMVVM.ViewModelCore.Bindable.Mutable`1.Unbind(System.Action{`0})">
+            <inheritdoc cref="M:UnityMVVM.ViewModelCore.Bindable.IBindable`1.Unbind(System.Action{`0})"/>
+        </member>
+        <member name="M:UnityMVVM.ViewModelCore.Bindable.Mutable`1.Unbind(System.Action)">
+            <inheritdoc cref="M:UnityMVVM.ViewModelCore.Bindable.IBindable`1.Unbind(System.Action)"/>
+        </member>
+        <member name="T:UnityMVVM.ViewModelCore.IPayload">
+            <summary>
+            Interface to define and determine view model payload.
+            </summary>
+        </member>
+        <member name="T:UnityMVVM.ViewModelCore.IViewModel">
+            <summary>
+            Base view model interface.
+            </summary>
+        </member>
+        <member name="E:UnityMVVM.ViewModelCore.IViewModel.OnDestroy">
+            <summary>
+            Fired on view model destroyed.
+            </summary>
+        </member>
+        <member name="P:UnityMVVM.ViewModelCore.IViewModel.Layer">
+            <summary>
+            Layer, on which view was opened.
+            </summary>
+        </member>
+        <member name="M:UnityMVVM.ViewModelCore.IViewModel.Destroy">
+            <summary>
+            Destroys the view modes and view.
+            </summary>
+        </member>
+        <member name="T:UnityMVVM.ViewModelCore.IViewModelInitializer">
+            <summary>
+            Internal interface for initializing view model internal dependencies.
+            </summary>
+        </member>
+        <member name="M:UnityMVVM.ViewModelCore.IViewModelInitializer.SetInternalDependencies(UnityMVVM.ViewManager.IViewManager,UnityMVVM.ViewManager.ViewLayer.IViewLayer,UnityMVVM.ViewModelCore.IViewModel)">
+            <summary>
+            Sets the internal view model dependencies.
+            </summary>
+            <param name="viewManager">View manager.</param>
+            <param name="layer">Layer on which view was created.</param>
+            <param name="parent">Parent view.</param>
+        </member>
+        <member name="T:UnityMVVM.ViewModelCore.ViewModel">
+            <summary>
+            Base class for view model.
+            </summary>
+        </member>
+        <member name="P:UnityMVVM.ViewModelCore.ViewModel.Layer">
+            <inheritdoc cref="P:UnityMVVM.ViewModelCore.IViewModel.Layer"/>
+        </member>
+        <member name="E:UnityMVVM.ViewModelCore.ViewModel.OnDestroy">
+            <inheritdoc cref="E:UnityMVVM.ViewModelCore.IViewModel.OnDestroy"/>
+        </member>
+        <member name="M:UnityMVVM.ViewModelCore.ViewModel.SetInternalDependencies(UnityMVVM.ViewManager.IViewManager,UnityMVVM.ViewManager.ViewLayer.IViewLayer,UnityMVVM.ViewModelCore.IViewModel)">
+            <summary>
+            Default constructor for view model.
+            </summary>
+            <param name="viewManager">View manager.</param>
+            <param name="layer">Layer, on which it is placed.</param>
+            <param name="parent">Parent view model. This view model will be destroyed with it.</param>
+        </member>
+        <member name="M:UnityMVVM.ViewModelCore.ViewModel.CreateSubView``1(UnityMVVM.ViewModelCore.IPayload)">
+            <summary>
+            Creates a child view and view model.
+            </summary>
+            <typeparam name="T">Type of the view model.</typeparam>
+            <param name="payload">The view model payload.</param>
+            <returns>Created view model.</returns>
+        </member>
+        <member name="M:UnityMVVM.ViewModelCore.ViewModel.OpenView``1(System.String,UnityMVVM.ViewModelCore.IPayload)">
+            <summary>
+            Clear layer and opens view on it.
+            </summary>
+            <typeparam name="T">Type of the view model.</typeparam>
+            <param name="viewLayerId">Id of the layer to open view on.</param>
+            <param name="payload">The view model payload.</param>
+        </member>
+        <member name="M:UnityMVVM.ViewModelCore.ViewModel.Destroy">
+            <inheritdoc cref="M:UnityMVVM.ViewModelCore.IViewModel.Destroy"/>
+        </member>
+        <member name="M:UnityMVVM.ViewModelCore.ViewModel.OnDestroyInternal">
+            <summary>
+            Internal method to handle view model destroying.
+            </summary>
+        </member>
+        <member name="T:UnityMVVM.ViewModelCore.ViewModelsFactory.IViewModelFactory`1">
+            <summary>
+            Factory to create views and view models.
+            </summary>
+            <typeparam name="TViewModel">Type of view models, that will be created.</typeparam>
+        </member>
+        <member name="M:UnityMVVM.ViewModelCore.ViewModelsFactory.IViewModelFactory`1.Create(UnityMVVM.ViewManager.ViewLayer.IViewLayer,UnityMVVM.ViewModelCore.IViewModel,UnityMVVM.ViewModelCore.IPayload)">
+            <summary>
+            Creates view and its view model
+            </summary>
+            <param name="viewLayer">Layer to place a view.</param>
+            <param name="parent">Parent view model to set to the created view model.</param>
+            <param name="payload">View model payload.</param>
+            <returns>Returns created view model to conrol the view.</returns>
+        </member>
+        <member name="T:UnityMVVM.ViewModelCore.ViewModelsFactory.IViewModelFactoryInternal`1">
+            <summary>
+            Internal interface for view model factory.
+            </summary>
+            <typeparam name="TViewModel">The type of view model to set to the view.</typeparam>
+        </member>
+        <member name="E:UnityMVVM.ViewModelCore.ViewModelsFactory.IViewModelFactoryInternal`1.ViewModelCreated">
+            <summary>
+            Firede on some view model created.
+            </summary>
+        </member>
+        <member name="T:UnityMVVM.ViewModelCore.ViewModelsFactory.ViewModelFactory`3">
+            <inheritdoc cref="T:UnityMVVM.ViewModelCore.ViewModelsFactory.IViewModelFactory`1"/>
+        </member>
+        <member name="E:UnityMVVM.ViewModelCore.ViewModelsFactory.ViewModelFactory`3.ViewModelCreated">
+            <inheritdoc cref="E:UnityMVVM.ViewModelCore.ViewModelsFactory.IViewModelFactoryInternal`1.ViewModelCreated"/>
+        </member>
+        <member name="M:UnityMVVM.ViewModelCore.ViewModelsFactory.ViewModelFactory`3.#ctor(Zenject.IInstantiator,UnityEngine.GameObject)">
+            <summary>
+            Default constructor for view factory.
+            </summary>
+            <param name="instantiator">Instantiator to create views.</param>
+            <param name="viewPrefab">Prefab of the view.</param>
+        </member>
+        <member name="M:UnityMVVM.ViewModelCore.ViewModelsFactory.ViewModelFactory`3.Create(UnityMVVM.ViewManager.ViewLayer.IViewLayer,UnityMVVM.ViewModelCore.IViewModel,UnityMVVM.ViewModelCore.IPayload)">
+            <inheritdoc cref="M:UnityMVVM.ViewModelCore.ViewModelsFactory.IViewModelFactory`1.Create(UnityMVVM.ViewManager.ViewLayer.IViewLayer,UnityMVVM.ViewModelCore.IViewModel,UnityMVVM.ViewModelCore.IPayload)"/>
+        </member>
+    </members>
+</doc>

@@ -18,7 +18,8 @@
         "Castle.Core.dll",
         "Zenject-usage.dll",
         "UnityAuxiliaryTools.dll",
-        "nunit.framework.dll"
+        "nunit.framework.dll",
+        "UnityMVVM.dll"
     ],
     "autoReferenced": true,
     "defineConstraints": [

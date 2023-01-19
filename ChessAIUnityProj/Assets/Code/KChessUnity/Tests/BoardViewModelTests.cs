@@ -18,7 +18,7 @@ namespace KChessUnity.Tests
         public void GetWorldPosition_CornersSet_PositionCorrect(float x, float y, int vertical, int horizontal)
         {
             // Arrange
-            TestHelper.CreateContainerFor<BoardViewModel>(out var boardViewModel);
+            TestHelper.CreateContainerForViewModel<BoardViewModel>(out var boardViewModel);
             
             // Act
             boardViewModel.SetCornerPoints(Vector3.zero, new Vector3(8f, 8f, 0f));
@@ -36,7 +36,7 @@ namespace KChessUnity.Tests
         public void GetCellPosition_CornersSet_PositionCorrect(float x, float y, int vertical, int horizontal)
         {
             // Arrange
-            TestHelper.CreateContainerFor<BoardViewModel>(out var boardViewModel);
+            TestHelper.CreateContainerForViewModel<BoardViewModel>(out var boardViewModel);
             
             // Act
             boardViewModel.SetCornerPoints(Vector3.zero, new Vector3(8f, 8f, 0f));
@@ -55,7 +55,7 @@ namespace KChessUnity.Tests
         public void GetCellPosition_CornersSetWithNegativeCoords_PositionCorrect(float x, float y, int vertical, int horizontal)
         {
             // Arrange
-            TestHelper.CreateContainerFor<BoardViewModel>(out var boardViewModel);
+            TestHelper.CreateContainerForViewModel<BoardViewModel>(out var boardViewModel);
             
             // Act
             boardViewModel.SetCornerPoints(new Vector3(-4f, -4f, 0f), new Vector3(4f, 4f, 0f));
@@ -77,7 +77,7 @@ namespace KChessUnity.Tests
         public void GetCellPosition_OutOfBoard_ReturnsNull(float x, float y)
         {
             // Arrange
-            TestHelper.CreateContainerFor<BoardViewModel>(out var boardViewModel);
+            TestHelper.CreateContainerForViewModel<BoardViewModel>(out var boardViewModel);
             
             // Act
             boardViewModel.SetCornerPoints(Vector3.zero, new Vector3(8f, 8f, 0f));

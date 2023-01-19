@@ -1,16 +1,45 @@
-﻿using KChess.Domain.Impl;
-using MVVMCore;
+﻿using KChess.Core.API.PlayerFacade;
+using KChess.Domain;
+using KChess.Domain.Impl;
+using KChessUnity.Models.Board;
+using KChessUnity.ViewModels.MovesDisplayer;
+using KChessUnity.ViewModels.Piece;
 using UnityEngine;
+using UnityMVVM.ViewModelCore;
+using Zenject;
 
 namespace KChessUnity.ViewModels.Board
 {
-    public class BoardViewModel : ViewModel, IBoardViewModel
+    public class BoardViewModel : ViewModel, IBoardViewModel, IInitializable, IBoardWorldPositionsCalculator
     {
 
         private const float BoardSize = 8f;
 
         private Vector3 _bottomLeftCorner;
         private Vector3 _size;
+
+        private readonly IPlayerFacade _whitePlayerFacade;
+        private readonly IPlayerFacade _blackPlayerFacade;
+        
+
+        public BoardViewModel(IBoardViewModelPayload payload)
+        {
+            _whitePlayerFacade = payload.WhitePlayerFacade;
+            _blackPlayerFacade = payload.BlackPlayerFacade;
+        }
+        
+        public void Initialize()
+        {
+            CreateSubView<IMovesDisplayerViewModel>(new MovesDisplayerPayload(this));
+
+            foreach (var piece in _whitePlayerFacade.GetBoard().Pieces)
+            {
+                CreateSubView<IPieceViewModel>(
+                    new PieceViewModelPayload(piece,
+                        piece.Color == PieceColor.White ? _whitePlayerFacade : _blackPlayerFacade,
+                        this));
+            }
+        }
 
         public void SetCornerPoints(Vector3 bottomLeft, Vector3 topRight)
         {

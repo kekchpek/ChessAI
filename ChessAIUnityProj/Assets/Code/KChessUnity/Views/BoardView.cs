@@ -1,6 +1,6 @@
 ﻿using KChessUnity.ViewModels.Board;
-using MVVMCore;
 using UnityEngine;
+using UnityMVVM;
 
 namespace KChessUnity.Views
 {

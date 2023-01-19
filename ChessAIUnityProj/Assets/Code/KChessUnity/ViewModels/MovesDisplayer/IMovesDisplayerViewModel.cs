@@ -1,14 +1,12 @@
 ﻿using System.Collections.Generic;
-using KChess.Domain.Impl;
-using MVVMCore;
 using UnityEngine;
+using UnityMVVM.ViewModelCore;
+using UnityMVVM.ViewModelCore.Bindable;
 
 namespace KChessUnity.ViewModels.MovesDisplayer
 {
     public interface IMovesDisplayerViewModel : IViewModel
     {
-        IReadOnlyCollection<Vector3> HighlightedPositions { get; }
-        void ShowMoves(BoardCoordinates[] availableMoves);
-        void HideMoves();
+        IBindable<IReadOnlyCollection<Vector3>> HighlightedPositions { get; }
     }
 }

@@ -1,19 +1,41 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using NSubstitute;
+using UnityMVVM.ViewManager;
+using UnityMVVM.ViewManager.ViewLayer;
 using Zenject;
 
 namespace KChessUnity.Tests.Helper
 {
     public static class TestHelper
     {
+
+        public static DiContainer CreateContainerForViewModel<T>(out T createdObj)
+        {
+            return CreateContainerFor(new Dictionary<Type, object>{
+                { typeof(IViewManager), Substitute.For<IViewManager>() },
+                { typeof(IViewLayer), Substitute.For<IViewLayer>() }
+            }, out createdObj);
+        }
+
         /// <summary>
-        /// Creates a container filled with substitutes and one specified real object.
+        /// Creates a container with an object of type <typeparamref name="T"/> and all its mocked dependencies inside.
         /// </summary>
-        /// <param name="createdObj">Created object</param>
-        /// <typeparam name="T">The type of real object that should be created.</typeparam>
-        /// <returns>The container filled with substitutes and one specified real object.</returns>
-        public static DiContainer CreateContainerFor<T>(out T createdObj)
+        /// <param name="createdObj">Created object of type <typeparamref name="T"/> inside container.</param>
+        /// <typeparam name="T">The type of object that should be created, and dependencies of which should be mocked.</typeparam>
+        /// <returns>Returns a container with created object and all its mocked dependencies.</returns>
+        /// <exception cref="InvalidOperationException">The type <typeparamref name="T"/> has several constructors or have no one.</exception>
+        public static DiContainer CreateContainerFor<T>(out T createdObj, bool useRealInstantiator = false)
+        {
+            return CreateContainerFor(new Dictionary<Type, object>(), out createdObj, useRealInstantiator);
+        }
+        
+        /// <inheritdoc cref="CreateContainerFor{T}(out T)"/>
+        /// <param name="explicitDependencies">The explicitly specified dependencies, that will be passed to the constructor.
+        /// You can specify here own stubs or dependencies, that can't be mocked automatically with NSubstitute.</param>
+        /// <exception cref="ArgumentException">The type of the dependency in <paramref name="explicitDependencies"/> doesn't corresponds the provided object type.</exception>
+        public static DiContainer CreateContainerFor<T>(IReadOnlyDictionary<Type, object> explicitDependencies, out T createdObj, bool useRealInstantiator = false)
         {
             var type = typeof(T);
             var container = new DiContainer();
@@ -23,25 +45,100 @@ namespace KChessUnity.Tests.Helper
                 throw new InvalidOperationException(
                     "Can not determine what constructor should be used for mocks creating");
             }
+
+            foreach (var dependency in explicitDependencies)
+            {
+                if (!dependency.Key.IsAssignableFrom(dependency.Value.GetType()))
+                {
+                    throw new ArgumentException(
+                        $"Argument of type {dependency.Value.GetType()} is not assignable to {dependency.Key} argument");
+                }
+                
+                container.Bind(dependency.Key)
+                    .FromInstance(dependency.Value)
+                    .AsSingle();
+            }
             foreach (var argType in constructorInfos.First().GetParameters().Select(x => x.ParameterType))
             {
-                // IInstantiator should be rebind because it is bind by default
-                if (argType == typeof(IInstantiator)) 
+                // IInstantiator should be rebind because it is bound by default
+                if (!explicitDependencies.ContainsKey(argType))
                 {
-                    container.Rebind(argType)
-                        .FromInstance(Substitute.For(new[] {argType}, Array.Empty<object>()))
-                        .AsSingle();
-                }
-                else
-                {
-                    container.Bind(argType)
-                        .FromInstance(Substitute.For(new[] {argType}, Array.Empty<object>()))
-                        .AsSingle();
+                    if (argType == typeof(IInstantiator))
+                    {
+                        if (!useRealInstantiator)
+                        {
+                            container.Rebind(argType)
+                                .FromInstance(Substitute.For(new[] {argType}, Array.Empty<object>()))
+                                .AsSingle();
+                        }
+                    }
+                    else
+                    {
+                        container.Bind(argType)
+                            .FromInstance(Substitute.For(new[] {argType}, Array.Empty<object>()))
+                            .AsSingle();
+                    }
                 }
             }
             container.Bind<T>().ToSelf().AsSingle();
             createdObj = container.Resolve<T>();
             return container;
+        }
+
+        public static DiContainer CreateContainerForPartsOf<T>(out T createdObject) 
+            where T: class
+        {
+            var type = typeof(T);
+            var container = new DiContainer();
+            var constructorInfos = type.GetConstructors();
+            if (constructorInfos.Length != 1)
+            {
+                throw new InvalidOperationException(
+                    "Can not determine what constructor should be used for mocks creating");
+            }
+            
+            var ctorTypes = constructorInfos.First().GetParameters().Select(x => x.ParameterType).ToArray();
+            foreach (var argType in ctorTypes)
+            {
+                container.Bind(argType)
+                    .FromInstance(Substitute.For(new[] {argType}, Array.Empty<object>()))
+                    .AsSingle();
+            }
+
+            var ctorArgs = ctorTypes.Select(argType => container.Resolve(argType)).ToArray();
+            createdObject = Substitute.ForPartsOf<T>(ctorArgs);
+            container.Bind<T>()
+                .FromInstance(createdObject)
+                .AsSingle();
+            
+            return container;
+        }
+        /// <summary>
+        /// Ads a dependencies of an object of type <typeparamref name="T"/> to existing container.
+        /// </summary>
+        /// <param name="container">Existing container.</param>
+        /// <typeparam name="T">The type of object which dependencies should be added to the container.</typeparam>
+        /// <exception cref="InvalidOperationException">The type <typeparamref name="T"/> has several constructors or have no one.</exception>
+        public static void AddDependenciesToContainer<T>(this DiContainer container)
+        {
+            var type = typeof(T);
+            var constructorInfos = type.GetConstructors();
+            if (constructorInfos.Length != 1)
+            {
+                throw new InvalidOperationException(
+                    "Can not determine what constructor should be used for mocks creating");
+            }
+            foreach (var argType in constructorInfos.First().GetParameters().Select(x => x.ParameterType))
+            {
+                if (argType == typeof(IInstantiator) || container.HasBinding(argType))
+                {
+                    continue;
+                }
+
+                container.Bind(argType)
+                    .FromInstance(Substitute.For(new[] {argType}, Array.Empty<object>()))
+                    .AsSingle();
+            }
         }
     }
 }

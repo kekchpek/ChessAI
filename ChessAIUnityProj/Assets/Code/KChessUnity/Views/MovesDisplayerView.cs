@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using KChessUnity.ViewModels.MovesDisplayer;
-using MVVMCore;
 using UnityEngine;
+using UnityMVVM;
 using Zenject;
 
 namespace KChessUnity.Views
@@ -25,24 +27,29 @@ namespace KChessUnity.Views
         protected override void OnViewModelSet()
         {
             base.OnViewModelSet();
-            SubscribeForPropertyChange<Vector3[]>(nameof(ViewModel.HighlightedPositions), OnHighlightedPositionChanged);
+            if (ViewModel != null)
+            {
+                ViewModel.HighlightedPositions.Bind(OnHighlightedPositionChanged);
+            }
         }
 
-        private void OnHighlightedPositionChanged(Vector3[] highlightedPositions)
+        private void OnHighlightedPositionChanged(IEnumerable<Vector3> highlightedPositions)
         {
+            
+            var array = highlightedPositions == null ? Array.Empty<Vector3>() : highlightedPositions.ToArray();
             foreach (var marker in _markers)
             {
                 marker.SetActive(false);
             }
 
-            while (_markers.Count < highlightedPositions.Length)
+            while (_markers.Count < array.Length)
             {
                 AddMarkers(MarkersAddition);
             }
 
-            for (var i = 0; i < highlightedPositions.Length; i++)
+            for (var i = 0; i < array.Length; i++)
             {
-                _markers[i].transform.position = highlightedPositions[i];
+                _markers[i].transform.position = array[i];
                 _markers[i].SetActive(true);
             }
         }

@@ -1,11 +1,15 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using KChess.Domain.Impl;
+using KChessUnity.Models;
 using KChessUnity.Tests.Helper;
 using KChessUnity.ViewModels.Board;
 using KChessUnity.ViewModels.MovesDisplayer;
 using NSubstitute;
 using NUnit.Framework;
 using UnityEngine;
+using UnityMVVM.ViewModelCore.Bindable;
 
 namespace KChessUnity.Tests
 {
@@ -15,8 +19,13 @@ namespace KChessUnity.Tests
         public void ShowMoves_PositionsHighlighted()
         {
             // Arrange 
-            var container = TestHelper.CreateContainerFor<MovesDisplayerViewModel>(out var movesDisplayer);
-            var boardViewModel = container.Resolve<IBoardViewModel>();
+            var container = TestHelper.CreateContainerForViewModel<MovesDisplayerViewModel>(out var movesDisplayer);
+            var payload = container.Resolve<IMovesDisplayerPayload>();
+            var positionCalculator = payload.BoardWorldPositionsCalculator;
+            var highlightedMovesModel = container.Resolve<IHighlightedCellsModel>();
+
+            var cellsProp = new Mutable<IEnumerable<BoardCoordinates>>(Array.Empty<BoardCoordinates>());
+            highlightedMovesModel.HighlightedCells.Returns(cellsProp);
 
             var availableMoves = new[]
             {
@@ -36,17 +45,18 @@ namespace KChessUnity.Tests
             
             for (var i = 0; i < availableMoves.Length; i++)
             {
-                boardViewModel.GetWorldPosition(availableMoves[i]).Returns(availableMovesPositions[i]);
+                positionCalculator.GetWorldPosition(availableMoves[i]).Returns(availableMovesPositions[i]);
             }
 
             // Act
-            movesDisplayer.ShowMoves(availableMoves);
+            movesDisplayer.Initialize();
+            cellsProp.Value = availableMoves;
             
             // Assert
-            Assert.AreEqual(availableMoves.Length, movesDisplayer.HighlightedPositions.Count);
+            Assert.AreEqual(availableMoves.Length, movesDisplayer.HighlightedPositions.Value.Count);
             for (var i = 0; i < availableMoves.Length; i++)
             {
-                Assert.IsTrue(movesDisplayer.HighlightedPositions.Contains(availableMovesPositions[i]));
+                Assert.IsTrue(movesDisplayer.HighlightedPositions.Value.Contains(availableMovesPositions[i]));
             }
         }
         
@@ -54,8 +64,13 @@ namespace KChessUnity.Tests
         public void HideMoves_HighlightedMovesCleared()
         {
             // Arrange 
-            var container = TestHelper.CreateContainerFor<MovesDisplayerViewModel>(out var movesDisplayer);
-            var boardViewModel = container.Resolve<IBoardViewModel>();
+            var container = TestHelper.CreateContainerForViewModel<MovesDisplayerViewModel>(out var movesDisplayer);
+            var payload = container.Resolve<IMovesDisplayerPayload>();
+            var positionCalculator = payload.BoardWorldPositionsCalculator;
+            var highlightedMovesModel = container.Resolve<IHighlightedCellsModel>();
+
+            var cellsProp = new Mutable<IEnumerable<BoardCoordinates>>(Array.Empty<BoardCoordinates>());
+            highlightedMovesModel.HighlightedCells.Returns(cellsProp);
 
             var availableMoves = new[]
             {
@@ -75,15 +90,16 @@ namespace KChessUnity.Tests
             
             for (var i = 0; i < availableMoves.Length; i++)
             {
-                boardViewModel.GetWorldPosition(availableMoves[i]).Returns(availableMovesPositions[i]);
+                positionCalculator.GetWorldPosition(availableMoves[i]).Returns(availableMovesPositions[i]);
             }
 
             // Act
-            movesDisplayer.ShowMoves(availableMoves);
-            movesDisplayer.HideMoves();
+            movesDisplayer.Initialize();
+            cellsProp.Value = availableMoves;
+            cellsProp.Value = Array.Empty<BoardCoordinates>();
             
             // Assert
-            Assert.IsEmpty(movesDisplayer.HighlightedPositions);
+            Assert.IsEmpty(movesDisplayer.HighlightedPositions.Value);
         }
     }
 }

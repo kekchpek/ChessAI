@@ -1,17 +1,19 @@
 ﻿using KChess.Core.API.PlayerFacade;
 using KChess.Domain;
 using KChessUnity.Input;
+using KChessUnity.Models;
 using KChessUnity.ViewModels.Board;
 using KChessUnity.ViewModels.MovesDisplayer;
 using KChessUnity.ViewModels.Piece;
 using KChessUnity.ViewModels.Triggers;
 using KChessUnity.Views;
-using MVVMCore.DI;
 using UnityEngine;
+using UnityMVVM.DI;
+using Zenject;
 
 namespace KChessUnity.Core
 {
-    public class MainInstaller : MonoMvvmInstaller
+    public class MainInstaller : MonoInstaller
     {
         [SerializeField] private GameObject _piecePrefab;
         [SerializeField] private GameObject _boardPrefab;
@@ -25,15 +27,29 @@ namespace KChessUnity.Core
         public override void InstallBindings()
         {
             base.InstallBindings();
+
+            var modelLayerContainer = Container.CreateSubContainer();
+            modelLayerContainer.Bind(typeof(IHighlightedCellsModel), typeof(IHighlightedCellsMutableModel))
+                .To<HighlightedCellsModel>().AsSingle();
+            modelLayerContainer.Bind<IHighlightedCellsService>().To<HighlightedCellsService>().AsSingle();
+
+            Container.Bind<IHighlightedCellsModel>()
+                .FromMethod(x => modelLayerContainer.Resolve<IHighlightedCellsModel>());
+            Container.Bind<IHighlightedCellsService>()
+                .FromMethod(x => modelLayerContainer.Resolve<IHighlightedCellsService>());
+            
             Container.Bind<IInputController>().FromComponentInNewPrefab(_inputController).AsSingle().OnInstantiated<InputController>(
                 (_, inputController) =>
                 {
                     inputController.SetCamera(_camera);
                 });
             Container.Bind<IResetSelectionTrigger>().To<ResetSelectionTrigger>().AsSingle();
-            InstallFactoryFor<PieceView, IPieceViewModel, PieceViewModel, IBoardViewModel, IMovesDisplayerViewModel, IPlayerFacade, IPiece>(_piecePrefab, _mainCanvas);
-            InstallFactoryFor<BoardView, IBoardViewModel, BoardViewModel>(_boardPrefab, _mainCanvas);
-            InstallFactoryFor<MovesDisplayerView, IMovesDisplayerViewModel, MovesDisplayerViewModel, IBoardViewModel>(_movesDisplayerPrefab, _mainCanvas);
+            
+            
+            var mvvmContainer = new MvvmSubContainer(Container, new [] { (VIewLayersIds.Main, _mainCanvas) });
+            mvvmContainer.InstallFactoryFor<PieceView, IPieceViewModel, PieceViewModel>(_piecePrefab);
+            mvvmContainer.InstallFactoryFor<BoardView, IBoardViewModel, BoardViewModel>(_boardPrefab);
+            mvvmContainer.InstallFactoryFor<MovesDisplayerView, IMovesDisplayerViewModel, MovesDisplayerViewModel>(_movesDisplayerPrefab);
         }
     }
 }

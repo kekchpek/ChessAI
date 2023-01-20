@@ -8,6 +8,7 @@ namespace KChess.Domain.Impl
     {
         public event Action<IPiece> PositionChanged;
         public event Action<IPiece> PieceMoved;
+        public event Action<IPiece> PieceAddedOnBoard;
 
         public IReadOnlyList<IPiece> Pieces => _pieces;
 
@@ -41,7 +42,7 @@ namespace KChess.Domain.Impl
                 PieceMoved?.Invoke(piece);
             });
             piece.Moved += _pieceMoveCallbacks[piece];
-            
+            PieceAddedOnBoard?.Invoke(piece);
             PositionChanged?.Invoke(piece);
         }
     }

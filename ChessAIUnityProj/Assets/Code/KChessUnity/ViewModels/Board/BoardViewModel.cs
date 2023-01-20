@@ -3,6 +3,7 @@ using KChess.Domain;
 using KChess.Domain.Impl;
 using KChessUnity.Models.Board;
 using KChessUnity.ViewModels.MovesDisplayer;
+using KChessUnity.ViewModels.PawnTransform;
 using KChessUnity.ViewModels.Piece;
 using UnityEngine;
 using UnityMVVM.ViewModelCore;
@@ -39,6 +40,23 @@ namespace KChessUnity.ViewModels.Board
                         piece.Color == PieceColor.White ? _whitePlayerFacade : _blackPlayerFacade,
                         this));
             }
+
+            _whitePlayerFacade.PieceAddedOnBoard += OnPieceAddedOnBoard;
+            _blackPlayerFacade.PieceRequiredToBeTransformed += OnPawnTransform;
+        }
+
+        private void OnPieceAddedOnBoard(IPiece piece)
+        {
+            CreateSubView<IPieceViewModel>(
+                new PieceViewModelPayload(piece,
+                    piece.Color == PieceColor.White ? _whitePlayerFacade : _blackPlayerFacade,
+                    this));
+        }
+
+        private void OnPawnTransform(IPiece piece)
+        {
+            CreateSubView<IPawnTransformViewModel>(new PawnTransformPayload(piece.Color,
+                piece.Color == PieceColor.White ? _whitePlayerFacade : _blackPlayerFacade));
         }
 
         public void SetCornerPoints(Vector3 bottomLeft, Vector3 topRight)
@@ -69,6 +87,13 @@ namespace KChessUnity.ViewModels.Board
             var horizontal = (int) Mathf.Floor(y * BoardSize / _size.x);
             return (vertical, horizontal);
 
+        }
+
+        protected override void OnDestroyInternal()
+        {
+            _whitePlayerFacade.PieceAddedOnBoard -= OnPieceAddedOnBoard;
+            _blackPlayerFacade.PieceRequiredToBeTransformed -= OnPawnTransform;
+            base.OnDestroyInternal();
         }
     }
 }

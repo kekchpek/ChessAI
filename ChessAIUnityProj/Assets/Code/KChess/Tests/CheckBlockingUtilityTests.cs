@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using KChess.Core.CheckBlockingUtility;
 using KChess.Core.XRayUtility;
@@ -33,6 +34,38 @@ namespace KChess.Tests
             // Assert
             Assert.IsEmpty(blockingMoves);
         }
+        
+        [Test]
+        public void NoDirectXRay_BlockingPiece_ReturnsEmpty()
+        {
+            // Arrange 
+            var checkBlockingUtility = CreateCheckBlockingUtility(
+                out var xRayUtility);
+
+            var blackPiece = Substitute.For<IPiece>();
+            blackPiece.Color.Returns(PieceColor.Black);
+
+            var whiteKing = Substitute.For<IPiece>();
+            whiteKing.Color.Returns(PieceColor.White);
+            whiteKing.Type.Returns(PieceType.King);
+
+            var xRay = Substitute.For<IXRay>();
+            xRay.AttackingPiece.Returns(blackPiece);
+            xRay.TargetPiece.Returns(whiteKing);
+            xRay.BlockingPieces.Returns(new [] { Substitute.For<IPiece>() });
+            xRay.CellsBetween.Returns(new BoardCoordinates[]{"c3", "a4", "d2", "f3"});
+
+            xRayUtility.TargetPieces.Returns(new Dictionary<IPiece, IReadOnlyList<IXRay>>
+            {
+                {whiteKing, new List<IXRay> {xRay}}
+            });
+            
+            // Act
+            var blockingMoves = checkBlockingUtility.GetMovesForCheckBlocking(PieceColor.White);
+            
+            // Assert
+            Assert.IsEmpty(blockingMoves);
+        }
 
         [Test]
         public void BlackCheckingWhite_ReturnsCellsBetween()
@@ -51,7 +84,8 @@ namespace KChess.Tests
             var xRay = Substitute.For<IXRay>();
             xRay.AttackingPiece.Returns(blackPiece);
             xRay.TargetPiece.Returns(whiteKing);
-            xRay.CellsBetween.Returns(Substitute.For<IReadOnlyList<BoardCoordinates>>());
+            xRay.BlockingPieces.Returns(Array.Empty<IPiece>());
+            xRay.CellsBetween.Returns(new BoardCoordinates[]{"c3", "a4", "d2", "f3"});
 
             xRayUtility.TargetPieces.Returns(new Dictionary<IPiece, IReadOnlyList<IXRay>>
             {
@@ -63,6 +97,44 @@ namespace KChess.Tests
             
             // Assert
             Assert.IsTrue(xRay.CellsBetween.SequenceEqual(blockingMoves));
+        }
+
+        [Test]
+        public void BlackCheckingWhite_TwoXrays_ReturnsCellsBetween()
+        {
+            // Arrange 
+            var checkBlockingUtility = CreateCheckBlockingUtility(
+                out var xRayUtility);
+
+            var blackPiece = Substitute.For<IPiece>();
+            blackPiece.Color.Returns(PieceColor.Black);
+
+            var whiteKing = Substitute.For<IPiece>();
+            whiteKing.Color.Returns(PieceColor.White);
+            whiteKing.Type.Returns(PieceType.King);
+
+            var xRay1 = Substitute.For<IXRay>();
+            xRay1.AttackingPiece.Returns(blackPiece);
+            xRay1.TargetPiece.Returns(whiteKing);
+            xRay1.BlockingPieces.Returns(new[] {Substitute.For<IPiece>()});
+            xRay1.CellsBetween.Returns(Substitute.For<IReadOnlyList<BoardCoordinates>>());
+            
+            var xRay2 = Substitute.For<IXRay>();
+            xRay2.AttackingPiece.Returns(blackPiece);
+            xRay2.TargetPiece.Returns(whiteKing);
+            xRay2.BlockingPieces.Returns(Array.Empty<IPiece>());
+            xRay2.CellsBetween.Returns(new BoardCoordinates[]{"c3", "a4", "d2", "f3"});
+
+            xRayUtility.TargetPieces.Returns(new Dictionary<IPiece, IReadOnlyList<IXRay>>
+            {
+                {whiteKing, new List<IXRay> {xRay1, xRay2}},
+            });
+            
+            // Act
+            var blockingMoves = checkBlockingUtility.GetMovesForCheckBlocking(PieceColor.White);
+            
+            // Assert
+            Assert.IsTrue(xRay2.CellsBetween.SequenceEqual(blockingMoves));
         }
         
 

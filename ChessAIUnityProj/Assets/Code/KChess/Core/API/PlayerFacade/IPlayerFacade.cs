@@ -9,8 +9,8 @@ namespace KChess.Core.API.PlayerFacade
     {
         event Action<PieceColor> TurnChanged;
         event Action<BoardState> BoardStateChanged;
-
         event Action<IPiece> PieceRequiredToBeTransformed;
+        event Action<IPiece> PieceAddedOnBoard;
 
         IBoard GetBoard();
         

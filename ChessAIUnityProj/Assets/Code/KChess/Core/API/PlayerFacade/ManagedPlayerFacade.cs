@@ -15,7 +15,8 @@ namespace KChess.Core.API.PlayerFacade
         public event Action<PieceColor> TurnChanged;
         public event Action<BoardState> BoardStateChanged;
         public event Action<IPiece> PieceRequiredToBeTransformed;
-        
+        public event Action<IPiece> PieceAddedOnBoard;
+
         private readonly IMoveUtility _moveUtility;
         private readonly ITurnGetter _turnGetter;
         private readonly ITurnObserver _turnObserver;
@@ -41,6 +42,7 @@ namespace KChess.Core.API.PlayerFacade
             _boardStateObserver.StateChanged += OnBoardStateChanged;
             _turnObserver.TurnChanged += OnTurnChanged;
             _pawnTransformationUtility.TransformationBecomesRequired += OnTransformationBecomesRequired;
+            _board.PieceAddedOnBoard += OnPieceAddedOnBoard;
         }
 
         private void OnTransformationBecomesRequired(IPiece piece)
@@ -100,11 +102,18 @@ namespace KChess.Core.API.PlayerFacade
         {
             BoardStateChanged?.Invoke(boardState);
         }
-
+        
+        private void OnPieceAddedOnBoard(IPiece obj)
+        {
+            PieceAddedOnBoard?.Invoke(obj);
+        }
+        
         public void Dispose()
         {
             _boardStateObserver.StateChanged -= OnBoardStateChanged;
             _turnObserver.TurnChanged -= OnTurnChanged;
+            _pawnTransformationUtility.TransformationBecomesRequired -= OnTransformationBecomesRequired;
+            _board.PieceAddedOnBoard -= OnPieceAddedOnBoard;
         }
     }
 }

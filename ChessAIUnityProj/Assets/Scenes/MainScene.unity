@@ -239,11 +239,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
-  m_ScreenMatchMode: 0
+  m_ReferenceResolution: {x: 1000, y: 800}
+  m_ScreenMatchMode: 1
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
@@ -319,7 +319,7 @@ RectTransform:
   m_GameObject: {fileID: 329817268}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.3, y: 0.3, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 177402520}
@@ -448,6 +448,7 @@ MonoBehaviour:
   _piecePrefab: {fileID: 4516523899085425255, guid: dd0fd40be1fc94149906c4f1909fedbf, type: 3}
   _boardPrefab: {fileID: 4516523899085425255, guid: cd21a11f55616944a8fca26458a236d0, type: 3}
   _movesDisplayerPrefab: {fileID: 4516523899085425255, guid: d852d347f32c79244af36830042c133f, type: 3}
+  _pawnTransformPopup: {fileID: 4516523899085425255, guid: d7ed7e42d2175154080f827f18fae959, type: 3}
   _inputController: {fileID: -8078920566649726967, guid: 9cc4f66aef929f247bb6112097a68706, type: 3}
   _mainCanvas: {fileID: 329817269}
   _camera: {fileID: 519420031}

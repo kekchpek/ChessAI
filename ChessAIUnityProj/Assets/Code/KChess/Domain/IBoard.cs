@@ -7,6 +7,7 @@ namespace KChess.Domain
     {
         event Action<IPiece> PositionChanged;
         event Action<IPiece> PieceMoved;
+        public event Action<IPiece> PieceAddedOnBoard;
         
         IReadOnlyList<IPiece> Pieces { get; }
 

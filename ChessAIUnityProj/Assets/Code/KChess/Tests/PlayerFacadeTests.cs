@@ -183,10 +183,10 @@ namespace KChess.Tests
             var board = container.Resolve<IBoard>();
 
             // Act
-            var getBoard = playerFacade.GetBoard();
+            var pieces = playerFacade.GetPieces();
             
             // Assert
-            Assert.AreEqual(board, getBoard);
+            Assert.AreEqual(board.Pieces, pieces);
         }
         
         [TestCase(BoardState.Regular)]

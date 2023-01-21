@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using KChess.Domain.Impl;
 
-namespace KChessUnity.Models
+namespace KChessUnity.Models.HighlightedCells
 {
     public class HighlightedCellsService : IHighlightedCellsService
     {

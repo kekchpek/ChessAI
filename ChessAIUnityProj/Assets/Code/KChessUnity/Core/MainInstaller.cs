@@ -1,14 +1,17 @@
-﻿using KChess.Core.API.PlayerFacade;
-using KChess.Domain;
+﻿using KChess.Core.API.BoardsManager;
 using KChessUnity.Core.Assets;
-using KChessUnity.Input;
-using KChessUnity.Models;
-using KChessUnity.ViewModels.Board;
-using KChessUnity.ViewModels.MovesDisplayer;
-using KChessUnity.ViewModels.PawnTransform;
-using KChessUnity.ViewModels.Piece;
-using KChessUnity.ViewModels.Triggers;
-using KChessUnity.Views;
+using KChessUnity.Core.Camera;
+using KChessUnity.Core.Screen;
+using KChessUnity.Models.HighlightedCells;
+using KChessUnity.Models.Startup;
+using KChessUnity.MVVM.Common.BoardPositioning;
+using KChessUnity.MVVM.Triggers;
+using KChessUnity.MVVM.Triggers.BoardClicked;
+using KChessUnity.MVVM.Triggers.PieceSelected;
+using KChessUnity.MVVM.Views.Board;
+using KChessUnity.MVVM.Views.MovesDisplayer;
+using KChessUnity.MVVM.Views.PawnTransform;
+using KChessUnity.MVVM.Views.Piece;
 using UnityEngine;
 using UnityMVVM.DI;
 using Zenject;
@@ -22,10 +25,8 @@ namespace KChessUnity.Core
         [SerializeField] private GameObject _movesDisplayerPrefab;
         [SerializeField] private GameObject _pawnTransformPopup;
 
-        [SerializeField] private InputController _inputController;
-
-        [SerializeField] private Transform _mainCanvas;
-        [SerializeField] private Camera _camera;
+        [SerializeField] private Transform _mainUiContainer;
+        [SerializeField] private Transform _popupsContainer;
         
         public override void InstallBindings()
         {
@@ -35,23 +36,37 @@ namespace KChessUnity.Core
             modelLayerContainer.Bind(typeof(IHighlightedCellsModel), typeof(IHighlightedCellsMutableModel))
                 .To<HighlightedCellsModel>().AsSingle();
             modelLayerContainer.Bind<IHighlightedCellsService>().To<HighlightedCellsService>().AsSingle();
+            modelLayerContainer.Bind<IStartupService>().To<StartupService>().AsSingle();
+            modelLayerContainer.Bind<IBoardsManager>().To<BoardManager>().AsSingle().WhenInjectedInto<StartupService>();
 
+            Container.Bind<IStartupService>()
+                .FromMethod(_ => modelLayerContainer.Resolve<IStartupService>());
             Container.Bind<IHighlightedCellsModel>()
-                .FromMethod(x => modelLayerContainer.Resolve<IHighlightedCellsModel>());
+                .FromMethod(_ => modelLayerContainer.Resolve<IHighlightedCellsModel>());
             Container.Bind<IHighlightedCellsService>()
-                .FromMethod(x => modelLayerContainer.Resolve<IHighlightedCellsService>());
+                .FromMethod(_ => modelLayerContainer.Resolve<IHighlightedCellsService>());
 
             Container.Bind<IAssetManager>().To<AssetManager>().AsSingle();
+
+            Container.Bind<IScreenAdapter>().To<ScreenAdapter>().AsSingle();
+            Container.Bind<ICameraService>().To<CameraService>().AsSingle();
+            Container.Bind<ICameraModel>().To<CameraModel>().AsSingle();
+            Container.Bind<ICameraMutableModel>()
+                .FromMethod(_ => (ICameraMutableModel)Container.Resolve<ICameraModel>())
+                .AsSingle().WhenInjectedInto<CameraService>();
+
+            Container.Bind<IBoardPositionsCalculator>().To<BoardPositionsCalculator>().AsSingle();
+            Container.Bind<IBoardClickedTrigger>().To<BoardClickedTrigger>().AsSingle();
+            Container.Bind<IPieceSelectedTrigger>().To<PieceSelectedTrigger>().AsSingle();
             
-            Container.Bind<IInputController>().FromComponentInNewPrefab(_inputController).AsSingle().OnInstantiated<InputController>(
-                (_, inputController) =>
-                {
-                    inputController.SetCamera(_camera);
-                });
-            Container.Bind<IResetSelectionTrigger>().To<ResetSelectionTrigger>().AsSingle();
+            
+            var mvvmContainer = new MvvmSubContainer(Container, new []
+            {
+                (VIewLayersIds.Main, _mainUiContainer),
+                (VIewLayersIds.Popup, _popupsContainer),
+            });
             
             
-            var mvvmContainer = new MvvmSubContainer(Container, new [] { (VIewLayersIds.Main, _mainCanvas) });
             mvvmContainer.InstallFactoryFor<PieceView, IPieceViewModel, PieceViewModel>(_piecePrefab);
             mvvmContainer.InstallFactoryFor<BoardView, IBoardViewModel, BoardViewModel>(_boardPrefab);
             mvvmContainer.InstallFactoryFor<MovesDisplayerView, IMovesDisplayerViewModel, MovesDisplayerViewModel>(_movesDisplayerPrefab);

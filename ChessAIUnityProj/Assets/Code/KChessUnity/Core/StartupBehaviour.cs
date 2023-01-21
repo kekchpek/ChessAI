@@ -1,9 +1,7 @@
-﻿using KChess.Core.API.BoardsManager;
-using KChess.Core.API.PlayerFacade;
-using KChess.Domain;
-using KChessUnity.ViewModels.Board;
+﻿using KChess.Core.API.PlayerFacade;
+using KChessUnity.Core.Camera;
+using KChessUnity.Models.Startup;
 using UnityEngine;
-using UnityMVVM.ViewManager;
 using Zenject;
 
 namespace KChessUnity.Core
@@ -11,24 +9,27 @@ namespace KChessUnity.Core
     public class StartupBehaviour : MonoBehaviour
     {
 
-        private IViewManager _viewManager;
+        [SerializeField] private UnityEngine.Camera _camera;
 
-        private IBoardsManager _boardsManager;
+        private IStartupService _startupService;
+        private ICameraService _cameraService;
 
         private IPlayerFacade _whitePlayerFacade;
         private IPlayerFacade _blackPlayerFacade;
         
         [Inject]
-        public void Construct(IViewManager viewManager)
+        public void Construct(
+            IStartupService startupService,
+            ICameraService cameraService)
         {
-            _viewManager = viewManager;
+            _startupService = startupService;
+            _cameraService = cameraService;
         }
         
         private void Awake()
         {
-            _boardsManager = new BoardManager();
-            _boardsManager.CreateBoard(out _whitePlayerFacade, out _blackPlayerFacade);
-            _viewManager.Open<IBoardViewModel>(VIewLayersIds.Main, new BoardViewModelPayload(_whitePlayerFacade, _blackPlayerFacade));
+            _cameraService.SetCamera(_camera);
+            _startupService.StartSingleGame();
         }
     }
 }

@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using KChess.Domain.Impl;
-using KChessUnity.Models;
+using KChessUnity.Models.HighlightedCells;
+using KChessUnity.MVVM.Common.BoardPositioning;
+using KChessUnity.MVVM.Views.MovesDisplayer;
 using KChessUnity.Tests.Helper;
-using KChessUnity.ViewModels.Board;
-using KChessUnity.ViewModels.MovesDisplayer;
 using NSubstitute;
 using NUnit.Framework;
 using UnityEngine;
@@ -20,8 +20,7 @@ namespace KChessUnity.Tests
         {
             // Arrange 
             var container = TestHelper.CreateContainerForViewModel<MovesDisplayerViewModel>(out var movesDisplayer);
-            var payload = container.Resolve<IMovesDisplayerPayload>();
-            var positionCalculator = payload.BoardWorldPositionsCalculator;
+            var positionCalculator = container.Resolve<IBoardPositionsCalculator>();
             var highlightedMovesModel = container.Resolve<IHighlightedCellsModel>();
 
             var cellsProp = new Mutable<IEnumerable<BoardCoordinates>>(Array.Empty<BoardCoordinates>());
@@ -45,7 +44,7 @@ namespace KChessUnity.Tests
             
             for (var i = 0; i < availableMoves.Length; i++)
             {
-                positionCalculator.GetWorldPosition(availableMoves[i]).Returns(availableMovesPositions[i]);
+                positionCalculator.GetCellCoordsOnBoardRect(availableMoves[i]).Returns(availableMovesPositions[i]);
             }
 
             // Act
@@ -65,8 +64,7 @@ namespace KChessUnity.Tests
         {
             // Arrange 
             var container = TestHelper.CreateContainerForViewModel<MovesDisplayerViewModel>(out var movesDisplayer);
-            var payload = container.Resolve<IMovesDisplayerPayload>();
-            var positionCalculator = payload.BoardWorldPositionsCalculator;
+            var positionCalculator = container.Resolve<IBoardPositionsCalculator>();
             var highlightedMovesModel = container.Resolve<IHighlightedCellsModel>();
 
             var cellsProp = new Mutable<IEnumerable<BoardCoordinates>>(Array.Empty<BoardCoordinates>());
@@ -90,7 +88,7 @@ namespace KChessUnity.Tests
             
             for (var i = 0; i < availableMoves.Length; i++)
             {
-                positionCalculator.GetWorldPosition(availableMoves[i]).Returns(availableMovesPositions[i]);
+                positionCalculator.GetCellCoordsOnBoardRect(availableMoves[i]).Returns(availableMovesPositions[i]);
             }
 
             // Act

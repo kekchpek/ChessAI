@@ -2,7 +2,7 @@
 using KChess.Domain.Impl;
 using UnityMVVM.ViewModelCore.Bindable;
 
-namespace KChessUnity.Models
+namespace KChessUnity.Models.HighlightedCells
 {
     public interface IHighlightedCellsModel
     {

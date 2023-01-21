@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using KChess.Core.PawnTransformation;
 using KChess.Domain;
 using KChess.Domain.Impl;
@@ -12,7 +13,7 @@ namespace KChess.Core.API.PlayerFacade
         event Action<IPiece> PieceRequiredToBeTransformed;
         event Action<IPiece> PieceAddedOnBoard;
 
-        IBoard GetBoard();
+        IEnumerable<IPiece> GetPieces();
         
         bool TryMovePiece(IPiece piece, BoardCoordinates position);
 

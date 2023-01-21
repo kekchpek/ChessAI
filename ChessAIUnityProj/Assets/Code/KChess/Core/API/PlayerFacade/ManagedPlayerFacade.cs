@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using KChess.Core.BoardStateUtils;
 using KChess.Core.MoveUtility;
@@ -50,9 +51,9 @@ namespace KChess.Core.API.PlayerFacade
             PieceRequiredToBeTransformed?.Invoke(piece);
         }
 
-        public IBoard GetBoard()
+        public IEnumerable<IPiece> GetPieces()
         {
-            return _board;
+            return _board.Pieces;
         }
 
         public bool TryMovePiece(IPiece piece, BoardCoordinates position)

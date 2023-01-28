@@ -256,7 +256,7 @@
         <member name="M:UnityMVVM.ViewManager.ViewManagerImpl.Create``1(UnityMVVM.ViewModelCore.IViewModel,System.String,UnityMVVM.ViewModelCore.IPayload)">
             <inheritdoc cref="M:UnityMVVM.ViewManager.IViewManager.Create``1(UnityMVVM.ViewModelCore.IViewModel,System.String,UnityMVVM.ViewModelCore.IPayload)"/>
         </member>
-        <member name="M:UnityMVVM.ViewManager.ViewManagerImpl.Open``1(System.String,System.String,UnityMVVM.ViewModelCore.IPayload)">
+        <member name="M:UnityMVVM.ViewManager.ViewManagerImpl.Open(System.String,System.String,UnityMVVM.ViewModelCore.IPayload)">
             <inheritdoc cref="M:UnityMVVM.ViewManager.IViewManager.Open(System.String,System.String,UnityMVVM.ViewModelCore.IPayload)"/>
         </member>
         <member name="T:UnityMVVM.ViewModelCore.Bindable.IBindable`1">

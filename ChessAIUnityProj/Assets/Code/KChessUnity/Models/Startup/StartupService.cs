@@ -19,7 +19,7 @@ namespace KChessUnity.Models.Startup
         public void StartSingleGame()
         {
             _boardsManager.CreateBoard(out var whitePlayerFacade, out var blackPlayerFacade);
-            _viewManager.Open<IBoardViewModel>(VIewLayersIds.Main, new BoardViewModelPayload(whitePlayerFacade, blackPlayerFacade));
+            _viewManager.Open(ViewLayersIds.Main, ViewNames.Board, new BoardViewModelPayload(whitePlayerFacade, blackPlayerFacade));
         }
 
         public void StartGameWithAI()

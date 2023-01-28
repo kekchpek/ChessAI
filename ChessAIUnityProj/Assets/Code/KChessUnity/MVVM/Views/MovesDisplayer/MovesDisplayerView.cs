@@ -58,5 +58,11 @@ namespace KChessUnity.MVVM.Views.MovesDisplayer
                 _markers.Add(marker);
             }
         }
+
+        protected override void OnViewModelClear()
+        {
+            base.OnViewModelClear();
+            ViewModel.HighlightedPositions.Unbind(OnHighlightedPositionChanged);
+        }
     }
 }

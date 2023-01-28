@@ -5,10 +5,10 @@ using KChessUnity.Core.Screen;
 using KChessUnity.Models.HighlightedCells;
 using KChessUnity.Models.Startup;
 using KChessUnity.MVVM.Common.BoardPositioning;
-using KChessUnity.MVVM.Triggers;
 using KChessUnity.MVVM.Triggers.BoardClicked;
 using KChessUnity.MVVM.Triggers.PieceSelected;
 using KChessUnity.MVVM.Views.Board;
+using KChessUnity.MVVM.Views.GameEnded;
 using KChessUnity.MVVM.Views.MovesDisplayer;
 using KChessUnity.MVVM.Views.PawnTransform;
 using KChessUnity.MVVM.Views.Piece;
@@ -24,6 +24,7 @@ namespace KChessUnity.Core
         [SerializeField] private GameObject _boardPrefab;
         [SerializeField] private GameObject _movesDisplayerPrefab;
         [SerializeField] private GameObject _pawnTransformPopup;
+        [SerializeField] private GameObject _gameEndedPopupPrefab;
 
         [SerializeField] private Transform _mainUiContainer;
         [SerializeField] private Transform _popupsContainer;
@@ -32,45 +33,35 @@ namespace KChessUnity.Core
         {
             base.InstallBindings();
 
-            var modelLayerContainer = Container.CreateSubContainer();
-            modelLayerContainer.Bind(typeof(IHighlightedCellsModel), typeof(IHighlightedCellsMutableModel))
-                .To<HighlightedCellsModel>().AsSingle();
-            modelLayerContainer.Bind<IHighlightedCellsService>().To<HighlightedCellsService>().AsSingle();
-            modelLayerContainer.Bind<IStartupService>().To<StartupService>().AsSingle();
-            modelLayerContainer.Bind<IBoardsManager>().To<BoardManager>().AsSingle().WhenInjectedInto<StartupService>();
-
-            Container.Bind<IStartupService>()
-                .FromMethod(_ => modelLayerContainer.Resolve<IStartupService>());
-            Container.Bind<IHighlightedCellsModel>()
-                .FromMethod(_ => modelLayerContainer.Resolve<IHighlightedCellsModel>());
-            Container.Bind<IHighlightedCellsService>()
-                .FromMethod(_ => modelLayerContainer.Resolve<IHighlightedCellsService>());
-
-            Container.Bind<IAssetManager>().To<AssetManager>().AsSingle();
-
-            Container.Bind<IScreenAdapter>().To<ScreenAdapter>().AsSingle();
-            Container.Bind<ICameraService>().To<CameraService>().AsSingle();
-            Container.Bind<ICameraModel>().To<CameraModel>().AsSingle();
-            Container.Bind<ICameraMutableModel>()
-                .FromMethod(_ => (ICameraMutableModel)Container.Resolve<ICameraModel>())
-                .AsSingle().WhenInjectedInto<CameraService>();
-
-            Container.Bind<IBoardPositionsCalculator>().To<BoardPositionsCalculator>().AsSingle();
-            Container.Bind<IBoardClickedTrigger>().To<BoardClickedTrigger>().AsSingle();
-            Container.Bind<IPieceSelectedTrigger>().To<PieceSelectedTrigger>().AsSingle();
-            
-            
-            var mvvmContainer = new MvvmSubContainer(Container, new []
+            Container.UseAsMvvmContainer(new []
             {
-                (VIewLayersIds.Main, _mainUiContainer),
-                (VIewLayersIds.Popup, _popupsContainer),
+                (ViewLayersIds.Main, _mainUiContainer),
+                (ViewLayersIds.Popup, _popupsContainer),
             });
             
+            Container.FastBind<IHighlightedCellsMutableModel, IHighlightedCellsModel, HighlightedCellsModel>();
+            Container.FastBind<IHighlightedCellsService, HighlightedCellsService>();
+            Container.FastBind<IStartupService, StartupService>();
+            Container.Bind<IBoardsManager>().To<BoardManager>().AsSingle();
+
+            Container.FastBind<IAssetManager, AssetManager>();
+            Container.ProvideAccessForViewLayer<IAssetManager>();
+
+            Container.FastBind<IScreenAdapter, ScreenAdapter>();
+            Container.ProvideAccessForViewLayer<IScreenAdapter>();
             
-            mvvmContainer.InstallFactoryFor<PieceView, IPieceViewModel, PieceViewModel>(_piecePrefab);
-            mvvmContainer.InstallFactoryFor<BoardView, IBoardViewModel, BoardViewModel>(_boardPrefab);
-            mvvmContainer.InstallFactoryFor<MovesDisplayerView, IMovesDisplayerViewModel, MovesDisplayerViewModel>(_movesDisplayerPrefab);
-            mvvmContainer.InstallFactoryFor<PawnTransformView, IPawnTransformViewModel, PawnTransformViewModel>(_pawnTransformPopup);
+            Container.FastBind<ICameraService, CameraService>();
+            Container.FastBind<ICameraMutableModel, ICameraModel, CameraModel>();
+
+            Container.FastBind<IBoardPositionsCalculator, BoardPositionsCalculator>();
+            Container.FastBind<IBoardClickedTrigger, BoardClickedTrigger>();
+            Container.FastBind<IPieceSelectedTrigger, PieceSelectedTrigger>();
+
+            Container.InstallView<PieceView, IPieceViewModel, PieceViewModel>(ViewNames.Piece, _piecePrefab);
+            Container.InstallView<BoardView, IBoardViewModel, BoardViewModel>(ViewNames.Board, _boardPrefab);
+            Container.InstallView<MovesDisplayerView, IMovesDisplayerViewModel, MovesDisplayerViewModel>(ViewNames.MovesDisplayer, _movesDisplayerPrefab);
+            Container.InstallView<PawnTransformView, IPawnTransformViewModel, PawnTransformViewModel>(ViewNames.TransformationPopup, _pawnTransformPopup);
+            Container.InstallView<GameEndedPopupView, IGameEndedPopupViewModel, GameEndedPopupViewModel>(ViewNames.GameEnded, _gameEndedPopupPrefab);
         }
     }
 }

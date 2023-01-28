@@ -1,5 +1,5 @@
 ﻿using KChess.Domain.Impl;
-using UnityAuxiliaryTools.Trigger.Factory;
+using UnityAuxiliaryTools.Trigger;
 
 namespace KChessUnity.MVVM.Triggers.BoardClicked
 {

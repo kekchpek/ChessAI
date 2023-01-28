@@ -1,0 +1,394 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>UnityAuxiliaryTools</name>
+    </assembly>
+    <members>
+        <member name="T:UnityAuxiliaryTools.Promises.Awaiter.IBasePromiseAwaiter">
+            <summary>
+            Base API for promise awaiter.
+            </summary>
+        </member>
+        <member name="P:UnityAuxiliaryTools.Promises.Awaiter.IBasePromiseAwaiter.IsCompleted">
+            <summary>
+            Indicates that promise is completed.
+            </summary>
+        </member>
+        <member name="T:UnityAuxiliaryTools.Promises.Awaiter.IConfiguredPromiseAwaiterContainer">
+            <summary>
+            A container for configured promise awaiter.
+            </summary>
+        </member>
+        <member name="M:UnityAuxiliaryTools.Promises.Awaiter.IConfiguredPromiseAwaiterContainer.GetAwaiter">
+            <summary>
+            Gets configured promise awaiter.
+            </summary>
+            <returns>The configured promise awaiter</returns>
+        </member>
+        <member name="T:UnityAuxiliaryTools.Promises.Awaiter.IConfiguredPromiseAwaiterContainer`1">
+            <summary>
+            A container for configured promise awaiter.
+            </summary>
+        </member>
+        <member name="M:UnityAuxiliaryTools.Promises.Awaiter.IConfiguredPromiseAwaiterContainer`1.GetAwaiter">
+            <summary>
+            Gets configured promise awaiter.
+            </summary>
+            <returns>The configured promise awaiter</returns>
+        </member>
+        <member name="T:UnityAuxiliaryTools.Promises.Awaiter.IPromiseAwaiter">
+            <summary>
+            An awaiter for promises with result.
+            </summary>
+        </member>
+        <member name="M:UnityAuxiliaryTools.Promises.Awaiter.IPromiseAwaiter.GetResult">
+            <summary>
+            Gets the promise result. Throw exception if promise is failed.
+            </summary>
+        </member>
+        <member name="T:UnityAuxiliaryTools.Promises.Awaiter.IPromiseAwaiter`1">
+            <summary>
+            An awaiter for promises with result.
+            </summary>
+        </member>
+        <member name="M:UnityAuxiliaryTools.Promises.Awaiter.IPromiseAwaiter`1.GetResult">
+            <summary>
+            Gets the promise result. Throw exception if promise is failed.
+            </summary>
+        </member>
+        <member name="T:UnityAuxiliaryTools.Promises.BaseControllablePromise">
+            <inheritdoc cref="T:UnityAuxiliaryTools.Promises.IBaseControllablePromise"/>
+        </member>
+        <member name="P:UnityAuxiliaryTools.Promises.BaseControllablePromise.FailException">
+            <summary>
+            An exception that cause promise fail. 
+            </summary>
+        </member>
+        <member name="P:UnityAuxiliaryTools.Promises.BaseControllablePromise.IsCompleted">
+            <inheritdoc cref="P:UnityAuxiliaryTools.Promises.IBasePromise.IsCompleted"/>
+        </member>
+        <member name="M:UnityAuxiliaryTools.Promises.BaseControllablePromise.OnFail(System.Action{System.Exception})">
+            <inheritdoc cref="M:UnityAuxiliaryTools.Promises.IBasePromise.OnFail(System.Action{System.Exception})"/>
+        </member>
+        <member name="M:UnityAuxiliaryTools.Promises.BaseControllablePromise.Finally(System.Action)">
+            <inheritdoc cref="M:UnityAuxiliaryTools.Promises.IBasePromise.Finally(System.Action)"/>
+        </member>
+        <member name="M:UnityAuxiliaryTools.Promises.BaseControllablePromise.Fail(System.Exception)">
+            <inheritdoc cref="M:UnityAuxiliaryTools.Promises.IBaseControllablePromise.Fail(System.Exception)"/>
+        </member>
+        <member name="M:UnityAuxiliaryTools.Promises.BaseControllablePromise.DoFinally">
+            <summary>
+            Should be called when the promise is completed.
+            </summary>
+        </member>
+        <member name="T:UnityAuxiliaryTools.Promises.ControllablePromise">
+            <inheritdoc cref="T:UnityAuxiliaryTools.Promises.IControllablePromise"/>
+        </member>
+        <member name="M:UnityAuxiliaryTools.Promises.ControllablePromise.Success">
+            <inheritdoc cref="M:UnityAuxiliaryTools.Promises.IControllablePromise.Success"/>
+        </member>
+        <member name="M:UnityAuxiliaryTools.Promises.ControllablePromise.OnSuccess(System.Action)">
+            <inheritdoc cref="M:UnityAuxiliaryTools.Promises.IPromise.OnSuccess(System.Action)"/>
+        </member>
+        <member name="M:UnityAuxiliaryTools.Promises.ControllablePromise.GetAwaiter">
+            <inheritdoc cref="M:UnityAuxiliaryTools.Promises.IPromise.GetAwaiter"/>
+        </member>
+        <member name="M:UnityAuxiliaryTools.Promises.ControllablePromise.ConfigureAwait(System.Boolean)">
+            <inheritdoc cref="M:UnityAuxiliaryTools.Promises.IPromise.ConfigureAwait(System.Boolean)"/>
+        </member>
+        <member name="M:UnityAuxiliaryTools.Promises.ControllablePromise.ThrowIfFailed">
+            <inheritdoc cref="M:UnityAuxiliaryTools.Promises.IPromise.ThrowIfFailed"/>
+        </member>
+        <member name="T:UnityAuxiliaryTools.Promises.ControllablePromise`1">
+            <inheritdoc cref="T:UnityAuxiliaryTools.Promises.IControllablePromise`1"/>
+        </member>
+        <member name="M:UnityAuxiliaryTools.Promises.ControllablePromise`1.Success(`0)">
+            <inheritdoc cref="M:UnityAuxiliaryTools.Promises.IControllablePromise`1.Success(`0)"/>
+        </member>
+        <member name="M:UnityAuxiliaryTools.Promises.ControllablePromise`1.OnSuccess(System.Action{`0})">
+            <inheritdoc cref="M:UnityAuxiliaryTools.Promises.IPromise`1.OnSuccess(System.Action{`0})"/>
+        </member>
+        <member name="M:UnityAuxiliaryTools.Promises.ControllablePromise`1.TryGetResult(`0@)">
+            <inheritdoc cref="M:UnityAuxiliaryTools.Promises.IPromise`1.TryGetResult(`0@)"/>
+        </member>
+        <member name="M:UnityAuxiliaryTools.Promises.ControllablePromise`1.GetAwaiter">
+            <inheritdoc cref="M:UnityAuxiliaryTools.Promises.IPromise`1.GetAwaiter"/>
+        </member>
+        <member name="M:UnityAuxiliaryTools.Promises.ControllablePromise`1.ConfigureAwait(System.Boolean)">
+            <inheritdoc cref="M:UnityAuxiliaryTools.Promises.IPromise`1.ConfigureAwait(System.Boolean)"/>
+        </member>
+        <member name="T:UnityAuxiliaryTools.Promises.IBaseControllablePromise">
+            <summary>
+            The interface to control promise completion.
+            </summary>
+        </member>
+        <member name="M:UnityAuxiliaryTools.Promises.IBaseControllablePromise.Fail(System.Exception)">
+            <summary>
+            Mark promise as failed.
+            </summary>
+            <param name="error">The exception, that is a reason of a failing</param>
+        </member>
+        <member name="T:UnityAuxiliaryTools.Promises.IBasePromise">
+            <summary>
+            This is a base result independent callbacks for promises.
+            </summary>
+        </member>
+        <member name="P:UnityAuxiliaryTools.Promises.IBasePromise.IsCompleted">
+            <summary>
+            Returns true if promise is completed.
+            </summary>
+        </member>
+        <member name="M:UnityAuxiliaryTools.Promises.IBasePromise.OnFail(System.Action{System.Exception})">
+            <summary>
+            Callback will be executed in the Unity thread after the promise will fail.
+            </summary>
+            <param name="callback">A callback to execute</param>
+        </member>
+        <member name="M:UnityAuxiliaryTools.Promises.IBasePromise.Finally(System.Action)">
+            <summary>
+            Callback will be executed in the Unity thread after the promise will success of fail.
+            </summary>
+            <param name="callback">A callback to execute</param>
+        </member>
+        <member name="T:UnityAuxiliaryTools.Promises.IControllablePromise">
+            <summary>
+            An interface to control promise success completition.
+            </summary>
+        </member>
+        <member name="M:UnityAuxiliaryTools.Promises.IControllablePromise.Success">
+            <summary>
+            Mark promise as succeed.
+            </summary>
+        </member>
+        <member name="T:UnityAuxiliaryTools.Promises.IControllablePromise`1">
+            <summary>
+            An interface to control promise success completition.
+            </summary>
+        </member>
+        <member name="M:UnityAuxiliaryTools.Promises.IControllablePromise`1.Success(`0)">
+            <summary>
+            Mark promise as succeed.
+            </summary>
+        </member>
+        <member name="T:UnityAuxiliaryTools.Promises.IPromise`1">
+            <summary>
+            An async operation with ability to proceed the result. PAY ATTENTION: promises callbacks will be executed in the Unity thread.
+            </summary>
+            <typeparam name="T">The type of the result</typeparam>
+        </member>
+        <member name="M:UnityAuxiliaryTools.Promises.IPromise`1.ConfigureAwait(System.Boolean)">
+            <summary>
+            Creates configured awaiter for the promise.
+            </summary>
+            <param name="continueOnCapturedContext">Should awaited execution be exececuted on captured context.</param>
+            <returns>The promise awaiter container</returns>
+        </member>
+        <member name="M:UnityAuxiliaryTools.Promises.IPromise`1.GetAwaiter">
+            <summary>
+            Gets an awaiter for promise async execution.
+            </summary>
+            <returns>The promise awaiter</returns>
+        </member>
+        <member name="M:UnityAuxiliaryTools.Promises.IPromise`1.OnSuccess(System.Action{`0})">
+            <summary>
+            Callback will be executed in the Unity thread after the promise will success.
+            </summary>
+            <param name="callback">A callback to execute</param>
+        </member>
+        <member name="M:UnityAuxiliaryTools.Promises.IPromise`1.TryGetResult(`0@)">
+            <summary>
+            Obtaining a result if promise is completed.
+            </summary>
+            <param name="result">The result of the promise.</param>
+            <returns>Returns true if result can be obtained. False - otherwise.</returns>
+        </member>
+        <member name="T:UnityAuxiliaryTools.Promises.IPromise">
+            <summary>
+            An async operation with ability to proceed the result. PAY ATTENTION: promises callbacks will be executed in the Unity thread.
+            </summary>
+        </member>
+        <member name="M:UnityAuxiliaryTools.Promises.IPromise.ConfigureAwait(System.Boolean)">
+            <summary>
+            Creates configured awaiter for the promise.
+            </summary>
+            <param name="continueOnUnityMainThread">Should awaited execution be exececuted on Unity main thread.</param>
+            <returns>The promise awaiter container.</returns>
+        </member>
+        <member name="M:UnityAuxiliaryTools.Promises.IPromise.GetAwaiter">
+            <summary>
+            Gets an awaiter for promise async execution.
+            </summary>
+            <returns>The promise awaiter</returns>
+        </member>
+        <member name="M:UnityAuxiliaryTools.Promises.IPromise.OnSuccess(System.Action)">
+            <summary>
+            Callback will be executed in the Unity thread after the promise will success.
+            </summary>
+            <param name="callback">A callback to execute</param>
+        </member>
+        <member name="M:UnityAuxiliaryTools.Promises.IPromise.ThrowIfFailed">
+            <summary>
+            Throws an exception if promise is failed.
+            </summary>
+        </member>
+        <member name="T:UnityAuxiliaryTools.Trigger.Awaiter.IBaseTriggerAwaiter">
+            <summary>
+            Base inteface for awaiter for trigger.
+            </summary>
+        </member>
+        <member name="P:UnityAuxiliaryTools.Trigger.Awaiter.IBaseTriggerAwaiter.IsCompleted">
+            <summary>
+            Was trigger activated after awaiting started.
+            </summary>
+        </member>
+        <member name="T:UnityAuxiliaryTools.Trigger.Awaiter.IConfiguredTriggerAwaiterContainer">
+            <summary>
+            The contianer for configured trigger awaiter.
+            </summary>
+        </member>
+        <member name="M:UnityAuxiliaryTools.Trigger.Awaiter.IConfiguredTriggerAwaiterContainer.GetAwaiter">
+            <summary>
+            Gets configured trigger awaiter.
+            </summary>
+            <returns>The configured trigger awaiter.</returns>
+        </member>
+        <member name="T:UnityAuxiliaryTools.Trigger.Awaiter.IConfiguredTriggerAwaiterContainer`1">
+            <summary>
+            The contianer for configured trigger awaiter.
+            </summary>
+        </member>
+        <member name="M:UnityAuxiliaryTools.Trigger.Awaiter.IConfiguredTriggerAwaiterContainer`1.GetAwaiter">
+            <summary>
+            Gets configured trigger awaiter.
+            </summary>
+            <returns>The configured trigger awaiter.</returns>
+        </member>
+        <member name="T:UnityAuxiliaryTools.Trigger.Awaiter.ITriggerAwaiter">
+            <summary>
+            Interface for awaiter for trigger.
+            </summary>
+        </member>
+        <member name="M:UnityAuxiliaryTools.Trigger.Awaiter.ITriggerAwaiter.GetResult">
+            <summary>
+            Do nothing. Required for await/async compatibility.
+            </summary>
+        </member>
+        <member name="T:UnityAuxiliaryTools.Trigger.Awaiter.ITriggerAwaiter`1">
+            <summary>
+            Interface for awaiter for trigger.
+            </summary>
+        </member>
+        <member name="M:UnityAuxiliaryTools.Trigger.Awaiter.ITriggerAwaiter`1.GetResult">
+            <summary>
+            Returns trigger activation payload.
+            </summary>
+        </member>
+        <member name="T:UnityAuxiliaryTools.Trigger.IRegularTrigger">
+            <summary>
+            The trigger.
+            </summary>
+        </member>
+        <member name="T:UnityAuxiliaryTools.Trigger.IRegularTrigger`1">
+            <summary>
+            The value-trigger.
+            </summary>
+        </member>
+        <member name="T:UnityAuxiliaryTools.Trigger.ITrigger">
+            <summary>
+            The ingerface for trigger activation.
+            </summary>
+        </member>
+        <member name="M:UnityAuxiliaryTools.Trigger.ITrigger.Trigger">
+            <summary>
+            Activates the trigger.
+            </summary>
+        </member>
+        <member name="T:UnityAuxiliaryTools.Trigger.ITrigger`1">
+            <summary>
+            The ingerface for value-trigger activation.
+            </summary>
+        </member>
+        <member name="M:UnityAuxiliaryTools.Trigger.ITrigger`1.Trigger(`0)">
+            <summary>
+            Activates the trigger and passes some value to it.
+            </summary>
+            <param name="obj"></param>
+        </member>
+        <member name="T:UnityAuxiliaryTools.Trigger.ITriggerHandler">
+            <summary>
+             The interface for handling trigger activation.
+            </summary>
+        </member>
+        <member name="E:UnityAuxiliaryTools.Trigger.ITriggerHandler.Triggered">
+            <summary>
+            Fired on trigger actiovation.
+            </summary>
+        </member>
+        <member name="M:UnityAuxiliaryTools.Trigger.ITriggerHandler.GetAwaiter">
+            <summary>
+            Gets an awaiter for trigger activation.
+            </summary>
+            <returns>The trigger awaiter.</returns>
+        </member>
+        <member name="M:UnityAuxiliaryTools.Trigger.ITriggerHandler.ConfigureAwaiter(System.Boolean)">
+            <summary>
+            Gets a container for configured trigger awaiter.
+            </summary>
+            <param name="captureContext">Should execution be executed with captured context.</param>
+            <returns>The container for configured trigger awaiter.</returns>
+        </member>
+        <member name="T:UnityAuxiliaryTools.Trigger.ITriggerHandler`1">
+            <summary>
+            The interface for handling value-trigger activation.
+            </summary>
+        </member>
+        <member name="E:UnityAuxiliaryTools.Trigger.ITriggerHandler`1.Triggered">
+            <summary>
+            Fired on value-trigger actiovation.
+            </summary>
+        </member>
+        <member name="M:UnityAuxiliaryTools.Trigger.ITriggerHandler`1.GetAwaiter">
+            <summary>
+            Gets an awaiter for value-trigger activation.
+            </summary>
+            <returns>The value-trigger awaiter.</returns>
+        </member>
+        <member name="M:UnityAuxiliaryTools.Trigger.ITriggerHandler`1.ConfigureAwaiter(System.Boolean)">
+            <summary>
+            Gets a container for configured value-trigger awaiter.
+            </summary>
+            <param name="captureContext">Should execution be executed with captured context.</param>
+            <returns>The container for configured value-trigger awaiter.</returns>
+        </member>
+        <member name="T:UnityAuxiliaryTools.Trigger.RegularTrigger">
+            <inheritdoc cref="T:UnityAuxiliaryTools.Trigger.IRegularTrigger"/>
+        </member>
+        <member name="E:UnityAuxiliaryTools.Trigger.RegularTrigger.Triggered">
+            <inheritdoc cref="E:UnityAuxiliaryTools.Trigger.ITriggerHandler.Triggered"/>
+        </member>
+        <member name="M:UnityAuxiliaryTools.Trigger.RegularTrigger.ConfigureAwaiter(System.Boolean)">
+            <inheritdoc cref="M:UnityAuxiliaryTools.Trigger.ITriggerHandler.ConfigureAwaiter(System.Boolean)"/>
+        </member>
+        <member name="M:UnityAuxiliaryTools.Trigger.RegularTrigger.GetAwaiter">
+            <inheritdoc cref="M:UnityAuxiliaryTools.Trigger.ITriggerHandler.GetAwaiter"/>
+        </member>
+        <member name="M:UnityAuxiliaryTools.Trigger.RegularTrigger.Trigger">
+            <inheritdoc cref="M:UnityAuxiliaryTools.Trigger.ITrigger.Trigger"/>
+        </member>
+        <member name="T:UnityAuxiliaryTools.Trigger.RegularTrigger`1">
+            <inheritdoc cref="T:UnityAuxiliaryTools.Trigger.IRegularTrigger`1"/>
+        </member>
+        <member name="E:UnityAuxiliaryTools.Trigger.RegularTrigger`1.Triggered">
+            <inheritdoc cref="E:UnityAuxiliaryTools.Trigger.ITriggerHandler`1.Triggered"/>
+        </member>
+        <member name="M:UnityAuxiliaryTools.Trigger.RegularTrigger`1.Trigger(`0)">
+            <inheritdoc cref="M:UnityAuxiliaryTools.Trigger.ITrigger`1.Trigger(`0)"/>
+        </member>
+        <member name="M:UnityAuxiliaryTools.Trigger.RegularTrigger`1.GetAwaiter">
+            <inheritdoc cref="M:UnityAuxiliaryTools.Trigger.ITriggerHandler`1.GetAwaiter"/>
+        </member>
+        <member name="M:UnityAuxiliaryTools.Trigger.RegularTrigger`1.ConfigureAwaiter(System.Boolean)">
+            <inheritdoc cref="M:UnityAuxiliaryTools.Trigger.ITriggerHandler`1.ConfigureAwaiter(System.Boolean)"/>
+        </member>
+    </members>
+</doc>

@@ -1,4 +1,4 @@
-﻿using UnityAuxiliaryTools.Trigger.Factory;
+﻿using UnityAuxiliaryTools.Trigger;
 
 namespace KChessUnity.MVVM.Triggers.PieceSelected
 {

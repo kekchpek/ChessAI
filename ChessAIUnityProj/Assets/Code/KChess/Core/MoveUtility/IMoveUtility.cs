@@ -13,7 +13,7 @@ namespace KChess.Core.MoveUtility
         BoardCoordinates[] GetAvailableMoves(IPiece piece);
         
         /// <summary>
-        /// Returns available moves for the specified figure
+        /// Returns available moves for the specified figure on empty board.
         /// </summary>
         /// <param name="piece">The piece, which moves should be calculated</param>
         /// <returns>Available moves</returns>

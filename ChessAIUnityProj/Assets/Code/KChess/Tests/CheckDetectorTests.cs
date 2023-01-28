@@ -1,7 +1,9 @@
 ﻿using System;
 using KChess.Core.BoardStateUtils;
-using KChess.Core.CheckDetector;
+using KChess.Core.CheckMate;
 using KChess.Core.CheckUtility;
+using KChess.Core.MateUtility;
+using KChess.Core.PawnTransformation;
 using KChess.Domain;
 using NSubstitute;
 using NUnit.Framework;
@@ -10,7 +12,7 @@ namespace KChess.Tests
 {
     public class CheckDetectorTests
     {
-        private CheckDetector CreateCheckDetector(
+        private CheckMateDetector CreateCheckDetector(
             out IBoard board,
             out IBoardStateSetter boardStateSetter,
             out ICheckUtility checkUtility)
@@ -18,7 +20,10 @@ namespace KChess.Tests
             board = Substitute.For<IBoard>();
             boardStateSetter = Substitute.For<IBoardStateSetter>();
             checkUtility = Substitute.For<ICheckUtility>();
-            return new CheckDetector(board, boardStateSetter, checkUtility);
+            var mateUtility = Substitute.For<IMateUtility>();
+            var pawnTransformation = Substitute.For<IPawnTransformationUtility>();
+            pawnTransformation.GetTransformingPiece().Returns((IPiece)null);
+            return new CheckMateDetector(board, boardStateSetter, checkUtility, mateUtility, pawnTransformation);
         }
         
         [Test]

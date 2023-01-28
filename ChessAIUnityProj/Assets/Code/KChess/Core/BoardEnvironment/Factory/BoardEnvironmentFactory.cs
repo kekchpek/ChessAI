@@ -1,5 +1,6 @@
 ﻿using KChess.Core.API.PlayerFacade;
 using KChess.Core.BoardStateUtils;
+using KChess.Core.CheckMate;
 using KChess.Core.Factories;
 using KChess.Core.LastMovedPieceUtils;
 using KChess.Core.MoveUtility;
@@ -49,8 +50,6 @@ namespace KChess.Core.BoardEnvironment.Factory
             var xRayUtility = new XRayUtility.XRayUtility(board, queenXRayUtility, rookXRayUtility, bishopXRayUtility);
             
             var boardStateContainer = new BoardStateContainer();
-            var checkUtility = new CheckUtility.CheckUtility(board, piecesMovesFacade);
-            var checkDetector = new CheckDetector.CheckDetector(board, boardStateContainer, checkUtility);
             var checkBlockingUtility = new CheckBlockingUtility.CheckBlockingUtility(xRayUtility);
 
             var enPassantUtility = new EnPassantUtility.EnPassantUtility(lastMovedPieceUtility);
@@ -61,12 +60,16 @@ namespace KChess.Core.BoardEnvironment.Factory
             var pawnTransformationDetector = new PawnTransformationDetector(pawnTransformationUtility, board);
 
             var takeDetector = new TakeDetector.TakeDetector(board, enPassantUtility);
+            var checkUtility = new CheckUtility.CheckUtility(board, piecesMovesFacade);
             var moveUtility = new MoveUtility.MoveUtility(piecesMovesFacade, xRayUtility, attackedCellUtility,
                 boardStateContainer, checkBlockingUtility, checkUtility, castleMoveUtility,
                 pawnTransformationUtility);
-            var castleDetector = new CastleDetector.CastleDetector(board);
 
             var turnContainer = new TurnUtility.TurnUtility(board);
+            var mateUtility = new MateUtility.MateUtility(board, moveUtility, turnContainer);
+            var checkDetector = new CheckMateDetector(board, boardStateContainer, 
+                checkUtility, mateUtility, pawnTransformationUtility);
+            var castleDetector = new CastleDetector.CastleDetector(board);
 
             var whitePlayerFacade = new ManagedPlayerFacade(moveUtility, turnContainer, turnContainer,
                 boardStateContainer, boardStateContainer, board, pawnTransformationUtility, PieceColor.White);

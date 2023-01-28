@@ -1,9 +1,10 @@
-﻿using KChess.Core.API.PlayerFacade;
+﻿using System;
+using KChess.Core.API.PlayerFacade;
 using KChess.Domain;
 using KChessUnity.Core;
 using KChessUnity.MVVM.Common.BoardPositioning;
 using KChessUnity.MVVM.Triggers.BoardClicked;
-using KChessUnity.MVVM.Views.MovesDisplayer;
+using KChessUnity.MVVM.Views.GameEnded.Payload;
 using KChessUnity.MVVM.Views.PawnTransform;
 using KChessUnity.MVVM.Views.Piece;
 using UnityEngine;
@@ -32,36 +33,57 @@ namespace KChessUnity.MVVM.Views.Board
         
         public void Initialize()
         {
-            CreateSubView<IMovesDisplayerViewModel>();
-
-            foreach (var piece in _whitePlayerFacade.GetPieces())
+            CreateSubView(ViewNames.MovesDisplayer);
+            var pieces = _whitePlayerFacade.GetPieces();
+            foreach (var piece in pieces)
             {
-                CreateSubView<IPieceViewModel>(
+                CreateSubView(ViewNames.Piece,
                     new PieceViewModelPayload(piece,
                         piece.Color == PieceColor.White ? _whitePlayerFacade : _blackPlayerFacade));
             }
 
             _whitePlayerFacade.PieceAddedOnBoard += OnPieceAddedOnBoard;
-            _blackPlayerFacade.PieceRequiredToBeTransformed += OnPawnTransform;
+            _whitePlayerFacade.PieceRequiredToBeTransformed += OnPawnTransform;
+            _whitePlayerFacade.BoardStateChanged += OnBoardStateChanged;
+        }
+
+        private void OnBoardStateChanged(BoardState state)
+        {
+            switch (state)
+            {
+                case BoardState.Regular:
+                case BoardState.CheckToWhite:
+                case BoardState.CheckToBlack:
+                    break;
+                case BoardState.MateToWhite:
+                case BoardState.MateToBlack:
+                case BoardState.Stalemate:
+                case BoardState.RepeatDraw:
+                    OpenView(ViewLayersIds.Popup, ViewNames.GameEnded, new GameEndedPopupPayload(state));
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(state), state, null);
+            }
         }
 
         private void OnPieceAddedOnBoard(IPiece piece)
         {
-            OpenView<IPieceViewModel>(VIewLayersIds.Popup,
+            CreateSubView(ViewNames.Piece,
                 new PieceViewModelPayload(piece,
                     piece.Color == PieceColor.White ? _whitePlayerFacade : _blackPlayerFacade));
         }
 
         private void OnPawnTransform(IPiece piece)
         {
-            CreateSubView<IPawnTransformViewModel>(new PawnTransformPayload(piece.Color,
+            OpenView(ViewLayersIds.Popup, ViewNames.TransformationPopup, new PawnTransformPayload(piece.Color,
                 piece.Color == PieceColor.White ? _whitePlayerFacade : _blackPlayerFacade));
         }
 
         protected override void OnDestroyInternal()
         {
             _whitePlayerFacade.PieceAddedOnBoard -= OnPieceAddedOnBoard;
-            _blackPlayerFacade.PieceRequiredToBeTransformed -= OnPawnTransform;
+            _whitePlayerFacade.PieceRequiredToBeTransformed -= OnPawnTransform;
+            _whitePlayerFacade.BoardStateChanged -= OnBoardStateChanged;
             base.OnDestroyInternal();
         }
 

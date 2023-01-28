@@ -1,5 +1,4 @@
-﻿using System;
-using KChessUnity.Core.Screen;
+﻿using KChessUnity.Core.Screen;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -25,7 +24,7 @@ namespace KChessUnity.MVVM.Views.Piece
             _screenAdapter = screenAdapter;
         }
 
-        private void Reset()
+        private void Awake()
         {
             _image = GetComponent<Image>();
             if (_image is null)

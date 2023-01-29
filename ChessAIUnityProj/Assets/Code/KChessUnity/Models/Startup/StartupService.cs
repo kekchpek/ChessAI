@@ -1,4 +1,5 @@
-﻿using KChess.Core.API.BoardsManager;
+﻿using System;
+using KChess.Core.API.BoardsManager;
 using KChessUnity.Core;
 using KChessUnity.MVVM.Views.Board;
 using UnityMVVM.ViewManager;
@@ -10,6 +11,8 @@ namespace KChessUnity.Models.Startup
         private readonly IViewManager _viewManager;
         private readonly IBoardsManager _boardsManager;
 
+        private Guid? _currenBoardId;
+
         public StartupService(IViewManager viewManager, IBoardsManager boardsManager)
         {
             _viewManager = viewManager;
@@ -18,7 +21,11 @@ namespace KChessUnity.Models.Startup
         
         public void StartSingleGame()
         {
-            _boardsManager.CreateBoard(out var whitePlayerFacade, out var blackPlayerFacade);
+            if (_currenBoardId.HasValue)
+            {
+                _boardsManager.ReleaseBoard(_currenBoardId.Value);
+            }
+            _currenBoardId = _boardsManager.CreateBoard(out var whitePlayerFacade, out var blackPlayerFacade);
             _viewManager.Open(ViewLayersIds.Main, ViewNames.Board, new BoardViewModelPayload(whitePlayerFacade, blackPlayerFacade));
         }
 

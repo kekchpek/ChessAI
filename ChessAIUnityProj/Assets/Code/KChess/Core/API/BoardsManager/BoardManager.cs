@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using KChess.Core.API.PlayerFacade;
 using KChess.Core.BoardEnvironment;
 using KChess.Core.BoardEnvironment.Factory;
@@ -10,7 +11,7 @@ namespace KChess.Core.API.BoardsManager
     {
         private readonly IBoardEnvironmentFactory _boardEnvironmentFactory;
 
-        private readonly IList<IBoardEnvironment> _boardEnvironments = new List<IBoardEnvironment>();
+        private readonly IDictionary<Guid, IBoardEnvironment> _boardEnvironments = new Dictionary<Guid, IBoardEnvironment>();
 
         public BoardManager()
         {
@@ -19,12 +20,28 @@ namespace KChess.Core.API.BoardsManager
             _boardEnvironmentFactory = new BoardEnvironmentFactory(boardFactory, pieceFactory);
         }
         
-        public void CreateBoard(out IPlayerFacade whitePlayer, out IPlayerFacade blackPlayer)
+        public Guid CreateBoard(out IPlayerFacade whitePlayer, out IPlayerFacade blackPlayer)
         {
             var boardEnvironment = _boardEnvironmentFactory.Create();
             whitePlayer = boardEnvironment.WhitePlayerFacade;
             blackPlayer = boardEnvironment.BlackPlayerFacade;
-            _boardEnvironments.Add(boardEnvironment);
+            var boardId = Guid.NewGuid();
+            _boardEnvironments.Add(boardId, boardEnvironment);
+            return boardId;
+        }
+
+        public void ReleaseBoard(Guid boardId)
+        {
+            if (_boardEnvironments.TryGetValue(boardId, out var environment))
+            {
+                environment.Dispose();
+                _boardEnvironments.Remove(boardId);
+            }
+            else
+            {
+                // do nothing? throw error? log something?
+                // Do nothing for now.
+            }
         }
     }
 }

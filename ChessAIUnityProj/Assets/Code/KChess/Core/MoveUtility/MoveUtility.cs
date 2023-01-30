@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using KChess.Core.AttackedCellsUtility;
-using KChess.Core.BoardEnvironment;
 using KChess.Core.BoardStateUtils;
 using KChess.Core.CastleMoveUtility;
 using KChess.Core.CheckBlockingUtility;
@@ -15,7 +14,7 @@ using UnityEngine.Assertions;
 
 namespace KChess.Core.MoveUtility
 {
-    public class MoveUtility : IMoveUtility, IBoardEnvironmentComponent
+    internal class MoveUtility : IMoveUtility
     {
         private readonly IPieceMoveUtilityFacade _pieceMoveUtilityFacade;
         private readonly IXRayUtility _xRayUtility;
@@ -119,11 +118,6 @@ namespace KChess.Core.MoveUtility
         public BoardCoordinates[] GetAttackedMoves(IPiece piece)
         {
             return _pieceMoveUtilityFacade.GetAttackedCells(piece);
-        }
-
-        public void Dispose()
-        {
-            // do nothing
         }
     }
 }

@@ -5,7 +5,7 @@ using KChess.Domain;
 
 namespace KChess.Core.XRayUtility.XRayPiecesUtilities.QueenXRayUtility
 {
-    public class QueenXRayUtility : IQueenXRayUtility
+    internal class QueenXRayUtility : IQueenXRayUtility
     {
         private readonly IBishopXRayUtility _bishopXRayUtility;
         private readonly IRookXRayUtility _rookXRayUtility;
@@ -21,11 +21,6 @@ namespace KChess.Core.XRayUtility.XRayPiecesUtilities.QueenXRayUtility
             return _bishopXRayUtility.GetXRays(piece)
                 .Concat(_rookXRayUtility.GetXRays(piece))
                 .ToArray();
-        }
-
-        public void Dispose()
-        {
-            // do nothing
         }
     }
 }

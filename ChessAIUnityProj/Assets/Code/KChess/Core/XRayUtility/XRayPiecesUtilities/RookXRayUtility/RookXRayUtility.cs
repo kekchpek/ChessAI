@@ -2,7 +2,7 @@
 
 namespace KChess.Core.XRayUtility.XRayPiecesUtilities.RookXRayUtility
 {
-    public class RookXRayUtility : BasePieceXRayUtility, IRookXRayUtility
+    internal class RookXRayUtility : BasePieceXRayUtility, IRookXRayUtility
     {
         public RookXRayUtility(IBoard board) : base(board)
         {

@@ -54,7 +54,7 @@ namespace KChess.Tests
             bishopXRayUtility.GetXRays(whiteBishop).Returns(xRays);
 
             // Act
-            board.PositionChanged += Raise.Event<Action<IPiece>>(whiteBishop);
+            board.Updated += Raise.Event<Action<IPiece>>(whiteBishop);
 
             // Assert
             Assert.AreEqual(xRayUtility.AttackingPieces[whiteBishop].Count, xRays.Length);
@@ -91,7 +91,7 @@ namespace KChess.Tests
             bishopXRayUtility.GetXRays(whiteBishop).Returns(xRays);
 
             // Act
-            board.PositionChanged += Raise.Event<Action<IPiece>>(whiteBishop);
+            board.Updated += Raise.Event<Action<IPiece>>(whiteBishop);
 
             // Assert
             Assert.AreEqual(xRayUtility.TargetPieces.Count, xRays.Length);
@@ -147,10 +147,10 @@ namespace KChess.Tests
             rookXRayUtility.GetXRays(blackRook).Returns(rookXRays);
 
             // Act
-            board.PositionChanged += Raise.Event<Action<IPiece>>(whiteBishop);
-            board.PositionChanged += Raise.Event<Action<IPiece>>(blackRook);
+            board.Updated += Raise.Event<Action<IPiece>>(whiteBishop);
+            board.Updated += Raise.Event<Action<IPiece>>(blackRook);
             bishopXRayUtility.Configure().GetXRays(whiteBishop).Returns(bishopSecondXRays);
-            board.PositionChanged += Raise.Event<Action<IPiece>>(whiteBishop);
+            board.Updated += Raise.Event<Action<IPiece>>(whiteBishop);
 
             // Assert
             Assert.AreEqual(2, xRayUtility.AttackingPieces.Count);
@@ -213,10 +213,10 @@ namespace KChess.Tests
             rookXRayUtility.GetXRays(blackRook).Returns(rookXRays);
 
             // Act
-            board.PositionChanged += Raise.Event<Action<IPiece>>(whiteBishop);
-            board.PositionChanged += Raise.Event<Action<IPiece>>(blackRook);
+            board.Updated += Raise.Event<Action<IPiece>>(whiteBishop);
+            board.Updated += Raise.Event<Action<IPiece>>(blackRook);
             bishopXRayUtility.Configure().GetXRays(whiteBishop).Returns(bishopSecondXRays);
-            board.PositionChanged += Raise.Event<Action<IPiece>>(whiteBishop);
+            board.Updated += Raise.Event<Action<IPiece>>(whiteBishop);
 
             // Assert
             Assert.AreEqual(bishopSecondXRays.Length + rookXRays.Length, xRayUtility.TargetPieces.Count);

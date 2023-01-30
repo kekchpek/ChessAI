@@ -4,7 +4,7 @@ using KChess.Domain.Impl;
 
 namespace KChess.Core.Factories
 {
-    public class BoardFactory : IBoardFactory
+    internal class BoardFactory : IBoardFactory
     {
         private readonly IPieceFactory _pieceFactory;
 

@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace KChess.Domain.BoardIndices
 {
-    public class BoardIndex : IBoardIndex
+    internal class BoardIndex : IBoardIndex
     {
 
         private readonly IDictionary<BoardCoordinates, IPiece> _piecesByPosition = new Dictionary<BoardCoordinates, IPiece>();
@@ -14,7 +14,7 @@ namespace KChess.Domain.BoardIndices
         {
             if (boardRef.TryGetTarget(out var board))
             {
-                board.PositionChanged += OnPositionChanged;
+                board.Updated += OnBoardUpdated;
                 foreach (var piece in board.Pieces)
                 {
                     if (piece.Position.HasValue)
@@ -33,7 +33,7 @@ namespace KChess.Domain.BoardIndices
             }
         }
 
-        private void OnPositionChanged(IPiece piece)
+        private void OnBoardUpdated(IPiece piece)
         {
             if (_piecesByPosition.TryGetValue(piece.PreviousPosition, out var previousPiece) && previousPiece == piece)
             {

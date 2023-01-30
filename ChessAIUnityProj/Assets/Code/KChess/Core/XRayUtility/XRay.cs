@@ -5,7 +5,7 @@ using KChess.Domain.Impl;
 
 namespace KChess.Core.XRayUtility
 {
-    public readonly struct XRay : IXRay
+    internal readonly struct XRay : IXRay
     {
         public IPiece TargetPiece { get; }
         public IPiece AttackingPiece { get; }

@@ -1,5 +1,4 @@
-﻿using System;
-using KChess.Core.BoardStateUtils;
+﻿using KChess.Core.BoardStateUtils;
 using KChess.Core.CheckMate;
 using KChess.Core.CheckUtility;
 using KChess.Core.MateUtility;
@@ -12,26 +11,23 @@ namespace KChess.Tests
 {
     public class CheckDetectorTests
     {
-        private CheckMateDetector CreateCheckDetector(
-            out IBoard board,
+        private CheckMateUtility CreateCheckDetector(
             out IBoardStateSetter boardStateSetter,
             out ICheckUtility checkUtility)
         {
-            board = Substitute.For<IBoard>();
             boardStateSetter = Substitute.For<IBoardStateSetter>();
             checkUtility = Substitute.For<ICheckUtility>();
             var mateUtility = Substitute.For<IMateUtility>();
             var pawnTransformation = Substitute.For<IPawnTransformationUtility>();
             pawnTransformation.GetTransformingPiece().Returns((IPiece)null);
-            return new CheckMateDetector(board, boardStateSetter, checkUtility, mateUtility, pawnTransformation);
+            return new CheckMateUtility(boardStateSetter, checkUtility, mateUtility, pawnTransformation);
         }
         
         [Test]
         public void CheckToWhite_BoardStateSet()
         {
             // Arrange 
-            var checkDecorator = CreateCheckDetector(
-                out var board,
+            var checkMateUtility = CreateCheckDetector(
                 out var boardStateSetter,
                 out var checkUtility);
             checkUtility.IsPositionWithCheck(out Arg.Any<PieceColor>()).Returns(x =>
@@ -41,7 +37,7 @@ namespace KChess.Tests
             });
 
             // Act
-            board.PositionChanged += Raise.Event<Action<IPiece>>(Substitute.For<IPiece>());
+            checkMateUtility.UpdateBoardState();
 
             // Assert
             boardStateSetter.Received().Set(BoardState.CheckToWhite);
@@ -51,8 +47,7 @@ namespace KChess.Tests
         public void CheckToBlack_BoardStateSet()
         {
             // Arrange 
-            var checkDecorator = CreateCheckDetector(
-                out var board,
+            var checkMateUtility = CreateCheckDetector(
                 out var boardStateSetter,
                 out var checkUtility);
             checkUtility.IsPositionWithCheck(out Arg.Any<PieceColor>()).Returns(x =>
@@ -62,7 +57,7 @@ namespace KChess.Tests
             });
 
             // Act
-            board.PositionChanged += Raise.Event<Action<IPiece>>(Substitute.For<IPiece>());
+            checkMateUtility.UpdateBoardState();
 
             // Assert
             boardStateSetter.Received().Set(BoardState.CheckToBlack);

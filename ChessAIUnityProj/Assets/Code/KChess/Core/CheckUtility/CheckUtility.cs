@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using KChess.Core.BoardEnvironment;
 using KChess.Core.MoveUtility;
 using KChess.Domain;
 using UnityEngine.Assertions;
 
 namespace KChess.Core.CheckUtility
 {
-    public class CheckUtility : ICheckUtility, IBoardEnvironmentComponent
+    internal class CheckUtility : ICheckUtility, IDisposable
     {
         private readonly IBoard _board;
         private readonly IPieceMoveUtilityFacade _pieceMoveUtilityFacade;
@@ -22,7 +21,7 @@ namespace KChess.Core.CheckUtility
             _board = board;
             _pieceMoveUtilityFacade = pieceMoveUtilityFacade;
             _checkedColor = null;
-            _board.PositionChanged += OnPositionChanged;
+            _board.Updated += OnBoardUpdated;
         }
         
         public bool IsPositionWithCheck(out PieceColor checkedColor)
@@ -47,7 +46,7 @@ namespace KChess.Core.CheckUtility
             return Array.Empty<IPiece>();
         }
 
-        private void OnPositionChanged(IPiece piece)
+        private void OnBoardUpdated(IPiece piece)
         {
             UpdateState();
         }
@@ -92,7 +91,7 @@ namespace KChess.Core.CheckUtility
 
         public void Dispose()
         {
-            _board.PositionChanged -= OnPositionChanged;
+            _board.Updated -= OnBoardUpdated;
         }
     }
 }

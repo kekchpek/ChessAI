@@ -1,5 +1,7 @@
 ﻿using KChess.Core.API.PlayerFacade;
+using KChess.Core.BoardEnvironment.Utils;
 using KChess.Core.BoardStateUtils;
+using KChess.Core.Castle;
 using KChess.Core.CheckMate;
 using KChess.Core.Factories;
 using KChess.Core.LastMovedPieceUtils;
@@ -11,6 +13,8 @@ using KChess.Core.MoveUtility.PieceMoveUtilities.Pawn;
 using KChess.Core.MoveUtility.PieceMoveUtilities.Queen;
 using KChess.Core.MoveUtility.PieceMoveUtilities.Rook;
 using KChess.Core.PawnTransformation;
+using KChess.Core.Taking;
+using KChess.Core.TurnUtility;
 using KChess.Core.XRayUtility.XRayPiecesUtilities.BishopXRayUtility;
 using KChess.Core.XRayUtility.XRayPiecesUtilities.QueenXRayUtility;
 using KChess.Core.XRayUtility.XRayPiecesUtilities.RookXRayUtility;
@@ -18,7 +22,7 @@ using KChess.Domain;
 
 namespace KChess.Core.BoardEnvironment.Factory
 {
-    public class BoardEnvironmentFactory : IBoardEnvironmentFactory
+    internal class BoardEnvironmentFactory : IBoardEnvironmentFactory
     {
         private readonly IBoardFactory _boardFactory;
         private readonly IPieceFactory _pieceFactory;
@@ -32,9 +36,16 @@ namespace KChess.Core.BoardEnvironment.Factory
         public IBoardEnvironment Create()
         {
             var board = _boardFactory.CreateStandardBoard();
+            var utilityContainer = new UtilityContainer();
             
-            var lastMovedPieceUtility = new LastMovedPieceUtility(board);
+            // Common
+            var lastMovedPieceUtility = new LastMovedPieceUtility();
+            var boardStateContainer = new BoardStateContainer();
+            var turnUtility = new TurnUtility.TurnUtility();
+            utilityContainer.Add<ITurnUtility>(turnUtility);
+            
 
+            // Moves
             var pawnMoveUtility = new PawnMoveUtility(board, lastMovedPieceUtility);
             var knightMoveUtility = new KnightMoveUtility(board);
             var bishopMoveUtility = new BishopMoveUtility(board);
@@ -43,67 +54,51 @@ namespace KChess.Core.BoardEnvironment.Factory
             var kingMoveUtility = new KingMoveUtility(board);
             var piecesMovesFacade = new PieceMoveUtilityFacade(pawnMoveUtility, rookMoveUtility,
                 knightMoveUtility, bishopMoveUtility, queenMoveUtility, kingMoveUtility);
-
+            
+            // Attacked cells
+            var attackedCellUtility = new AttackedCellsUtility.AttackedCellsUtility(piecesMovesFacade, board);
+            
+            // Special moves
+            var enPassantUtility = new EnPassantUtility.EnPassantUtility(lastMovedPieceUtility);
+            var castleMoveUtility = new CastleMoveUtility.CastleMoveUtility(board, attackedCellUtility);
+            var castleUtility = new CastleUtility(board);
+            utilityContainer.Add<ICastleUtility>(castleUtility);
+            
+            // Taking
+            var takeUtility = new TakeUtility(board, enPassantUtility);
+            utilityContainer.Add<ITakeUtility>(takeUtility);
+            
+            // XRays
             var bishopXRayUtility = new BishopXRayUtility(board);
             var rookXRayUtility = new RookXRayUtility(board);
             var queenXRayUtility = new QueenXRayUtility(bishopXRayUtility, rookXRayUtility);
             var xRayUtility = new XRayUtility.XRayUtility(board, queenXRayUtility, rookXRayUtility, bishopXRayUtility);
             
-            var boardStateContainer = new BoardStateContainer();
+            // Check
             var checkBlockingUtility = new CheckBlockingUtility.CheckBlockingUtility(xRayUtility);
-
-            var enPassantUtility = new EnPassantUtility.EnPassantUtility(lastMovedPieceUtility);
-            var attackedCellUtility = new AttackedCellsUtility.AttackedCellsUtility(piecesMovesFacade, board);
-            var castleMoveUtility = new CastleMoveUtility.CastleMoveUtility(board, attackedCellUtility);
-
-            var pawnTransformationUtility = new PawnTransformationUtility(board, _pieceFactory);
-            var pawnTransformationDetector = new PawnTransformationDetector(pawnTransformationUtility, board);
-
-            var takeDetector = new TakeDetector.TakeDetector(board, enPassantUtility);
             var checkUtility = new CheckUtility.CheckUtility(board, piecesMovesFacade);
+
+            // Pawn transformation
+            var pawnTransformationUtility = new PawnTransformationUtility(board, _pieceFactory);
+            utilityContainer.Add<IPawnTransformationUtility>(pawnTransformationUtility);
+
+            // Available moves
             var moveUtility = new MoveUtility.MoveUtility(piecesMovesFacade, xRayUtility, attackedCellUtility,
                 boardStateContainer, checkBlockingUtility, checkUtility, castleMoveUtility,
                 pawnTransformationUtility);
-
-            var turnContainer = new TurnUtility.TurnUtility(board);
-            var mateUtility = new MateUtility.MateUtility(board, moveUtility, turnContainer);
-            var checkDetector = new CheckMateDetector(board, boardStateContainer, 
+            
+            // check-mate
+            var mateUtility = new MateUtility.MateUtility(board, moveUtility, turnUtility);
+            var checkMateUtility = new CheckMateUtility(boardStateContainer, 
                 checkUtility, mateUtility, pawnTransformationUtility);
-            var castleDetector = new CastleDetector.CastleDetector(board);
-
-            var whitePlayerFacade = new ManagedPlayerFacade(moveUtility, turnContainer, turnContainer,
+            utilityContainer.Add<ICheckMateUtility>(checkMateUtility);
+            
+            // Player facades
+            var whitePlayerFacade = new ManagedPlayerFacade(moveUtility, turnUtility, turnUtility,
                 boardStateContainer, boardStateContainer, board, pawnTransformationUtility, PieceColor.White);
-            var blackPlayerFacade = new ManagedPlayerFacade(moveUtility, turnContainer, turnContainer,
+            var blackPlayerFacade = new ManagedPlayerFacade(moveUtility, turnUtility, turnUtility,
                 boardStateContainer, boardStateContainer, board, pawnTransformationUtility, PieceColor.Black);
-
-            var components = new IBoardEnvironmentComponent[]
-            {
-                pawnMoveUtility,
-                knightMoveUtility,
-                bishopMoveUtility,
-                rookMoveUtility,
-                queenMoveUtility,
-                kingMoveUtility,
-                piecesMovesFacade,
-                bishopXRayUtility,
-                rookXRayUtility,
-                queenXRayUtility,
-                xRayUtility,
-                boardStateContainer,
-                checkUtility,
-                checkDetector,
-                checkBlockingUtility,
-                lastMovedPieceUtility,
-                enPassantUtility,
-                attackedCellUtility,
-                takeDetector,
-                moveUtility,
-                turnContainer,
-                castleDetector,
-                pawnTransformationDetector,
-                pawnTransformationUtility
-            };
-            return new BoardEnvironment(blackPlayerFacade, whitePlayerFacade, components);
+            return new BoardEnvironment(blackPlayerFacade, whitePlayerFacade, board, utilityContainer);
         }
     }
 }

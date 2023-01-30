@@ -3,7 +3,7 @@ using KChess.Domain.Impl;
 
 namespace KChess.Core.CastleMoveUtility
 {
-    public interface ICastleMoveUtility
+    internal interface ICastleMoveUtility
     {
         BoardCoordinates[] GetCastleMoves(PieceColor color);
     }

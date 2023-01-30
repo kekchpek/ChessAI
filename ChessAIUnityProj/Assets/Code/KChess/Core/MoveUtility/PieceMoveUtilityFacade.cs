@@ -10,7 +10,7 @@ using KChess.Domain.Impl;
 
 namespace KChess.Core.MoveUtility
 {
-    public class PieceMoveUtilityFacade : IPieceMoveUtilityFacade
+    internal class PieceMoveUtilityFacade : IPieceMoveUtilityFacade
     {
         private readonly IPawnMoveUtility _pawnMoveUtility;
         private readonly IRookMoveUtility _rookMoveUtility;
@@ -70,11 +70,6 @@ namespace KChess.Core.MoveUtility
                 };
             }
             return Array.Empty<BoardCoordinates>();
-        }
-
-        public void Dispose()
-        {
-            // do nothing
         }
     }
 }

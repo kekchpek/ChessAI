@@ -3,7 +3,7 @@ using KChess.Domain.Impl;
 
 namespace KChess.Core.CheckBlockingUtility
 {
-    public interface ICheckBlockingUtility
+    internal interface ICheckBlockingUtility
     {
         BoardCoordinates[] GetMovesForCheckBlocking(PieceColor checkedPlayer);
     }

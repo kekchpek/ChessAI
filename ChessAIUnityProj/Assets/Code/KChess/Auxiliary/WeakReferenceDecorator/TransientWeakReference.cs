@@ -1,5 +1,4 @@
 ﻿using System;
-using KChess.Auxiliary.WeakReferenceDecorator;
 
 namespace KChess.Auxiliary.WeakReferenceDecorator
 {

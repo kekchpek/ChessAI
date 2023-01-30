@@ -2,7 +2,7 @@
 
 namespace KChess.Core.BoardStateUtils
 {
-    public interface IBoardStateGetter
+    internal interface IBoardStateGetter
     {
         BoardState Get();
     }

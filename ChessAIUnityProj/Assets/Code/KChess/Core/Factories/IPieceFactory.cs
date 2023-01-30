@@ -3,7 +3,7 @@ using KChess.Domain.Impl;
 
 namespace KChess.Core.Factories
 {
-    public interface IPieceFactory
+    internal interface IPieceFactory
     {
         
         /// <summary>

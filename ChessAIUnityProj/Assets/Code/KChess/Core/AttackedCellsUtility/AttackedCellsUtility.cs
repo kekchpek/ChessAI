@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
-using KChess.Core.BoardEnvironment;
+﻿using System;
+using System.Collections.Generic;
 using KChess.Core.MoveUtility;
 using KChess.Domain;
 using KChess.Domain.Impl;
 
 namespace KChess.Core.AttackedCellsUtility
 {
-    public class AttackedCellsUtility : IAttackedCellsUtility, IBoardEnvironmentComponent
+    internal class AttackedCellsUtility : IAttackedCellsUtility, IDisposable
     {
         private readonly IPieceMoveUtilityFacade _pieceMoveUtilityFacade;
         private readonly IBoard _board;
@@ -21,7 +21,7 @@ namespace KChess.Core.AttackedCellsUtility
             _pieceMoveUtilityFacade = pieceMoveUtilityFacade;
             _board = board;
             UpdateData();
-            _board.PositionChanged += OnPositionChanged;
+            _board.Updated += OnBoardUpdated;
         }
 
         public bool IsCellAttacked(BoardCoordinates coordinates, PieceColor attackingColor)
@@ -30,7 +30,7 @@ namespace KChess.Core.AttackedCellsUtility
                    attackingColor == PieceColor.White && _attackedByWhite.Contains(coordinates);
         }
 
-        private void OnPositionChanged(IPiece _)
+        private void OnBoardUpdated(IPiece _)
         {
             UpdateData();
         }
@@ -58,7 +58,7 @@ namespace KChess.Core.AttackedCellsUtility
 
         public void Dispose()
         {
-            _board.PositionChanged -= OnPositionChanged;
+            _board.Updated -= OnBoardUpdated;
         }
     }
 }

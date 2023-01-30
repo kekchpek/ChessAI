@@ -3,7 +3,7 @@ using KChess.Domain;
 
 namespace KChess.Core.CheckUtility
 {
-    public interface ICheckUtility
+    internal interface ICheckUtility
     {
         bool IsPositionWithCheck(out PieceColor checkedColor);
 

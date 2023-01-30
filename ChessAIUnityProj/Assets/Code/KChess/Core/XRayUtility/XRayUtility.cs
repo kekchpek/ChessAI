@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using KChess.Core.BoardEnvironment;
+﻿using System;
+using System.Collections.Generic;
 using KChess.Core.XRayUtility.XRayPiecesUtilities.BishopXRayUtility;
 using KChess.Core.XRayUtility.XRayPiecesUtilities.QueenXRayUtility;
 using KChess.Core.XRayUtility.XRayPiecesUtilities.RookXRayUtility;
@@ -7,7 +7,7 @@ using KChess.Domain;
 
 namespace KChess.Core.XRayUtility
 {
-    public class XRayUtility : IXRayUtility, IBoardEnvironmentComponent
+    internal class XRayUtility : IXRayUtility, IDisposable
     {
 
         public IReadOnlyDictionary<IPiece, IReadOnlyList<IXRay>> TargetPieces => _targetPieces;
@@ -34,10 +34,10 @@ namespace KChess.Core.XRayUtility
             _queenMoveUtility = queenMoveUtility;
             _rookXRayUtility = rookXRayUtility;
             _bishopXRayUtility = bishopXRayUtility;
-            _board.PositionChanged += OnPositionChanged;
+            _board.Updated += OnBoardUpdated;
         }
 
-        private void OnPositionChanged(IPiece _)
+        private void OnBoardUpdated(IPiece _)
         {
             _targetPieces.Clear();
             _attackingPieces.Clear();
@@ -69,7 +69,7 @@ namespace KChess.Core.XRayUtility
 
         public void Dispose()
         {
-            _board.PositionChanged -= OnPositionChanged;
+            _board.Updated -= OnBoardUpdated;
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace KChess.Core.XRayUtility.XRayPiecesUtilities.RookXRayUtility
 {
-    public interface IRookXRayUtility : IPieceXRayUtility
+    internal interface IRookXRayUtility : IPieceXRayUtility
     {
         
     }

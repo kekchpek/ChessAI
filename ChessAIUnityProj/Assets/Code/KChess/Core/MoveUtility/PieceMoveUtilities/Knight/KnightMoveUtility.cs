@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using KChess.Core.BoardEnvironment;
+﻿using System.Linq;
 using KChess.Domain;
 using KChess.Domain.Impl;
 
 namespace KChess.Core.MoveUtility.PieceMoveUtilities.Knight
 {
-    public class KnightMoveUtility : IKnightMoveUtility, IBoardEnvironmentComponent
+    internal class KnightMoveUtility : IKnightMoveUtility
     {
         private readonly IBoard _board;
 
@@ -49,11 +47,6 @@ namespace KChess.Core.MoveUtility.PieceMoveUtilities.Knight
             availableMoves[7] = (numericCoords.Item1 + 1, numericCoords.Item2 + 2);
 
             return availableMoves;
-        }
-
-        public void Dispose()
-        {
-            // do nothing
         }
     }
 }

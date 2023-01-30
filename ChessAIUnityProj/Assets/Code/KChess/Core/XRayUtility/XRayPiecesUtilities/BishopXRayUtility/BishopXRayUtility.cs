@@ -2,7 +2,7 @@
 
 namespace KChess.Core.XRayUtility.XRayPiecesUtilities.BishopXRayUtility
 {
-    public class BishopXRayUtility : BasePieceXRayUtility, IBishopXRayUtility
+    internal class BishopXRayUtility : BasePieceXRayUtility, IBishopXRayUtility
     {
         public BishopXRayUtility(IBoard board) : base(board)
         {

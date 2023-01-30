@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using KChess.Core.AttackedCellsUtility;
-using KChess.Core.BoardEnvironment;
 using KChess.Domain;
 using KChess.Domain.Extensions;
 using KChess.Domain.Impl;
 
 namespace KChess.Core.CastleMoveUtility
 {
-    public class CastleMoveUtility : ICastleMoveUtility, IBoardEnvironmentComponent
+    internal class CastleMoveUtility : ICastleMoveUtility, IDisposable
     {
         private readonly IBoard _board;
         private readonly IAttackedCellsUtility _attackedCellsUtility;
@@ -21,7 +20,7 @@ namespace KChess.Core.CastleMoveUtility
         {
             _board = board;
             _attackedCellsUtility = attackedCellsUtility;
-            _board.PositionChanged += OnPositionChanged;
+            _board.Updated += OnBoardUpdated;
             UpdateState();
         }
         
@@ -38,7 +37,7 @@ namespace KChess.Core.CastleMoveUtility
             }
         }
 
-        private void OnPositionChanged(IPiece piece)
+        private void OnBoardUpdated(IPiece piece)
         {
             UpdateState();
         }
@@ -95,7 +94,7 @@ namespace KChess.Core.CastleMoveUtility
 
         public void Dispose()
         {
-            _board.PositionChanged -= OnPositionChanged;
+            _board.Updated -= OnBoardUpdated;
         }
     }
 }

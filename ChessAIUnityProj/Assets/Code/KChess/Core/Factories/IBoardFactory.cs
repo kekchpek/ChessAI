@@ -2,7 +2,7 @@
 
 namespace KChess.Core.Factories
 {
-    public interface IBoardFactory
+    internal interface IBoardFactory
     {
         public IBoard CreateStandardBoard();
 

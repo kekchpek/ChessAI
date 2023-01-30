@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using KChess.Core.BoardEnvironment;
 using KChess.Domain;
 using KChess.Domain.Extensions;
 using KChess.Domain.Impl;
@@ -8,11 +7,11 @@ using UnityEngine.Assertions;
 
 namespace KChess.Core.XRayUtility.XRayPiecesUtilities
 {
-    public abstract class BasePieceXRayUtility : IPieceXRayUtility, IBoardEnvironmentComponent
+    internal abstract class BasePieceXRayUtility : IPieceXRayUtility
     {
         private readonly IBoard _board;
 
-        public BasePieceXRayUtility(IBoard board)
+        protected BasePieceXRayUtility(IBoard board)
         {
             _board = board;
         }
@@ -77,11 +76,6 @@ namespace KChess.Core.XRayUtility.XRayPiecesUtilities
             }
 
             return xRays.ToArray();
-        }
-
-        public void Dispose()
-        {
-            // do nothing
         }
     }
 }

@@ -1,12 +1,10 @@
 ﻿using System;
-using KChess.Core.BoardEnvironment;
 using KChess.Core.Factories;
 using KChess.Domain;
 
 namespace KChess.Core.PawnTransformation
 {
-    public class PawnTransformationUtility : IPawnTransformationUtility, IPawnTransformationUtilityWrite,
-        IBoardEnvironmentComponent
+    internal class PawnTransformationUtility : IPawnTransformationUtility
     {
         public event Action<IPiece> TransformationBecomesRequired;
         
@@ -20,7 +18,7 @@ namespace KChess.Core.PawnTransformation
             _board = board;
             _pieceFactory = pieceFactory;
         }
-        
+
         public IPiece GetTransformingPiece()
         {
             return _transformingPiece;
@@ -36,8 +34,21 @@ namespace KChess.Core.PawnTransformation
             _transformingPiece = null;
             return true;
         }
-
-        public void SetTransformingPiece(IPiece piece)
+        
+        public void UpdateTransformingPiece(IPiece piece)
+        {
+            if (piece.Position.HasValue && piece.Type == PieceType.Pawn)
+            {
+                var position = piece.Position.Value.ToNumeric();
+                if (piece.Color == PieceColor.White && position.Item2 == 7 ||
+                    piece.Color == PieceColor.Black && position.Item2 == 0)
+                {
+                    SetTransformingPiece(piece);
+                }
+            }
+        }
+        
+        private void SetTransformingPiece(IPiece piece)
         {
             _transformingPiece = piece;
             TransformationBecomesRequired?.Invoke(piece);
@@ -53,11 +64,6 @@ namespace KChess.Core.PawnTransformation
                 PawnTransformationVariant.Queen => PieceType.Queen,
                 _ => throw new ArgumentOutOfRangeException(nameof(variant), variant, null)
             };
-        }
-
-        public void Dispose()
-        {
-            // do nothing
         }
     }
 }

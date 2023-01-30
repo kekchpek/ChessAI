@@ -10,7 +10,7 @@ using KChess.Domain.Impl;
 
 namespace KChess.Core.API.PlayerFacade
 {
-    public class ManagedPlayerFacade : IManagedPlayerFacade
+    internal class ManagedPlayerFacade : IManagedPlayerFacade
     {
 
         public event Action<PieceColor> TurnChanged;
@@ -64,7 +64,6 @@ namespace KChess.Core.API.PlayerFacade
                 return false;
             if (!_moveUtility.GetAvailableMoves(piece).Contains(position))
                 return false;
-            
             piece.MoveTo(position);
             return true;
         }

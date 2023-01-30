@@ -3,7 +3,7 @@ using KChess.Domain.Impl;
 
 namespace KChess.Core.MoveUtility
 {
-    public interface IMoveUtility
+    internal interface IMoveUtility
     {
         /// <summary>
         /// Returns available moves for the specified figure

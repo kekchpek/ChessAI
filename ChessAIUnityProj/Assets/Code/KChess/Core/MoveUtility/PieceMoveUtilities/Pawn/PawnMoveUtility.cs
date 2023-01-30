@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using KChess.Core.BoardEnvironment;
 using KChess.Core.LastMovedPieceUtils;
 using KChess.Domain;
 using KChess.Domain.Impl;
 
 namespace KChess.Core.MoveUtility.PieceMoveUtilities.Pawn
 {
-    public class PawnMoveUtility : IPawnMoveUtility, IBoardEnvironmentComponent
+    internal class PawnMoveUtility : IPawnMoveUtility
     {
         private readonly IBoard _board;
         private readonly ILastMovedPieceGetter _lastMovedPieceGetter;
@@ -97,11 +96,6 @@ namespace KChess.Core.MoveUtility.PieceMoveUtilities.Pawn
             }
 
             return attackingCells.ToArray();
-        }
-
-        public void Dispose()
-        {
-            // do nothing
         }
         
     }

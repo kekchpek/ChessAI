@@ -3,7 +3,7 @@ using KChess.Domain;
 
 namespace KChess.Core.XRayUtility
 {
-    public interface IXRayUtility
+    internal interface IXRayUtility
     {
         
         IReadOnlyDictionary<IPiece, IReadOnlyList<IXRay>> TargetPieces { get; }

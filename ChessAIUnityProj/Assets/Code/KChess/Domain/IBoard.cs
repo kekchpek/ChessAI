@@ -3,10 +3,9 @@ using System.Collections.Generic;
 
 namespace KChess.Domain
 {
-    public interface IBoard
+    internal interface IBoard
     {
-        event Action<IPiece> PositionChanged;
-        event Action<IPiece> PieceMoved;
+        event Action<IPiece> Updated;
         public event Action<IPiece> PieceAddedOnBoard;
         
         IReadOnlyList<IPiece> Pieces { get; }

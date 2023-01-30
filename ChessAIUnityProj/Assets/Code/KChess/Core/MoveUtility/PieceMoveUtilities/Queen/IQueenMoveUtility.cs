@@ -1,6 +1,6 @@
 ﻿namespace KChess.Core.MoveUtility.PieceMoveUtilities.Queen
 {
-    public interface IQueenMoveUtility : IPieceMoveUtility
+    internal interface IQueenMoveUtility : IPieceMoveUtility
     {
         
     }

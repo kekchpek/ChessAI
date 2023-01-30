@@ -4,7 +4,7 @@ using KChess.Domain.Impl;
 
 namespace KChess.Domain.Extensions
 {
-    public static class BoardExtensions
+    internal static class BoardExtensions
     {
         
         public static IReadOnlyDictionary<BoardCoordinates, IPiece> GetPiecePositionsMap(this IBoard board)

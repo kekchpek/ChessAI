@@ -1,6 +1,6 @@
 ﻿using System;
 using KChess.Core.EnPassantUtility;
-using KChess.Core.TakeDetector;
+using KChess.Core.Taking;
 using KChess.Domain;
 using NSubstitute;
 using NUnit.Framework;
@@ -9,13 +9,13 @@ namespace KChess.Tests
 {
     public class TakeDetectorTests
     {
-        private TakeDetector CreateTakeDetector(
+        private TakeUtility CreateTakeDetector(
             out IBoard board,
             out IEnPassantUtility enPassantUtility)
         {
             board = Substitute.For<IBoard>();
             enPassantUtility = Substitute.For<IEnPassantUtility>();
-            return new TakeDetector(board, enPassantUtility);
+            return new TakeUtility(board, enPassantUtility);
         }
 
         [Test]
@@ -35,7 +35,7 @@ namespace KChess.Tests
             
             // Act
             pieces[2].Position.Returns((2,3));
-            board.PositionChanged += Raise.Event<Action<IPiece>>(pieces[2]);
+            takeDetector.TryTake(pieces[2]);
             
             // Assert
             board.DidNotReceive().RemovePiece(Arg.Any<IPiece>());
@@ -59,7 +59,7 @@ namespace KChess.Tests
             // Act
             var newPos = pieces[1].Position;
             pieces[2].Position.Returns(newPos);
-            board.PositionChanged += Raise.Event<Action<IPiece>>(pieces[2]);
+            takeDetector.TryTake(pieces[2]);
             
             // Assert
             board.Received().RemovePiece(pieces[1]);
@@ -87,7 +87,7 @@ namespace KChess.Tests
                 x[2] = pieces[1];
                 return true;
             });
-            board.PositionChanged += Raise.Event<Action<IPiece>>(pieces[2]);
+            takeDetector.TryTake(pieces[2]);
             
             // Assert
             board.Received().RemovePiece(pieces[1]);

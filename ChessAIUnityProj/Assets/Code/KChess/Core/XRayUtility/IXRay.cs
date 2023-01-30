@@ -4,7 +4,7 @@ using KChess.Domain.Impl;
 
 namespace KChess.Core.XRayUtility
 {
-    public interface IXRay
+    internal interface IXRay
     {
 
         IPiece TargetPiece { get; }

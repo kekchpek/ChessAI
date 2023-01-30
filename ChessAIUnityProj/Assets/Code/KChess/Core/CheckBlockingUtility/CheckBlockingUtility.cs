@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Linq;
 using Castle.Core.Internal;
-using KChess.Core.BoardEnvironment;
 using KChess.Core.XRayUtility;
 using KChess.Domain;
 using KChess.Domain.Impl;
 
 namespace KChess.Core.CheckBlockingUtility
 {
-    public class CheckBlockingUtility : ICheckBlockingUtility, IBoardEnvironmentComponent
+    internal class CheckBlockingUtility : ICheckBlockingUtility
     {
         private readonly IXRayUtility _xRayUtility;
 
@@ -25,11 +24,6 @@ namespace KChess.Core.CheckBlockingUtility
             if (checkedKing == null)
                 return Array.Empty<BoardCoordinates>();
             return _xRayUtility.TargetPieces[checkedKing].First(x => x.BlockingPieces.IsNullOrEmpty()).CellsBetween.ToArray();
-        }
-
-        public void Dispose()
-        {
-            // do nothing
         }
     }
 }

@@ -3,13 +3,15 @@ using KChess.Domain;
 
 namespace KChess.Core.PawnTransformation
 {
-    public interface IPawnTransformationUtility
+    internal interface IPawnTransformationUtility
     {
 
         /// <summary>
         /// Fired when some pawn starts needing to be transformed.
         /// </summary>
         event Action<IPiece> TransformationBecomesRequired;
+
+        public void UpdateTransformingPiece(IPiece piece);
         
         /// <summary>
         /// Returns piece needs to be transformed. Or null if there is not such piece.

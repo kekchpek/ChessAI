@@ -1,4 +1,4 @@
-﻿using KChess.Core.BoardEnvironment;
+﻿using System;
 using KChess.Core.BoardStateUtils;
 using KChess.Core.CheckUtility;
 using KChess.Core.MateUtility;
@@ -7,56 +7,51 @@ using KChess.Domain;
 
 namespace KChess.Core.CheckMate
 {
-    public class CheckMateDetector: ICheckMateDetector, IBoardEnvironmentComponent
+    internal class CheckMateUtility: ICheckMateUtility
     {
-        private readonly IBoard _board;
         private readonly IBoardStateSetter _boardStateSetter;
         private readonly ICheckUtility _checkUtility;
         private readonly IMateUtility _mateUtility;
         private readonly IPawnTransformationUtility _pawnTransformationUtility;
 
-        public CheckMateDetector(
-            IBoard board, 
+        public CheckMateUtility(
             IBoardStateSetter boardStateSetter, 
             ICheckUtility checkUtility,
             IMateUtility mateUtility,
             IPawnTransformationUtility pawnTransformationUtility)
         {
-            _board = board;
             _boardStateSetter = boardStateSetter;
             _checkUtility = checkUtility;
             _mateUtility = mateUtility;
             _pawnTransformationUtility = pawnTransformationUtility;
-
-            _board.PositionChanged += OnPositionChanged;
         }
 
-        private void OnPositionChanged(IPiece piece)
+        public BoardState UpdateBoardState()
         {
             if (_checkUtility.IsPositionWithCheck(out var checkedColor))
             {
                 switch (checkedColor)
                 {
                     case PieceColor.Black:
-                        if (_mateUtility.IsMate() && _pawnTransformationUtility.GetTransformingPiece() != null)
+                        _boardStateSetter.Set(BoardState.CheckToBlack);
+                        if (_mateUtility.IsMate() && _pawnTransformationUtility.GetTransformingPiece() == null)
                         {
                             _boardStateSetter.Set(BoardState.MateToBlack);
+                            return BoardState.MateToBlack;
                         }
-                        else
-                        {
-                            _boardStateSetter.Set(BoardState.CheckToBlack);
-                        }
-                        break;
+
+                        return BoardState.CheckToBlack;
                     case PieceColor.White:
-                        if (_mateUtility.IsMate() && _pawnTransformationUtility.GetTransformingPiece() != null)
+                        _boardStateSetter.Set(BoardState.CheckToWhite);
+                        if (_mateUtility.IsMate() && _pawnTransformationUtility.GetTransformingPiece() == null)
                         {
                             _boardStateSetter.Set(BoardState.MateToWhite);
+                            return BoardState.MateToWhite;
                         }
-                        else
-                        {
-                            _boardStateSetter.Set(BoardState.MateToWhite);
-                        }
-                        break;
+
+                        return BoardState.CheckToWhite;
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
             }
             else
@@ -65,17 +60,14 @@ namespace KChess.Core.CheckMate
                     _mateUtility.IsMate())
                 {
                     _boardStateSetter.Set(BoardState.Stalemate);
+                    return BoardState.Stalemate;
                 }
                 else
                 {
                     _boardStateSetter.Set(BoardState.Regular);
+                    return BoardState.Regular;
                 }
             }
-        }
-
-        public void Dispose()
-        {
-            _board.PositionChanged -= OnPositionChanged;
         }
     }
 }

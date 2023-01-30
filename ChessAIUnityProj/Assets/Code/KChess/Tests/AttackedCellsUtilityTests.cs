@@ -88,7 +88,7 @@ namespace KChess.Tests
             pieceMoveUtilityFacade.GetAttackedCells(whitePiece).Returns(new BoardCoordinates[]{"c3"});
             
             // Act
-            board.PositionChanged += Raise.Event<Action<IPiece>>(whitePiece);
+            board.Updated += Raise.Event<Action<IPiece>>(whitePiece);
             var isAttacked = attackedCellsUtility.IsCellAttacked("c3", attackingColor);
             
             // Assert

@@ -1,45 +1,20 @@
 ﻿using System;
-using KChess.Core.BoardEnvironment;
 using KChess.Domain;
 
 namespace KChess.Core.TurnUtility
 {
-    public class TurnUtility : ITurnGetter, ITurnObserver, ITurnSetter, IBoardEnvironmentComponent
+    public class TurnUtility : ITurnUtility
     {
-        private readonly IBoard _board;
         public event Action<PieceColor> TurnChanged;
 
         private PieceColor _turnColor = PieceColor.White;
         
         public PieceColor GetTurn() => _turnColor;
         
-        public TurnUtility(IBoard board)
+        public void NextTurn()
         {
-            _board = board;
-            _board.PieceMoved += OnPieceMoved;
-        }
-        
-        public void SetTurn(PieceColor pieceColor)
-        {
-            _turnColor = pieceColor;
+            _turnColor = _turnColor == PieceColor.White ? PieceColor.Black : PieceColor.White;
             TurnChanged?.Invoke(_turnColor);
-        }
-
-        private void OnPieceMoved(IPiece movedPiece)
-        {
-            if (movedPiece.Color == PieceColor.White)
-            {
-                SetTurn(PieceColor.Black);
-            }
-            if (movedPiece.Color == PieceColor.Black)
-            {
-                SetTurn(PieceColor.White);
-            }
-        }
-
-        public void Dispose()
-        {
-            _board.PieceMoved -= OnPieceMoved;
         }
     }
 }

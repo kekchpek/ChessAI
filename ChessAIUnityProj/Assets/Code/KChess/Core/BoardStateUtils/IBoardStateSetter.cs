@@ -2,7 +2,7 @@
 
 namespace KChess.Core.BoardStateUtils
 {
-    public interface IBoardStateSetter
+    internal interface IBoardStateSetter
     {
         void Set(BoardState boardState);
     }

@@ -1,6 +1,6 @@
 ﻿namespace KChess.Core.BoardEnvironment.Factory
 {
-    public interface IBoardEnvironmentFactory
+    internal interface IBoardEnvironmentFactory
     {
         IBoardEnvironment Create();
     }

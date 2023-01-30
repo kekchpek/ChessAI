@@ -6,8 +6,14 @@ namespace KChess.Domain.Impl
 {
     public class Board : IBoard
     {
-        public event Action<IPiece> PositionChanged;
-        public event Action<IPiece> PieceMoved;
+        private event Action<IPiece> Updated;
+
+        event Action<IPiece> IBoard.Updated
+        {
+            add => Updated += value;
+            remove => Updated -= value;
+        }
+        
         public event Action<IPiece> PieceAddedOnBoard;
 
         public IReadOnlyList<IPiece> Pieces => _pieces;
@@ -24,7 +30,7 @@ namespace KChess.Domain.Impl
                 piece.Moved -= _pieceMoveCallbacks[piece];
                 piece.Remove();
                 _pieceMoveCallbacks.Remove(piece);
-                PositionChanged?.Invoke(piece);
+                Updated?.Invoke(piece);
             }
         }
 
@@ -38,12 +44,11 @@ namespace KChess.Domain.Impl
             _pieces.Add(piece);
             _pieceMoveCallbacks.Add(piece, () =>
             {
-                PositionChanged?.Invoke(piece);
-                PieceMoved?.Invoke(piece);
+                Updated?.Invoke(piece);
             });
             piece.Moved += _pieceMoveCallbacks[piece];
             PieceAddedOnBoard?.Invoke(piece);
-            PositionChanged?.Invoke(piece);
+            Updated?.Invoke(piece);
         }
     }
 }

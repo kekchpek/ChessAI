@@ -40,7 +40,7 @@ namespace KChess.Tests
             board.Pieces.Returns(new[] {whitePiece1, blackKing});
 
             // Act
-            board.PositionChanged += Raise.Event<Action<IPiece>>(whitePiece1);
+            board.Updated += Raise.Event<Action<IPiece>>(whitePiece1);
             var isCheck = checkUtility.IsPositionWithCheck(out var checkedColor);
 
             // Assert
@@ -67,7 +67,7 @@ namespace KChess.Tests
             board.Pieces.Returns(new[] {whitePiece1, blackKing});
 
             // Act
-            board.PositionChanged += Raise.Event<Action<IPiece>>(whitePiece1);
+            board.Updated += Raise.Event<Action<IPiece>>(whitePiece1);
             var checkingPieces = checkUtility.GetCheckingPieces();
 
             // Assert
@@ -94,7 +94,7 @@ namespace KChess.Tests
             board.Pieces.Returns(new[] {blackPiece1, blackKing});
 
             // Act
-            board.PositionChanged += Raise.Event<Action<IPiece>>(blackPiece1);
+            board.Updated += Raise.Event<Action<IPiece>>(blackPiece1);
             var isCheck = checkUtility.IsPositionWithCheck(out var checkedColor);
 
             // Assert
@@ -121,7 +121,7 @@ namespace KChess.Tests
             board.Pieces.Returns(new[] {blackPiece1, blackKing});
 
             // Act
-            board.PositionChanged += Raise.Event<Action<IPiece>>(blackPiece1);
+            board.Updated += Raise.Event<Action<IPiece>>(blackPiece1);
             var checkingPieces = checkUtility.GetCheckingPieces();
 
             // Assert
@@ -149,7 +149,7 @@ namespace KChess.Tests
             board.Pieces.Returns(new[] {blackPiece1, whiteKing});
 
             // Act
-            board.PositionChanged += Raise.Event<Action<IPiece>>(blackPiece1);
+            board.Updated += Raise.Event<Action<IPiece>>(blackPiece1);
             var isCheck = checkUtility.IsPositionWithCheck(out var checkedColor);
 
             // Assert
@@ -179,7 +179,7 @@ namespace KChess.Tests
             board.Pieces.Returns(new[] {blackPiece1, whiteKing});
 
             // Act
-            board.PositionChanged += Raise.Event<Action<IPiece>>(blackPiece1);
+            board.Updated += Raise.Event<Action<IPiece>>(blackPiece1);
             var checkingPieces = checkUtility.GetCheckingPieces();
 
             // Assert
@@ -208,7 +208,7 @@ namespace KChess.Tests
             board.Pieces.Returns(new[] {whitePiece1, blackKing});
 
             // Act
-            board.PositionChanged += Raise.Event<Action<IPiece>>(whitePiece1);
+            board.Updated += Raise.Event<Action<IPiece>>(whitePiece1);
             var isCheck = checkUtility.IsPositionWithCheck(out var checkedColor);
 
             // Assert
@@ -248,7 +248,7 @@ namespace KChess.Tests
                 blackPiece3, whiteKing});
 
             // Act
-            board.PositionChanged += Raise.Event<Action<IPiece>>(blackPiece1);
+            board.Updated += Raise.Event<Action<IPiece>>(blackPiece1);
             var checkingPieces = checkUtility.GetCheckingPieces();
 
             // Assert

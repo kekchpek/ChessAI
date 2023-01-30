@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Linq;
-using KChess.Core.BoardEnvironment;
 using KChess.Core.LastMovedPieceUtils;
 using KChess.Domain;
 using KChess.Domain.Extensions;
 
 namespace KChess.Core.EnPassantUtility
 {
-    public class EnPassantUtility : IEnPassantUtility, IBoardEnvironmentComponent
+    internal class EnPassantUtility : IEnPassantUtility, IDisposable
     {
         private readonly ILastMovedPieceGetter _lastMovedPieceGetter;
 

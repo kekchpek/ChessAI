@@ -11,7 +11,7 @@ namespace KChess.Core.MateUtility
         private readonly IMoveUtility _moveUtility;
         private readonly ITurnGetter _turnGetter;
 
-        public MateUtility(
+        internal MateUtility(
             IBoard board, 
             IMoveUtility moveUtility,
             ITurnGetter turnGetter)

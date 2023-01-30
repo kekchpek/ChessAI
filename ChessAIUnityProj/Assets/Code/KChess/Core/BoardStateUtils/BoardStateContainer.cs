@@ -1,10 +1,9 @@
 ﻿using System;
-using KChess.Core.BoardEnvironment;
 using KChess.Domain;
 
 namespace KChess.Core.BoardStateUtils
 {
-    public class BoardStateContainer : IBoardStateSetter, IBoardStateGetter, IBoardStateObserver, IBoardEnvironmentComponent
+    public class BoardStateContainer : IBoardStateSetter, IBoardStateGetter, IBoardStateObserver
     {
 
         private BoardState _state = BoardState.Regular;
@@ -18,10 +17,5 @@ namespace KChess.Core.BoardStateUtils
         }
 
         public event Action<BoardState> StateChanged;
-
-        public void Dispose()
-        {
-            // do nothing
-        }
     }
 }

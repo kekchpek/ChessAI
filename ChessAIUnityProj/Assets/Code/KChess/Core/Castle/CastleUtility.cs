@@ -1,11 +1,10 @@
 ﻿using System.Linq;
-using KChess.Core.BoardEnvironment;
 using KChess.Domain;
 using KChess.Domain.Impl;
 
-namespace KChess.Core.CastleDetector
+namespace KChess.Core.Castle
 {
-    public class CastleDetector : ICastleDetector, IBoardEnvironmentComponent
+    internal class CastleUtility : ICastleUtility
     {
 
         private static readonly BoardCoordinates WhiteKingStartPos = "e1";
@@ -31,13 +30,12 @@ namespace KChess.Core.CastleDetector
         
         private readonly IBoard _board;
 
-        public CastleDetector(IBoard board)
+        public CastleUtility(IBoard board)
         {
             _board = board;
-            board.PositionChanged += OnPositionChanged;
         }
 
-        private void OnPositionChanged(IPiece piece)
+        public void TryMakeCastle(IPiece piece)
         {
             if (piece.Type != PieceType.King)
             {
@@ -71,11 +69,6 @@ namespace KChess.Core.CastleDetector
                     rook!.MoveTo(RightBlackRookCastlePos);
                 }
             }
-        }
-
-        public void Dispose()
-        {
-            _board.PositionChanged -= OnPositionChanged;
         }
     }
 }

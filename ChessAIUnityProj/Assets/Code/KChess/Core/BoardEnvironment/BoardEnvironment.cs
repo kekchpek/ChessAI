@@ -1,31 +1,71 @@
 ﻿using KChess.Core.API.PlayerFacade;
+using KChess.Core.BoardEnvironment.Utils;
+using KChess.Core.Castle;
+using KChess.Core.CheckMate;
+using KChess.Core.PawnTransformation;
+using KChess.Core.Taking;
+using KChess.Core.TurnUtility;
+using KChess.Domain;
 
 namespace KChess.Core.BoardEnvironment
 {
-    public readonly struct BoardEnvironment : IBoardEnvironment
+    internal class BoardEnvironment : IBoardEnvironment
     {
         public IPlayerFacade BlackPlayerFacade => _blackPlayerFacade;
         public IPlayerFacade WhitePlayerFacade => _whitePlayerFacade;
 
         private readonly IManagedPlayerFacade _whitePlayerFacade;
+        private readonly IBoard _board;
         private readonly IManagedPlayerFacade _blackPlayerFacade;
 
-        private readonly IBoardEnvironmentComponent[] _components;
+        private readonly IUtilityContainer _utilityContainer;
 
-        public BoardEnvironment(IManagedPlayerFacade blackPlayer, IManagedPlayerFacade whitePlayer,
-            params IBoardEnvironmentComponent[] components)
+        private bool _updating;
+
+        public BoardEnvironment(
+            IManagedPlayerFacade blackPlayer, 
+            IManagedPlayerFacade whitePlayer,
+            IBoard board,
+            IUtilityContainer components)
         {
             _blackPlayerFacade = blackPlayer;
             _whitePlayerFacade = whitePlayer;
-            _components = components;
+            _board = board;
+            _utilityContainer = components;
+
+            _board.Updated += OnBoardUpdated;
         }
-        
+
+        private void OnBoardUpdated(IPiece movedPiece)
+        {
+            if (_updating)
+                return;
+
+            _updating = true;
+            
+            // Take
+            _utilityContainer.Get<ITakeUtility>().TryTake(movedPiece);
+
+            // Castle
+            _utilityContainer.Get<ICastleUtility>().TryMakeCastle(movedPiece);
+            
+            // Pawn Transformation
+            _utilityContainer.Get<IPawnTransformationUtility>().UpdateTransformingPiece(movedPiece);
+
+            // Game state
+            var state = _utilityContainer.Get<ICheckMateUtility>().UpdateBoardState();
+            if (state is BoardState.Regular or BoardState.CheckToBlack or BoardState.CheckToWhite)
+            {
+                _utilityContainer.Get<ITurnUtility>().NextTurn();
+            }
+
+            _updating = false;
+        }
+
         public void Dispose()
         {
-            foreach (var component in _components)
-            {
-                component.Dispose();
-            }
+            _board.Updated -= OnBoardUpdated;
+            _utilityContainer.Dispose();
             _whitePlayerFacade.Dispose();
             _blackPlayerFacade.Dispose();
         }

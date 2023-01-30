@@ -1,6 +1,5 @@
 ﻿using KChess.Domain;
 using KChess.Domain.Impl;
-using NSubstitute;
 using NUnit.Framework;
 
 namespace KChess.Tests

@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using KChess.Core.BoardEnvironment;
 using KChess.Domain;
 using KChess.Domain.Impl;
 
 namespace KChess.Core.MoveUtility.PieceMoveUtilities.King
 {
-    public class KingMoveUtility : IKingMoveUtility, IBoardEnvironmentComponent
+    internal class KingMoveUtility : IKingMoveUtility
     {
         private readonly IBoard _board;
 
@@ -44,11 +43,6 @@ namespace KChess.Core.MoveUtility.PieceMoveUtilities.King
                 .Where(x => x.Item1 is >= 0 and <= 7 && x.Item2 is >= 0 and <= 7)
                 .Select(x => (BoardCoordinates) x)
                 .ToArray();
-        }
-
-        public void Dispose()
-        {
-            // do nothing
         }
     }
 }

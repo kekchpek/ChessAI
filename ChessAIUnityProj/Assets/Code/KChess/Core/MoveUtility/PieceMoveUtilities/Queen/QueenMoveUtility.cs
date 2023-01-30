@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using KChess.Core.BoardEnvironment;
 using KChess.Core.MoveUtility.PieceMoveUtilities.Bishop;
 using KChess.Core.MoveUtility.PieceMoveUtilities.Rook;
 using KChess.Domain;
@@ -7,7 +6,7 @@ using KChess.Domain.Impl;
 
 namespace KChess.Core.MoveUtility.PieceMoveUtilities.Queen
 {
-    public class QueenMoveUtility : IQueenMoveUtility, IBoardEnvironmentComponent
+    internal class QueenMoveUtility : IQueenMoveUtility
     {
         private readonly IBishopMoveUtility _bishopMoveUtility;
         private readonly IRookMoveUtility _rookMoveUtility;
@@ -30,11 +29,6 @@ namespace KChess.Core.MoveUtility.PieceMoveUtilities.Queen
             return _bishopMoveUtility.GetAttackedCells(position, pieceColor)
                 .Concat(_rookMoveUtility.GetAttackedCells(position, pieceColor))
                 .ToArray();
-        }
-
-        public void Dispose()
-        {
-            // do nothing
         }
     }
 }

@@ -51,7 +51,7 @@ namespace KChess.Tests
             
             // Act 
             IPiece changedPositionPiece = null;
-            board.PositionChanged += x => changedPositionPiece = x;
+            ((IBoard)board).Updated += x => changedPositionPiece = x;
             ((IBoard)board).PlacePiece(pieceToPlace);
             
             // Assert
@@ -96,23 +96,6 @@ namespace KChess.Tests
         }
 
         [Test]
-        public void PieceMoved_EventCalled_PieceMoved()
-        {
-            // Arrange
-            var board = CreateBoard();
-            var pieceToPlace = Substitute.For<IPiece>();
-            
-            // Act 
-            IPiece movedPiece = null;
-            board.PieceMoved += x => movedPiece = x;
-            ((IBoard)board).PlacePiece(pieceToPlace);
-            pieceToPlace.Moved += Raise.Event<Action>();
-            
-            // Assert
-            Assert.AreEqual(pieceToPlace, movedPiece);
-        }
-        
-        [Test]
         public void PieceMoved_EventCalled_PositionChanged()
         {
             // Arrange
@@ -122,7 +105,7 @@ namespace KChess.Tests
             // Act 
             IPiece movedPiece = null;
             ((IBoard)board).PlacePiece(pieceToPlace);
-            board.PositionChanged += x => movedPiece = x;
+            ((IBoard)board).Updated += x => movedPiece = x;
             pieceToPlace.Moved += Raise.Event<Action>();
             
             // Assert
@@ -138,7 +121,7 @@ namespace KChess.Tests
             
             // Act 
             IPiece movedPiece = null;
-            board.PositionChanged += x => movedPiece = x;
+            ((IBoard)board).Updated += x => movedPiece = x;
             ((IBoard)board).PlacePiece(pieceToPlace);
             pieceToPlace.Moved += Raise.Event<Action>();
             
@@ -186,29 +169,11 @@ namespace KChess.Tests
             // Act 
             ((IBoard)board).PlacePiece(pieceToPlace);
             IPiece positionChangedPiece = null;
-            board.PositionChanged += x => positionChangedPiece = x;
+            ((IBoard)board).Updated += x => positionChangedPiece = x;
             board.RemovePiece(pieceToPlace);
             
             // Assert
             Assert.AreEqual(pieceToPlace, positionChangedPiece);
-        }
-        
-        [Test]
-        public void RemovePiece_EventNotCalled_PieceMoved()
-        {
-            // Arrange
-            var board = CreateBoard();
-            var pieceToPlace = Substitute.For<IPiece>();
-            
-            // Act 
-            ((IBoard)board).PlacePiece(pieceToPlace);
-            board.RemovePiece(pieceToPlace);
-            IPiece movedPiece = null;
-            board.PieceMoved += x => movedPiece = x;
-            pieceToPlace.Moved += Raise.Event<Action>();
-            
-            // Assert
-            Assert.IsNull(movedPiece);
         }
     }
 }

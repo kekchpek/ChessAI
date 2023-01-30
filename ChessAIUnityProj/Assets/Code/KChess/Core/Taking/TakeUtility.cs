@@ -1,23 +1,21 @@
 ﻿using System.Linq;
-using KChess.Core.BoardEnvironment;
 using KChess.Core.EnPassantUtility;
 using KChess.Domain;
 
-namespace KChess.Core.TakeDetector
+namespace KChess.Core.Taking
 {
-    public class TakeDetector : ITakeDetector, IBoardEnvironmentComponent
+    internal class TakeUtility : ITakeUtility
     {
         private readonly IBoard _board;
         private readonly IEnPassantUtility _enPassantUtility;
 
-        public TakeDetector(IBoard board, IEnPassantUtility enPassantUtility)
+        public TakeUtility(IBoard board, IEnPassantUtility enPassantUtility)
         {
             _board = board;
             _enPassantUtility = enPassantUtility;
-            board.PositionChanged += OnPositionChanged;
         }
 
-        private void OnPositionChanged(IPiece piece)
+        public void TryTake(IPiece piece)
         {
             var newPiecePosition = piece.Position;
             var takenPiece = _board.Pieces.FirstOrDefault(x => x.Position == newPiecePosition && x != piece);
@@ -32,11 +30,6 @@ namespace KChess.Core.TakeDetector
                     _board.RemovePiece(enPassantTakenPiece);
                 }
             }
-        }
-
-        public void Dispose()
-        {
-            // do nothing
         }
     }
 }

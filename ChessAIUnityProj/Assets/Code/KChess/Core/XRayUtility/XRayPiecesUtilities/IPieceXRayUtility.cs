@@ -2,7 +2,7 @@
 
 namespace KChess.Core.XRayUtility.XRayPiecesUtilities
 {
-    public interface IPieceXRayUtility
+    internal interface IPieceXRayUtility
     {
 
         IXRay[] GetXRays(IPiece piece);

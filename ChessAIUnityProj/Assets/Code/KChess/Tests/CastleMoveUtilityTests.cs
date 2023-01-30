@@ -49,7 +49,7 @@ namespace KChess.Tests
             whiteLeftRook.IsMoved.Returns(false);
 
             board.Pieces.Returns(new[] {whiteKing, whiteLeftRook, whiteRightRook});
-            board.PositionChanged += Raise.Event<Action<IPiece>>(whiteKing);
+            board.Updated += Raise.Event<Action<IPiece>>(whiteKing);
 
             // Act
             var castleMoves = castleMoveUtility.GetCastleMoves(PieceColor.White);
@@ -87,7 +87,7 @@ namespace KChess.Tests
             whiteLeftRook.IsMoved.Returns(false);
             
             board.Pieces.Returns(new[] {whiteKing, whiteLeftRook, whiteRightRook});
-            board.PositionChanged += Raise.Event<Action<IPiece>>(whiteKing);
+            board.Updated += Raise.Event<Action<IPiece>>(whiteKing);
 
             // Act
             var castleMoves = castleMoveUtility.GetCastleMoves(PieceColor.White);
@@ -126,7 +126,7 @@ namespace KChess.Tests
             whiteLeftRook.IsMoved.Returns(true);
             
             board.Pieces.Returns(new[] {whiteKing, whiteLeftRook, whiteRightRook});
-            board.PositionChanged += Raise.Event<Action<IPiece>>(whiteKing);
+            board.Updated += Raise.Event<Action<IPiece>>(whiteKing);
 
             // Act
             var castleMoves = castleMoveUtility.GetCastleMoves(PieceColor.White);
@@ -168,7 +168,7 @@ namespace KChess.Tests
             whiteLeftRook.IsMoved.Returns(false);
             
             board.Pieces.Returns(new[] {whiteKing, whiteLeftRook, whiteRightRook});
-            board.PositionChanged += Raise.Event<Action<IPiece>>(whiteKing);
+            board.Updated += Raise.Event<Action<IPiece>>(whiteKing);
 
             // Act
             var castleMoves = castleMoveUtility.GetCastleMoves(PieceColor.White);
@@ -209,7 +209,7 @@ namespace KChess.Tests
             whiteLeftRook.IsMoved.Returns(false);
             
             board.Pieces.Returns(new[] {whiteKing, whiteLeftRook, whiteRightRook});
-            board.PositionChanged += Raise.Event<Action<IPiece>>(whiteKing);
+            board.Updated += Raise.Event<Action<IPiece>>(whiteKing);
 
             // Act
             var castleMoves = castleMoveUtility.GetCastleMoves(PieceColor.White);
@@ -248,7 +248,7 @@ namespace KChess.Tests
             whiteLeftRook.IsMoved.Returns(false);
             
             board.Pieces.Returns(new[] {whiteKing, whiteLeftRook, whiteRightRook});
-            board.PositionChanged += Raise.Event<Action<IPiece>>(whiteKing);
+            board.Updated += Raise.Event<Action<IPiece>>(whiteKing);
 
             // Act
             var castleMoves = castleMoveUtility.GetCastleMoves(PieceColor.White);
@@ -287,7 +287,7 @@ namespace KChess.Tests
             whiteLeftRook.IsMoved.Returns(false);
             
             board.Pieces.Returns(new[] {whiteKing, whiteLeftRook, whiteRightRook});
-            board.PositionChanged += Raise.Event<Action<IPiece>>(whiteKing);
+            board.Updated += Raise.Event<Action<IPiece>>(whiteKing);
 
             // Act
             var castleMoves = castleMoveUtility.GetCastleMoves(PieceColor.White);
@@ -336,7 +336,7 @@ namespace KChess.Tests
             blockingPiece.Type.Returns(PieceType.Bishop);
             
             board.Pieces.Returns(new[] {castleKing, castleLeftRook, castleRightRook, blockingPiece});
-            board.PositionChanged += Raise.Event<Action<IPiece>>(castleKing);
+            board.Updated += Raise.Event<Action<IPiece>>(castleKing);
 
             // Act
             var castleMoves = castleMoveUtility.GetCastleMoves(castleColor);
@@ -385,7 +385,7 @@ namespace KChess.Tests
             blockingPiece.Type.Returns(PieceType.Bishop);
             
             board.Pieces.Returns(new[] {castleKing, castleLeftRook, castleRightRook, blockingPiece});
-            board.PositionChanged += Raise.Event<Action<IPiece>>(castleKing);
+            board.Updated += Raise.Event<Action<IPiece>>(castleKing);
 
             // Act
             var castleMoves = castleMoveUtility.GetCastleMoves(castleColor);
@@ -424,7 +424,7 @@ namespace KChess.Tests
             whiteLeftRook.IsMoved.Returns(false);
             
             board.Pieces.Returns(new[] {whiteKing, whiteLeftRook, whiteRightRook});
-            board.PositionChanged += Raise.Event<Action<IPiece>>(whiteKing);
+            board.Updated += Raise.Event<Action<IPiece>>(whiteKing);
 
             // Act
             var castleMoves = castleMoveUtility.GetCastleMoves(PieceColor.White);
@@ -464,7 +464,7 @@ namespace KChess.Tests
             blackLeftRook.IsMoved.Returns(false);
             
             board.Pieces.Returns(new[] {blackKing, blackRightRook, blackLeftRook});
-            board.PositionChanged += Raise.Event<Action<IPiece>>(blackKing);
+            board.Updated += Raise.Event<Action<IPiece>>(blackKing);
 
             // Act
             var castleMoves = castleMoveUtility.GetCastleMoves(PieceColor.Black);
@@ -502,7 +502,7 @@ namespace KChess.Tests
             blackLeftRook.IsMoved.Returns(false);
             
             board.Pieces.Returns(new[] {blackKing, blackRightRook, blackLeftRook});
-            board.PositionChanged += Raise.Event<Action<IPiece>>(blackKing);
+            board.Updated += Raise.Event<Action<IPiece>>(blackKing);
 
             // Act
             var castleMoves = castleMoveUtility.GetCastleMoves(PieceColor.Black);
@@ -541,7 +541,7 @@ namespace KChess.Tests
             blackLeftRook.IsMoved.Returns(true);
             
             board.Pieces.Returns(new[] {blackKing, blackRightRook, blackLeftRook});
-            board.PositionChanged += Raise.Event<Action<IPiece>>(blackKing);
+            board.Updated += Raise.Event<Action<IPiece>>(blackKing);
 
             // Act
             var castleMoves = castleMoveUtility.GetCastleMoves(PieceColor.Black);
@@ -583,7 +583,7 @@ namespace KChess.Tests
             blackLeftRook.IsMoved.Returns(false);
             
             board.Pieces.Returns(new[] {blackKing, blackRightRook, blackLeftRook});
-            board.PositionChanged += Raise.Event<Action<IPiece>>(blackKing);
+            board.Updated += Raise.Event<Action<IPiece>>(blackKing);
 
             // Act
             var castleMoves = castleMoveUtility.GetCastleMoves(PieceColor.Black);
@@ -624,7 +624,7 @@ namespace KChess.Tests
             blackLeftRook.IsMoved.Returns(false);
             
             board.Pieces.Returns(new[] {blackKing, blackRightRook, blackLeftRook});
-            board.PositionChanged += Raise.Event<Action<IPiece>>(blackKing);
+            board.Updated += Raise.Event<Action<IPiece>>(blackKing);
 
             // Act
             var castleMoves = castleMoveUtility.GetCastleMoves(PieceColor.Black);
@@ -663,7 +663,7 @@ namespace KChess.Tests
             blackLeftRook.IsMoved.Returns(false);
             
             board.Pieces.Returns(new[] {blackKing, blackRightRook, blackLeftRook});
-            board.PositionChanged += Raise.Event<Action<IPiece>>(blackKing);
+            board.Updated += Raise.Event<Action<IPiece>>(blackKing);
 
             // Act
             var castleMoves = castleMoveUtility.GetCastleMoves(PieceColor.Black);
@@ -702,7 +702,7 @@ namespace KChess.Tests
             blackLeftRook.IsMoved.Returns(false);
             
             board.Pieces.Returns(new[] {blackKing, blackRightRook, blackLeftRook});
-            board.PositionChanged += Raise.Event<Action<IPiece>>(blackKing);
+            board.Updated += Raise.Event<Action<IPiece>>(blackKing);
 
             // Act
             var castleMoves = castleMoveUtility.GetCastleMoves(PieceColor.Black);
@@ -741,7 +741,7 @@ namespace KChess.Tests
             blackLeftRook.IsMoved.Returns(false);
             
             board.Pieces.Returns(new[] {blackKing, blackRightRook, blackLeftRook});
-            board.PositionChanged += Raise.Event<Action<IPiece>>(blackKing);
+            board.Updated += Raise.Event<Action<IPiece>>(blackKing);
 
             // Act
             var castleMoves = castleMoveUtility.GetCastleMoves(PieceColor.Black);

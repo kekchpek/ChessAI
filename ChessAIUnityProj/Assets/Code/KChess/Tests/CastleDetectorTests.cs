@@ -1,5 +1,4 @@
-﻿using System;
-using KChess.Core.CastleDetector;
+﻿using KChess.Core.Castle;
 using KChess.Domain;
 using KChess.Domain.Impl;
 using NSubstitute;
@@ -9,11 +8,11 @@ namespace KChess.Tests
 {
     public class CastleDetectorTests
     {
-        private CastleDetector CreateCastleDetector(
+        private CastleUtility CreateCastleDetector(
             out IBoard board)
         {
             board = Substitute.For<IBoard>();
-            return new CastleDetector(board);
+            return new CastleUtility(board);
         }
 
         [TestCase(0)]
@@ -49,7 +48,7 @@ namespace KChess.Tests
             // Act
             BoardCoordinates newKingPos = (2, yCoord);
             king.Position.Returns(newKingPos);
-            board.PositionChanged += Raise.Event<Action<IPiece>>(king);
+            detecotr.TryMakeCastle(king);
 
             // Assert
             leftRook.Received().MoveTo(Arg.Is<BoardCoordinates>(x => x == BoardCoordinates.FromNumeric(3, yCoord)));  
@@ -88,7 +87,7 @@ namespace KChess.Tests
             // Act
             BoardCoordinates newKingPos = (6, yCoord);
             king.Position.Returns(newKingPos);
-            board.PositionChanged += Raise.Event<Action<IPiece>>(king);
+            detecotr.TryMakeCastle(king);
 
             // Assert
             rightRook.Received().MoveTo(Arg.Is<BoardCoordinates>(x => x == BoardCoordinates.FromNumeric(5, yCoord)));  

@@ -3,7 +3,7 @@ using KChess.Domain;
 
 namespace KChess.Core.BoardStateUtils
 {
-    public interface IBoardStateObserver
+    internal interface IBoardStateObserver
     {
         event Action<BoardState> StateChanged;
     }

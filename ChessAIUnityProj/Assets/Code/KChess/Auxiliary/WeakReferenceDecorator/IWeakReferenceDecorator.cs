@@ -1,6 +1,4 @@
-﻿using System.Runtime.Serialization;
-
-namespace KChess.Auxiliary.WeakReferenceDecorator
+﻿namespace KChess.Auxiliary.WeakReferenceDecorator
 {
     public interface IWeakReferenceDecorator<T> where T : class
     {

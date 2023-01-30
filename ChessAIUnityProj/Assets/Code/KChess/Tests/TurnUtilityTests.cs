@@ -1,25 +1,21 @@
-﻿using System;
-using KChess.Core.TurnUtility;
+﻿using KChess.Core.TurnUtility;
 using KChess.Domain;
-using NSubstitute;
 using NUnit.Framework;
 
 namespace KChess.Tests
 {
     public class TurnUtilityTests
     {
-        private TurnUtility CreateTurnUtility(out IBoard board)
+        private TurnUtility CreateTurnUtility()
         {
-            board = Substitute.For<IBoard>();
-            return new TurnUtility(board);
+            return new TurnUtility();
         }
 
         [Test]
         public void Creation_WhiteTurn()
         {
             // Arrange
-            var turnUtility = CreateTurnUtility(
-                out var board);
+            var turnUtility = CreateTurnUtility();
             
             // Act 
             // no act
@@ -32,67 +28,29 @@ namespace KChess.Tests
         public void SetTurn_EventCalled()
         {
             // Arrange
-            var turnUtility = CreateTurnUtility(
-                out var board);
+            var turnUtility = CreateTurnUtility();
             
             // Act
             PieceColor? turnColor = null;
             turnUtility.TurnChanged += x => turnColor = x;
-            turnUtility.SetTurn(PieceColor.Black);
+            turnUtility.NextTurn();
             
             // Assert
             Assert.AreEqual(PieceColor.Black, turnColor);
         }
 
-        [Test]
-        public void PieceMoved_EventCalled()
-        {
-            // Arrange
-            var turnUtility = CreateTurnUtility(
-                out var board);
-            
-            // Act
-            PieceColor? turnColor = null;
-            turnUtility.TurnChanged += x => turnColor = x;
-            var whitePiece = Substitute.For<IPiece>();
-            whitePiece.Color.Returns(PieceColor.White);
-            board.PieceMoved += Raise.Event<Action<IPiece>>(whitePiece);
-            
-            // Assert
-            Assert.AreEqual(PieceColor.Black, turnColor);
-        }
-        
 
         [Test]
         public void SetTurn_TurnChanged()
         {
             // Arrange
-            var turnUtility = CreateTurnUtility(
-                out var board);
+            var turnUtility = CreateTurnUtility();
             
             // Act
-            turnUtility.SetTurn(PieceColor.Black);
+            turnUtility.NextTurn();
             
             // Assert
             Assert.AreEqual(PieceColor.Black, turnUtility.GetTurn());
-        }
-
-        [TestCase(PieceColor.White, PieceColor.Black)]
-        [TestCase(PieceColor.Black, PieceColor.White)]
-        public void PieceMoved_TurnChanged(PieceColor movedColor, PieceColor newTurnColor)
-        {
-            // Arrange
-            var turnUtility = CreateTurnUtility(
-                out var board);
-            
-            // Act
-            turnUtility.SetTurn(movedColor);
-            var piece = Substitute.For<IPiece>();
-            piece.Color.Returns(movedColor);
-            board.PieceMoved += Raise.Event<Action<IPiece>>(piece);
-            
-            // Assert
-            Assert.AreEqual(newTurnColor, turnUtility.GetTurn());
         }
     }
 }

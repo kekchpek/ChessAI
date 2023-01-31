@@ -2,8 +2,8 @@
 using KChess.Core.BoardEnvironment.Utils;
 using KChess.Core.BoardStateUtils;
 using KChess.Core.Castle;
-using KChess.Core.CheckMate;
 using KChess.Core.Factories;
+using KChess.Core.GameStateChanger;
 using KChess.Core.LastMovedPieceUtils;
 using KChess.Core.MoveUtility;
 using KChess.Core.MoveUtility.PieceMoveUtilities.Bishop;
@@ -13,6 +13,7 @@ using KChess.Core.MoveUtility.PieceMoveUtilities.Pawn;
 using KChess.Core.MoveUtility.PieceMoveUtilities.Queen;
 using KChess.Core.MoveUtility.PieceMoveUtilities.Rook;
 using KChess.Core.PawnTransformation;
+using KChess.Core.PositionRepeating;
 using KChess.Core.Taking;
 using KChess.Core.TurnUtility;
 using KChess.Core.XRayUtility.XRayPiecesUtilities.BishopXRayUtility;
@@ -43,6 +44,8 @@ namespace KChess.Core.BoardEnvironment.Factory
             var boardStateContainer = new BoardStateContainer();
             var turnUtility = new TurnUtility.TurnUtility();
             utilityContainer.Add<ITurnUtility>(turnUtility);
+            var positionRepeatingUtility = new PositionRepeatingUtility();
+            utilityContainer.Add<IPositionRepeatingUtility>(positionRepeatingUtility);
             
 
             // Moves
@@ -89,9 +92,10 @@ namespace KChess.Core.BoardEnvironment.Factory
             
             // check-mate
             var mateUtility = new MateUtility.MateUtility(board, moveUtility, turnUtility);
-            var checkMateUtility = new CheckMateUtility(boardStateContainer, 
-                checkUtility, mateUtility, pawnTransformationUtility);
-            utilityContainer.Add<ICheckMateUtility>(checkMateUtility);
+            var checkMateUtility = new GameStateChanger.GameStateChanger(boardStateContainer, 
+                checkUtility, mateUtility, pawnTransformationUtility, positionRepeatingUtility,
+                board);
+            utilityContainer.Add<IGameStateChanger>(checkMateUtility);
             
             // Player facades
             var whitePlayerFacade = new ManagedPlayerFacade(moveUtility, turnUtility, turnUtility,

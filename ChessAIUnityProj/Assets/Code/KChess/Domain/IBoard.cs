@@ -12,6 +12,8 @@ namespace KChess.Domain
 
         void RemovePiece(IPiece piece);
 
-        internal void PlacePiece(IPiece piece);
+        void PlacePiece(IPiece piece);
+
+        int GetPositionHash();
     }
 }

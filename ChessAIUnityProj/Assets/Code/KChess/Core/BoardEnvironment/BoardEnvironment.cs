@@ -1,8 +1,9 @@
 ﻿using KChess.Core.API.PlayerFacade;
 using KChess.Core.BoardEnvironment.Utils;
 using KChess.Core.Castle;
-using KChess.Core.CheckMate;
+using KChess.Core.GameStateChanger;
 using KChess.Core.PawnTransformation;
+using KChess.Core.PositionRepeating;
 using KChess.Core.Taking;
 using KChess.Core.TurnUtility;
 using KChess.Domain;
@@ -43,6 +44,9 @@ namespace KChess.Core.BoardEnvironment
 
             _updating = true;
             
+            // IndexPosition
+            _utilityContainer.Get<IPositionRepeatingUtility>().IndexPosition(_board);
+            
             // Take
             _utilityContainer.Get<ITakeUtility>().TryTake(movedPiece);
 
@@ -53,7 +57,7 @@ namespace KChess.Core.BoardEnvironment
             _utilityContainer.Get<IPawnTransformationUtility>().UpdateTransformingPiece(movedPiece);
 
             // Game state
-            var state = _utilityContainer.Get<ICheckMateUtility>().UpdateBoardState();
+            var state = _utilityContainer.Get<IGameStateChanger>().UpdateBoardState();
             if (state is BoardState.Regular or BoardState.CheckToBlack or BoardState.CheckToWhite)
             {
                 _utilityContainer.Get<ITurnUtility>().NextTurn();

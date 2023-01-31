@@ -50,5 +50,15 @@ namespace KChess.Domain.Impl
             PieceAddedOnBoard?.Invoke(piece);
             Updated?.Invoke(piece);
         }
+
+        public int GetPositionHash()
+        {
+            return Pieces.Aggregate(0,
+                (current, piece) => 
+                    current ^ 
+                    piece.Position.GetHashCode() * 17 + 
+                    piece.Type.GetHashCode() * 31 + 
+                    piece.Color.GetHashCode() * 59);
+        }
     }
 }

@@ -1,8 +1,8 @@
 ﻿using KChess.Domain;
 
-namespace KChess.Core.CheckMate
+namespace KChess.Core.GameStateChanger
 {
-    internal interface ICheckMateUtility
+    internal interface IGameStateChanger
     {
         public BoardState UpdateBoardState();
     }

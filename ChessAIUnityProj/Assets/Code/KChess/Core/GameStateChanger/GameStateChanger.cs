@@ -3,27 +3,34 @@ using KChess.Core.BoardStateUtils;
 using KChess.Core.CheckUtility;
 using KChess.Core.MateUtility;
 using KChess.Core.PawnTransformation;
+using KChess.Core.PositionRepeating;
 using KChess.Domain;
 
-namespace KChess.Core.CheckMate
+namespace KChess.Core.GameStateChanger
 {
-    internal class CheckMateUtility: ICheckMateUtility
+    internal class GameStateChanger: IGameStateChanger
     {
         private readonly IBoardStateSetter _boardStateSetter;
         private readonly ICheckUtility _checkUtility;
         private readonly IMateUtility _mateUtility;
         private readonly IPawnTransformationUtility _pawnTransformationUtility;
+        private readonly IPositionRepeatingUtility _positionRepeatingUtility;
+        private readonly IBoard _board;
 
-        public CheckMateUtility(
+        public GameStateChanger(
             IBoardStateSetter boardStateSetter, 
             ICheckUtility checkUtility,
             IMateUtility mateUtility,
-            IPawnTransformationUtility pawnTransformationUtility)
+            IPawnTransformationUtility pawnTransformationUtility,
+            IPositionRepeatingUtility positionRepeatingUtility,
+            IBoard board)
         {
             _boardStateSetter = boardStateSetter;
             _checkUtility = checkUtility;
             _mateUtility = mateUtility;
             _pawnTransformationUtility = pawnTransformationUtility;
+            _positionRepeatingUtility = positionRepeatingUtility;
+            _board = board;
         }
 
         public BoardState UpdateBoardState()
@@ -61,6 +68,11 @@ namespace KChess.Core.CheckMate
                 {
                     _boardStateSetter.Set(BoardState.Stalemate);
                     return BoardState.Stalemate;
+                }
+                else if (_positionRepeatingUtility.GetPositionRepeatingTimes(_board) > 2)
+                {
+                    _boardStateSetter.Set(BoardState.RepeatDraw);
+                    return BoardState.RepeatDraw;
                 }
                 else
                 {

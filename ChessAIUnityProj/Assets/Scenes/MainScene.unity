@@ -495,6 +495,7 @@ MonoBehaviour:
   _boardPrefab: {fileID: 4516523899085425255, guid: cd21a11f55616944a8fca26458a236d0, type: 3}
   _movesDisplayerPrefab: {fileID: 4516523899085425255, guid: d852d347f32c79244af36830042c133f, type: 3}
   _pawnTransformPopup: {fileID: 4516523899085425255, guid: d7ed7e42d2175154080f827f18fae959, type: 3}
+  _gameEndedPopupPrefab: {fileID: 4516523899085425255, guid: 679ac277be1489142bec72266de8891c, type: 3}
   _mainUiContainer: {fileID: 329817269}
   _popupsContainer: {fileID: 86287889}
 --- !u!1 &519420028

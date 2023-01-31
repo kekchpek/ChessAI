@@ -1,8 +1,9 @@
 ﻿using KChess.Core.BoardStateUtils;
-using KChess.Core.CheckMate;
 using KChess.Core.CheckUtility;
+using KChess.Core.GameStateChanger;
 using KChess.Core.MateUtility;
 using KChess.Core.PawnTransformation;
+using KChess.Core.PositionRepeating;
 using KChess.Domain;
 using NSubstitute;
 using NUnit.Framework;
@@ -11,7 +12,7 @@ namespace KChess.Tests
 {
     public class CheckDetectorTests
     {
-        private CheckMateUtility CreateCheckDetector(
+        private GameStateChanger CreateCheckDetector(
             out IBoardStateSetter boardStateSetter,
             out ICheckUtility checkUtility)
         {
@@ -20,7 +21,10 @@ namespace KChess.Tests
             var mateUtility = Substitute.For<IMateUtility>();
             var pawnTransformation = Substitute.For<IPawnTransformationUtility>();
             pawnTransformation.GetTransformingPiece().Returns((IPiece)null);
-            return new CheckMateUtility(boardStateSetter, checkUtility, mateUtility, pawnTransformation);
+            var board = Substitute.For<IBoard>();
+            var positionRepeatingUtility = Substitute.For<IPositionRepeatingUtility>();
+            return new GameStateChanger(boardStateSetter, checkUtility, mateUtility, pawnTransformation,
+                positionRepeatingUtility, board);
         }
         
         [Test]

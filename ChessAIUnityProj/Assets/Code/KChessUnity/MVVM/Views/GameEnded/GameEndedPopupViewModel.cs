@@ -15,7 +15,7 @@ namespace KChessUnity.MVVM.Views.GameEnded
         private readonly IGameEndedPopupPayload _payload;
         private readonly IStartupService _startupService;
 
-        private IMutable<string> _winText = new Mutable<string>();
+        private readonly IMutable<string> _winText = new Mutable<string>();
         public IBindable<string> WinText => _winText;
 
         public GameEndedPopupViewModel(

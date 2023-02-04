@@ -65,6 +65,17 @@ namespace KChess.Core.Factories
             return board;
         }
 
+        public IBoard Create(Position position)
+        {
+            var board = CreateBoard();
+            foreach (var pieceData in position.Pieces)
+            {
+                _pieceFactory.Create(pieceData.type, pieceData.color, pieceData.position, board);
+            }
+
+            return board;
+        }
+
         public IBoard Copy(IBoard sourceBoard)
         {
             var board = CreateBoard();

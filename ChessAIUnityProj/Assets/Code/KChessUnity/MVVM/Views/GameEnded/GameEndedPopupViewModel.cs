@@ -13,17 +13,17 @@ namespace KChessUnity.MVVM.Views.GameEnded
     {
 
         private readonly IGameEndedPopupPayload _payload;
-        private readonly IStartupService _startupService;
+        private readonly IStartGameService _startGameService;
 
         private readonly IMutable<string> _winText = new Mutable<string>();
         public IBindable<string> WinText => _winText;
 
         public GameEndedPopupViewModel(
             IGameEndedPopupPayload payload,
-            IStartupService startupService)
+            IStartGameService startGameService)
         {
             _payload = payload;
-            _startupService = startupService;
+            _startGameService = startGameService;
         }
 
         public void Initialize()
@@ -55,7 +55,7 @@ namespace KChessUnity.MVVM.Views.GameEnded
         
         public void OnRestartClicked()
         {
-            _startupService.StartSingleGame();
+            _startGameService.StartSingleGame();
         }
     }
 }

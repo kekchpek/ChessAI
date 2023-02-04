@@ -12,12 +12,15 @@ namespace KChess.Core.BoardEnvironment
 {
     internal class BoardEnvironment : IBoardEnvironment
     {
+        public IBoard Board => _board;
         public IPlayerFacade BlackPlayerFacade => _blackPlayerFacade;
         public IPlayerFacade WhitePlayerFacade => _whitePlayerFacade;
+        public IPlayerFacade UniversalPlayerFacade => _universalPlayerFacade;
 
         private readonly IManagedPlayerFacade _whitePlayerFacade;
         private readonly IBoard _board;
         private readonly IManagedPlayerFacade _blackPlayerFacade;
+        private readonly IManagedPlayerFacade _universalPlayerFacade;
 
         private readonly IUtilityContainer _utilityContainer;
 
@@ -26,11 +29,13 @@ namespace KChess.Core.BoardEnvironment
         public BoardEnvironment(
             IManagedPlayerFacade blackPlayer, 
             IManagedPlayerFacade whitePlayer,
+            IManagedPlayerFacade universalPlayerFacade,
             IBoard board,
             IUtilityContainer components)
         {
             _blackPlayerFacade = blackPlayer;
             _whitePlayerFacade = whitePlayer;
+            _universalPlayerFacade = universalPlayerFacade;
             _board = board;
             _utilityContainer = components;
 

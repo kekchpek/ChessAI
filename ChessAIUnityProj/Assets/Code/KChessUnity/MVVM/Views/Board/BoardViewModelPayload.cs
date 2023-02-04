@@ -4,13 +4,11 @@ namespace KChessUnity.MVVM.Views.Board
 {
     public class BoardViewModelPayload : IBoardViewModelPayload
     {
-        public IPlayerFacade WhitePlayerFacade { get; }
-        public IPlayerFacade BlackPlayerFacade { get; }
+        public IPlayerFacade PlayerFacade { get; }
 
-        public BoardViewModelPayload(IPlayerFacade whitePlayerFacade, IPlayerFacade blackPlayerFacade)
+        public BoardViewModelPayload(IPlayerFacade playerFacade)
         {
-            WhitePlayerFacade = whitePlayerFacade;
-            BlackPlayerFacade = blackPlayerFacade;
+            PlayerFacade = playerFacade;
         }
     }
 }

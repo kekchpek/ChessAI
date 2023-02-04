@@ -1,35 +1,40 @@
 ﻿using System;
 using KChess.Core.API.BoardsManager;
 using KChessUnity.Core;
-using KChessUnity.MVVM.Views.Board;
+using KChessUnity.MVVM.Views.GameScreen.Payload;
+using UnityAuxiliaryTools.Promises;
 using UnityMVVM.ViewManager;
 
 namespace KChessUnity.Models.Startup
 {
-    public class StartupService : IStartupService
+    public class StartGameService : IStartGameService
     {
         private readonly IViewManager _viewManager;
         private readonly IBoardsManager _boardsManager;
 
         private Guid? _currenBoardId;
 
-        public StartupService(IViewManager viewManager, IBoardsManager boardsManager)
+        public StartGameService(IViewManager viewManager, IBoardsManager boardsManager)
         {
             _viewManager = viewManager;
             _boardsManager = boardsManager;
         }
         
-        public void StartSingleGame()
+        public async IPromise StartSingleGame()
         {
             if (_currenBoardId.HasValue)
             {
                 _boardsManager.ReleaseBoard(_currenBoardId.Value);
             }
-            _currenBoardId = _boardsManager.CreateBoard(out var whitePlayerFacade, out var blackPlayerFacade);
-            _viewManager.Open(ViewLayersIds.Main, ViewNames.Board, new BoardViewModelPayload(whitePlayerFacade, blackPlayerFacade));
+            _currenBoardId = _boardsManager.CreateBoard(
+                out var whitePlayerFacade, 
+                out var blackPlayerFacade,
+                out var universalPlayerFacade);
+            await _viewManager.Open(ViewLayersIds.Main, ViewNames.GameScreen, new GameScreenPayload(universalPlayerFacade));
+
         }
 
-        public void StartGameWithAI()
+        public IPromise StartGameWithAI()
         {
             throw new System.NotImplementedException();
         }

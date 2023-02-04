@@ -20,11 +20,15 @@ namespace KChess.Core.API.BoardsManager
             _boardEnvironmentFactory = new BoardEnvironmentFactory(boardFactory, pieceFactory);
         }
         
-        public Guid CreateBoard(out IPlayerFacade whitePlayer, out IPlayerFacade blackPlayer)
+        public Guid CreateBoard(
+            out IPlayerFacade whitePlayer, 
+            out IPlayerFacade blackPlayer,
+            out IPlayerFacade universalPlayerFacade)
         {
             var boardEnvironment = _boardEnvironmentFactory.Create();
             whitePlayer = boardEnvironment.WhitePlayerFacade;
             blackPlayer = boardEnvironment.BlackPlayerFacade;
+            universalPlayerFacade = boardEnvironment.UniversalPlayerFacade;
             var boardId = Guid.NewGuid();
             _boardEnvironments.Add(boardId, boardEnvironment);
             return boardId;

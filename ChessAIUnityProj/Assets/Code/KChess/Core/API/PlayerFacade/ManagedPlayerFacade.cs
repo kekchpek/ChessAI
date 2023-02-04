@@ -25,12 +25,12 @@ namespace KChess.Core.API.PlayerFacade
         private readonly IBoardStateObserver _boardStateObserver;
         private readonly IBoard _board;
         private readonly IPawnTransformationUtility _pawnTransformationUtility;
-        private readonly PieceColor _pieceColor;
+        private readonly PieceColor? _pieceColor;
 
         public ManagedPlayerFacade(IMoveUtility moveUtility, ITurnGetter turnGetter,
             ITurnObserver turnObserver, IBoardStateGetter boardStateGetter,
             IBoardStateObserver boardStateObserver, IBoard board, IPawnTransformationUtility pawnTransformationUtility,
-            PieceColor pieceColor)
+            PieceColor? pieceColor)
         {
             _moveUtility = moveUtility;
             _turnGetter = turnGetter;
@@ -58,12 +58,18 @@ namespace KChess.Core.API.PlayerFacade
 
         public bool TryMovePiece(IPiece piece, BoardCoordinates position)
         {
-            if (_turnGetter.GetTurn() != _pieceColor)
-                return false;
-            if (piece.Color != _pieceColor)
+            if (_pieceColor is not null)
+            {
+                if (_turnGetter.GetTurn() != _pieceColor)
+                    return false;
+                if (piece.Color != _pieceColor)
+                    return false;
+            }
+            if (_turnGetter.GetTurn() != piece.Color)
                 return false;
             if (!_moveUtility.GetAvailableMoves(piece).Contains(position))
                 return false;
+
             piece.MoveTo(position);
             return true;
         }

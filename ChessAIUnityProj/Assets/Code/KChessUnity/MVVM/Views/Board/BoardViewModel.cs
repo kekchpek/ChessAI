@@ -17,8 +17,7 @@ namespace KChessUnity.MVVM.Views.Board
     {
         private readonly IBoardPositionsCalculator _boardPositionsCalculator;
         private readonly IBoardClickedTrigger _boardClickedTrigger;
-        private readonly IPlayerFacade _whitePlayerFacade;
-        private readonly IPlayerFacade _blackPlayerFacade;
+        private readonly IPlayerFacade _playerFacade;
         
 
         public BoardViewModel(IBoardViewModelPayload payload,
@@ -27,24 +26,22 @@ namespace KChessUnity.MVVM.Views.Board
         {
             _boardPositionsCalculator = boardPositionsCalculator;
             _boardClickedTrigger = boardClickedTrigger;
-            _whitePlayerFacade = payload.WhitePlayerFacade;
-            _blackPlayerFacade = payload.BlackPlayerFacade;
+            _playerFacade = payload.PlayerFacade;
         }
         
         public void Initialize()
         {
             CreateSubView(ViewNames.MovesDisplayer);
-            var pieces = _whitePlayerFacade.GetPieces();
+            var pieces = _playerFacade.GetPieces();
             foreach (var piece in pieces)
             {
                 CreateSubView(ViewNames.Piece,
-                    new PieceViewModelPayload(piece,
-                        piece.Color == PieceColor.White ? _whitePlayerFacade : _blackPlayerFacade));
+                    new PieceViewModelPayload(piece, _playerFacade));
             }
 
-            _whitePlayerFacade.PieceAddedOnBoard += OnPieceAddedOnBoard;
-            _whitePlayerFacade.PieceRequiredToBeTransformed += OnPawnTransform;
-            _whitePlayerFacade.BoardStateChanged += OnBoardStateChanged;
+            _playerFacade.PieceAddedOnBoard += OnPieceAddedOnBoard;
+            _playerFacade.PieceRequiredToBeTransformed += OnPawnTransform;
+            _playerFacade.BoardStateChanged += OnBoardStateChanged;
         }
 
         private void OnBoardStateChanged(BoardState state)
@@ -69,21 +66,20 @@ namespace KChessUnity.MVVM.Views.Board
         private void OnPieceAddedOnBoard(IPiece piece)
         {
             CreateSubView(ViewNames.Piece,
-                new PieceViewModelPayload(piece,
-                    piece.Color == PieceColor.White ? _whitePlayerFacade : _blackPlayerFacade));
+                new PieceViewModelPayload(piece, _playerFacade));
         }
 
         private void OnPawnTransform(IPiece piece)
         {
-            OpenView(ViewLayersIds.Popup, ViewNames.TransformationPopup, new PawnTransformPayload(piece.Color,
-                piece.Color == PieceColor.White ? _whitePlayerFacade : _blackPlayerFacade));
+            OpenView(ViewLayersIds.Popup, ViewNames.TransformationPopup, 
+                new PawnTransformPayload(piece.Color, _playerFacade));
         }
 
         protected override void OnDestroyInternal()
         {
-            _whitePlayerFacade.PieceAddedOnBoard -= OnPieceAddedOnBoard;
-            _whitePlayerFacade.PieceRequiredToBeTransformed -= OnPawnTransform;
-            _whitePlayerFacade.BoardStateChanged -= OnBoardStateChanged;
+            _playerFacade.PieceAddedOnBoard -= OnPieceAddedOnBoard;
+            _playerFacade.PieceRequiredToBeTransformed -= OnPawnTransform;
+            _playerFacade.BoardStateChanged -= OnBoardStateChanged;
             base.OnDestroyInternal();
         }
 

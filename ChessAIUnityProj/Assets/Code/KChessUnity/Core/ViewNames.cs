@@ -2,6 +2,8 @@
 {
     public static class ViewNames
     {
+        public static string MainMenu => "MainMenu";
+        public static string GameScreen => "GameScreen";
         public static string Board => "Board";
         public static string Piece => "Piece";
         public static string MovesDisplayer => "MovesDisplayer";

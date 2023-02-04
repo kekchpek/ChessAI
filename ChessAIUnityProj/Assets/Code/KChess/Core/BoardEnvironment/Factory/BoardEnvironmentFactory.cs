@@ -102,7 +102,15 @@ namespace KChess.Core.BoardEnvironment.Factory
                 boardStateContainer, boardStateContainer, board, pawnTransformationUtility, PieceColor.White);
             var blackPlayerFacade = new ManagedPlayerFacade(moveUtility, turnUtility, turnUtility,
                 boardStateContainer, boardStateContainer, board, pawnTransformationUtility, PieceColor.Black);
-            return new BoardEnvironment(blackPlayerFacade, whitePlayerFacade, board, utilityContainer);
+            var universalPlayerFacade = new ManagedPlayerFacade(moveUtility, turnUtility, turnUtility,
+                boardStateContainer, boardStateContainer, board, pawnTransformationUtility, null);
+            return new BoardEnvironment(blackPlayerFacade, whitePlayerFacade, universalPlayerFacade,
+                board, utilityContainer);
+        }
+
+        public IBoardEnvironment Create(Position specificPosition)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

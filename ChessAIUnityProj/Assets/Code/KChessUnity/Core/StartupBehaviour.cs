@@ -1,7 +1,6 @@
-﻿using KChess.Core.API.PlayerFacade;
-using KChessUnity.Core.Camera;
-using KChessUnity.Models.Startup;
+﻿using KChessUnity.Core.Camera;
 using UnityEngine;
+using UnityMVVM.ViewManager;
 using Zenject;
 
 namespace KChessUnity.Core
@@ -11,25 +10,22 @@ namespace KChessUnity.Core
 
         [SerializeField] private UnityEngine.Camera _camera;
 
-        private IStartupService _startupService;
+        private IViewManager _viewManager;
         private ICameraService _cameraService;
-
-        private IPlayerFacade _whitePlayerFacade;
-        private IPlayerFacade _blackPlayerFacade;
         
         [Inject]
         public void Construct(
-            IStartupService startupService,
-            ICameraService cameraService)
+            ICameraService cameraService,
+            IViewManager viewManager)
         {
-            _startupService = startupService;
+            _viewManager = viewManager;
             _cameraService = cameraService;
         }
         
         private void Awake()
         {
             _cameraService.SetCamera(_camera);
-            _startupService.StartSingleGame();
+            _viewManager.Open(ViewLayersIds.Main, ViewNames.MainMenu);
         }
     }
 }

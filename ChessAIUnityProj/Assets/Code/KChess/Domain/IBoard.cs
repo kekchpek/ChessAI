@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace KChess.Domain
 {
-    internal interface IBoard
+    public interface IBoard
     {
         event Action<IPiece> Updated;
         public event Action<IPiece> PieceAddedOnBoard;

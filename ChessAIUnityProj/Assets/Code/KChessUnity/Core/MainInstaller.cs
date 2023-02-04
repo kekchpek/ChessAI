@@ -9,6 +9,8 @@ using KChessUnity.MVVM.Triggers.BoardClicked;
 using KChessUnity.MVVM.Triggers.PieceSelected;
 using KChessUnity.MVVM.Views.Board;
 using KChessUnity.MVVM.Views.GameEnded;
+using KChessUnity.MVVM.Views.GameScreen;
+using KChessUnity.MVVM.Views.MainMenu;
 using KChessUnity.MVVM.Views.MovesDisplayer;
 using KChessUnity.MVVM.Views.PawnTransform;
 using KChessUnity.MVVM.Views.Piece;
@@ -25,6 +27,8 @@ namespace KChessUnity.Core
         [SerializeField] private GameObject _movesDisplayerPrefab;
         [SerializeField] private GameObject _pawnTransformPopup;
         [SerializeField] private GameObject _gameEndedPopupPrefab;
+        [SerializeField] private GameObject _mainMenuPrefab;
+        [SerializeField] private GameObject _gameScreenPrefab;
 
         [SerializeField] private Transform _mainUiContainer;
         [SerializeField] private Transform _popupsContainer;
@@ -41,7 +45,7 @@ namespace KChessUnity.Core
             
             Container.FastBind<IHighlightedCellsMutableModel, IHighlightedCellsModel, HighlightedCellsModel>();
             Container.FastBind<IHighlightedCellsService, HighlightedCellsService>();
-            Container.FastBind<IStartupService, StartupService>();
+            Container.FastBind<IStartGameService, StartGameService>();
             Container.Bind<IBoardsManager>().To<BoardManager>().AsSingle();
 
             Container.FastBind<IAssetManager, AssetManager>();
@@ -62,6 +66,8 @@ namespace KChessUnity.Core
             Container.InstallView<MovesDisplayerView, IMovesDisplayerViewModel, MovesDisplayerViewModel>(ViewNames.MovesDisplayer, _movesDisplayerPrefab);
             Container.InstallView<PawnTransformView, IPawnTransformViewModel, PawnTransformViewModel>(ViewNames.TransformationPopup, _pawnTransformPopup);
             Container.InstallView<GameEndedPopupView, IGameEndedPopupViewModel, GameEndedPopupViewModel>(ViewNames.GameEnded, _gameEndedPopupPrefab);
+            Container.InstallView<MainMenuView, IMainMenuViewModel, MainMenuViewModel>(ViewNames.MainMenu, _mainMenuPrefab);
+            Container.InstallView<GameScreenView, IGameScreenViewModel, GameScreenViewModel>(ViewNames.GameScreen, _gameScreenPrefab);
         }
     }
 }
